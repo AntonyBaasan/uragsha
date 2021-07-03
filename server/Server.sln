@@ -1,0 +1,54 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.31410.357
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Uragsha.Models", "Uragsha.Models\Uragsha.Models.csproj", "{A6DB0B1D-8F48-4414-B690-1E27B6BBCFFF}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Uragsha.Signalling", "Uragsha.Signalling\Uragsha.Signalling.csproj", "{16D629F1-3CA7-4604-A085-F98BCF7289F4}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Uragsha.WebClient", "Uragsha.WebClient\Uragsha.WebClient.csproj", "{B97974FF-E07D-4838-81C1-B5729BF99CEC}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Uragsha.WebApi", "Uragsha.WebApi\Uragsha.WebApi.csproj", "{7FDB8066-8133-422B-A4EE-98989FF4D514}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Uragsha.Services.Database", "Uragsha.Services.Database\Uragsha.Services.Database.csproj", "{5A0D2FE8-F561-4280-9085-6E45A7072AA9}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Services", "Services", "{2601CC5D-CF77-45FC-A694-FE800C8886C6}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{A6DB0B1D-8F48-4414-B690-1E27B6BBCFFF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A6DB0B1D-8F48-4414-B690-1E27B6BBCFFF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A6DB0B1D-8F48-4414-B690-1E27B6BBCFFF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A6DB0B1D-8F48-4414-B690-1E27B6BBCFFF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{16D629F1-3CA7-4604-A085-F98BCF7289F4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{16D629F1-3CA7-4604-A085-F98BCF7289F4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{16D629F1-3CA7-4604-A085-F98BCF7289F4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{16D629F1-3CA7-4604-A085-F98BCF7289F4}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B97974FF-E07D-4838-81C1-B5729BF99CEC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B97974FF-E07D-4838-81C1-B5729BF99CEC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B97974FF-E07D-4838-81C1-B5729BF99CEC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B97974FF-E07D-4838-81C1-B5729BF99CEC}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7FDB8066-8133-422B-A4EE-98989FF4D514}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7FDB8066-8133-422B-A4EE-98989FF4D514}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7FDB8066-8133-422B-A4EE-98989FF4D514}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7FDB8066-8133-422B-A4EE-98989FF4D514}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5A0D2FE8-F561-4280-9085-6E45A7072AA9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5A0D2FE8-F561-4280-9085-6E45A7072AA9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5A0D2FE8-F561-4280-9085-6E45A7072AA9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5A0D2FE8-F561-4280-9085-6E45A7072AA9}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{5A0D2FE8-F561-4280-9085-6E45A7072AA9} = {2601CC5D-CF77-45FC-A694-FE800C8886C6}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {FED6B0CB-F438-47FF-8316-81EA7C31F43E}
+	EndGlobalSection
+EndGlobal

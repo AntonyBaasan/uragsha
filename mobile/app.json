@@ -1,0 +1,9 @@
+{
+  "name": "mobile",
+  "displayName": "mobile",
+  "scheme": "myapp",
+  "splash": {
+    "image": "./assets/splash.png",
+    "backgroundColor": "#FEF9B0"
+  }
+}
