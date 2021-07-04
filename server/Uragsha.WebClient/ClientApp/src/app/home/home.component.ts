@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { SignalRService } from '../services/signlar.service';
 
 @Component({
@@ -10,12 +10,16 @@ export class HomeComponent implements OnInit {
   message: string;
   received: string[] = [];
 
-  constructor(private signalRService: SignalRService) {}
+  constructor(
+    private signalRService: SignalRService,
+    private cdr: ChangeDetectorRef
+  ) {}
 
   ngOnInit(): void {
     this.signalRService.startConnection();
     this.signalRService.messageSubject.subscribe(message => {
       this.received.unshift(message);
+      this.cdr.detectChanges();
     });
   }
 
