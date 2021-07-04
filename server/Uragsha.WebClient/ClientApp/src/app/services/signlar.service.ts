@@ -1,31 +1,41 @@
 import { Injectable } from '@angular/core';
 import * as signalR from "@aspnet/signalr";  // or from "@microsoft/signalr" if you are using a new library
 import { Subject } from 'rxjs';
+import { environment } from '../../environments/environment';
 
 @Injectable({
   providedIn: 'root'
 })
 export class SignalRService {
-  private server = 'https://localhost:5001';
-  private hub = '/chart';
 
-  public messageSubject: Subject<string>;
-  private hubConnection: signalR.HubConnection
+  private webApiServer = environment.webApiUrl;
+  private signallingServer = environment.messagingUrl;
+  private mainHub = '/mainHub';
+
+  public messageSubject = new Subject<string>();
+  private hubConnection: signalR.HubConnection;
 
   public startConnection = () => {
     this.hubConnection = new signalR.HubConnectionBuilder()
-      .withUrl(this.server + this.hub)
+      .withUrl(this.signallingServer + this.mainHub)
       .build();
-    this.hubConnection
+    return this.hubConnection
       .start()
-      .then(() => console.log('Connection started'))
+      .then(() => {
+        console.log('Connection started');
+        this.startMessageListener();
+      })
       .catch(err => console.log('Error while starting connection: ' + err))
   }
 
-  public startMessageListener = () => {
-    this.hubConnection.on('onMessageReceived', (message: string) => {
+  private startMessageListener = () => {
+    this.hubConnection.on('ReceiveMessage', (message: string) => {
       console.log(message);
       if (this.messageSubject) { this.messageSubject.next(message) }
     });
+  }
+
+  public sendMessage(message: string) {
+    this.hubConnection.invoke('SendMessage', message);
   }
 }
