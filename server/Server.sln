@@ -9,11 +9,13 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Uragsha.Signalling", "Urags
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Uragsha.WebClient", "Uragsha.WebClient\Uragsha.WebClient.csproj", "{B97974FF-E07D-4838-81C1-B5729BF99CEC}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Uragsha.WebApi", "Uragsha.WebApi\Uragsha.WebApi.csproj", "{7FDB8066-8133-422B-A4EE-98989FF4D514}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Uragsha.WebApi", "Uragsha.WebApi\Uragsha.WebApi.csproj", "{7FDB8066-8133-422B-A4EE-98989FF4D514}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Uragsha.Services.Database", "Uragsha.Services.Database\Uragsha.Services.Database.csproj", "{5A0D2FE8-F561-4280-9085-6E45A7072AA9}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Uragsha.Services.Database", "Uragsha.Services.Database\Uragsha.Services.Database.csproj", "{5A0D2FE8-F561-4280-9085-6E45A7072AA9}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Services", "Services", "{2601CC5D-CF77-45FC-A694-FE800C8886C6}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Uragsha.LandingPage", "Uragsha.LandingPage\Uragsha.LandingPage.csproj", "{6EFF32F7-878F-4083-B288-6EC54F28AFC3}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -41,6 +43,10 @@ Global
 		{5A0D2FE8-F561-4280-9085-6E45A7072AA9}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{5A0D2FE8-F561-4280-9085-6E45A7072AA9}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{5A0D2FE8-F561-4280-9085-6E45A7072AA9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6EFF32F7-878F-4083-B288-6EC54F28AFC3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6EFF32F7-878F-4083-B288-6EC54F28AFC3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6EFF32F7-878F-4083-B288-6EC54F28AFC3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6EFF32F7-878F-4083-B288-6EC54F28AFC3}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
