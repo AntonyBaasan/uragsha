@@ -8,7 +8,7 @@
     "watch": "ng build --watch --configuration development",
     "test": "ng test",
     "deploy": "firebase deploy",
-    "deploy:web": "firebase deploy --only hosting",
+    "deploy:hosting": "firebase deploy --only hosting",
     "deploy:functions": "firebase deploy --only functions"
   },
   "private": true,
