@@ -1,3 +1,4 @@
 export const environment = {
-  production: true
+  production: true,
+  subscribeUrl: 'https://us-central1-uragsha-landingpage.cloudfunctions.net/helloWorld',
 };

@@ -4,7 +4,7 @@
   id="mainNav"
 >
   <div class="container px-5">
-    <a class="navbar-brand fw-bold" href="#page-top">{{title}}</a>
+    <a class="navbar-brand fw-bold" href="#page-top">{{ title }}</a>
     <button
       class="navbar-toggler"
       type="button"
@@ -51,7 +51,7 @@
             Launch your mobile app landing page faster with this free, open
             source theme from Start Bootstrap!
           </p>
-          <div class="d-flex flex-column flex-lg-row align-items-center">
+          <!-- <div class="d-flex flex-column flex-lg-row align-items-center">
             <a class="me-lg-3 mb-4 mb-lg-0" href="#!"
               ><img
                 class="app-badge"
@@ -64,7 +64,32 @@
                 src="assets/img/app-store-badge.svg"
                 alt="..."
             /></a>
+          </div> -->
+          <div *ngIf="!subscribed" class="d-flex row justify-content-center">
+            <div class="d-flex justify-content-center">
+              <label>Sign up to be the first to know when we launch</label>
+            </div>
+            <div class="d-flex column input-group justify-content-center">
+              <div class="m-1">
+                <input type="text" placeholder="Email" class="form-control" [(ngModel)]="email"/>
+              </div>
+              <div class="m-1">
+                <button
+                  (click)="subscribe()"
+                  type="button"
+                  class="btn btn-success"
+                >
+                  Notify me!
+                </button>
+              </div>
+            </div>
           </div>
+          <div
+            *ngIf="subscribed"
+            class="d-flex row justify-content-center"
+          >
+          Thanks you!
+        </div>
         </div>
       </div>
       <div class="col-lg-6">
