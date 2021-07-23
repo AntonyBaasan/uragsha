@@ -4,7 +4,7 @@
 
 export const environment = {
   production: false,
-  subscribeUrl: 'http://localhost:5001/uragsha-landingpage/us-central1/helloWorld',
+  subscribeUrl: 'http://localhost:5001/uragsha-landingpage/us-central1/emailSubscribe',
 };
 
 /*

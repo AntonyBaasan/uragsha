@@ -1,4 +1,4 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
 import { environment } from './../environments/environment';
 
@@ -17,11 +17,14 @@ export class AppComponent implements OnInit {
   ngOnInit(): void {}
 
   subscribe(): void {
-    this.http
-      .get(environment.subscribeUrl + '?email=' + this.email)
-      .subscribe((res) => {
+    this.http.get(environment.subscribeUrl + '?email=' + this.email).subscribe(
+      (res) => {
         console.log(res);
         this.subscribed = true;
-      });
+      },
+      (res: HttpErrorResponse) => {
+        console.log(res.error);
+      }
+    );
   }
 }
