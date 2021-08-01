@@ -19,6 +19,8 @@
     "@angular/platform-browser": "~12.1.2",
     "@angular/platform-browser-dynamic": "~12.1.2",
     "@angular/router": "~12.1.2",
+    "bootstrap": "^5.0.2",
+    "jquery": "^3.6.0",
     "lodash-es": "^4.17.21",
     "rxjs": "~6.6.0",
     "tslib": "^2.2.0",
