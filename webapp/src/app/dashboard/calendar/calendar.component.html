@@ -33,7 +33,7 @@
   </div>
 </div>
 
-<!-- <div class="col-md-4">
+<div class="col-md-4">
   <div class="btn-group">
     <div
       class="btn btn-primary"
@@ -57,7 +57,7 @@
       Day
     </div>
   </div>
-</div> -->
+</div>
 
 <br />
 <div [ngSwitch]="view">
@@ -79,6 +79,7 @@
     [refresh]="refresh"
     (eventClicked)="handleEvent('Clicked', $event.event)"
     (eventTimesChanged)="eventTimesChanged($event)"
+    (hourSegmentClicked)="hourClicked($event.date)"
   >
   </mwl-calendar-week-view>
   <mwl-calendar-day-view
@@ -88,6 +89,7 @@
     [refresh]="refresh"
     (eventClicked)="handleEvent('Clicked', $event.event)"
     (eventTimesChanged)="eventTimesChanged($event)"
+    (hourSegmentClicked)="hourClicked($event.date)"
   >
   </mwl-calendar-day-view>
 </div>

@@ -5,8 +5,9 @@ import {
   CalendarEventTimesChangedEvent,
   CalendarView,
 } from 'angular-calendar';
-import { isSameDay, isSameMonth } from 'date-fns';
+import { addDays, isSameDay, isSameMonth, startOfDay, subDays } from 'date-fns';
 import { Subject, Subscription } from 'rxjs';
+import { COLORS } from 'src/app/shared/colors';
 import { DashboardStore } from '../dashboard.store';
 import { CalendarService } from './calendar.service';
 
@@ -38,7 +39,6 @@ export class CalendarComponent implements OnInit, OnDestroy {
       label: '<i class="fas fa-fw fa-trash-alt"></i>',
       a11yLabel: 'Delete',
       onClick: ({ event }: { event: CalendarEvent }): void => {
-        this.events = this.events.filter((iEvent) => iEvent !== event);
         this.handleEvent('Deleted', event);
       },
     },
@@ -101,6 +101,13 @@ export class CalendarComponent implements OnInit, OnDestroy {
   closeOpenMonthViewDay() {}
 
   handleEvent(action: string, event: CalendarEvent): void {
+    switch (action) {
+      case 'Edited':
+        break;
+      case 'Deleted':
+        this.removeSession(event)
+        break;
+    }
     this.modalData = { event, action };
   }
 
@@ -116,5 +123,13 @@ export class CalendarComponent implements OnInit, OnDestroy {
       }
       this.viewDate = date;
     }
+  }
+
+  hourClicked(date: Date) {
+    this.store.insertSession(date);
+  }
+
+  removeSession(event: CalendarEvent) {
+    this.store.removeSession(event.start);
   }
 }
