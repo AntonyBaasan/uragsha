@@ -7,6 +7,7 @@ import {
 } from 'angular-calendar';
 import { addDays, isSameDay, isSameMonth, startOfDay, subDays } from 'date-fns';
 import { Subject, Subscription } from 'rxjs';
+import { SingnallingService } from 'src/app/services/signalling.service';
 import { COLORS } from 'src/app/shared/colors';
 import { DashboardStore } from '../dashboard.store';
 import { CalendarService } from './calendar.service';
@@ -45,7 +46,7 @@ export class CalendarComponent implements OnInit, OnDestroy {
   ];
   events: CalendarEvent[] = [];
 
-  constructor(private store: DashboardStore, calendarService: CalendarService) {
+  constructor(private store: DashboardStore, calendarService: CalendarService, private signallingService: SingnallingService) {
     this.subWorkoutSessionsSubject =
       this.store.workoutSessionsSubject.subscribe((sessions) => {
         this.events = calendarService.mapToCalendarEvent(
@@ -131,5 +132,9 @@ export class CalendarComponent implements OnInit, OnDestroy {
 
   removeSession(event: CalendarEvent) {
     this.store.removeSession(event.start);
+  }
+
+  sendMessage(){
+    this.signallingService.sendMessage('hello world!');
   }
 }
