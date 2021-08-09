@@ -1,0 +1,16 @@
+<div class="row">
+  <div class="col-3">
+    <app-session-upcoming
+      [workoutSessions]="todaysWorkouts"
+      (sessionInserted)="insertSession($event)"
+      (sessionRemoved)="removeSession($event)"
+    ></app-session-upcoming>
+  </div>
+  <div class="col">
+    <app-calendar
+      [workoutSessions]="workoutSessions"
+      (sessionInserted)="insertSession($event)"
+      (sessionRemoved)="removeSession($event)"
+    ></app-calendar>
+  </div>
+</div>

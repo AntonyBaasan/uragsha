@@ -1,32 +1,50 @@
-import { Component, HostListener, OnDestroy, OnInit } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
+  Component,
+  EventEmitter,
+  HostListener,
+  Input,
+  OnDestroy,
+  OnInit,
+  Output,
+} from '@angular/core';
 import {
   CalendarEvent,
   CalendarEventAction,
   CalendarEventTimesChangedEvent,
   CalendarView,
 } from 'angular-calendar';
-import { addDays, isSameDay, isSameMonth, startOfDay, subDays } from 'date-fns';
-import { Subject, Subscription } from 'rxjs';
+import { isSameDay, isSameMonth } from 'date-fns';
+import { Subject } from 'rxjs';
 import { SingnallingService } from 'src/app/services/signalling.service';
-import { COLORS } from 'src/app/shared/colors';
-import { DashboardStore } from '../dashboard.store';
+import { WorkoutSession } from '../../models';
 import { CalendarService } from './calendar.service';
 
 @Component({
   selector: 'app-calendar',
   templateUrl: './calendar.component.html',
   styleUrls: ['./calendar.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class CalendarComponent implements OnInit, OnDestroy {
+  @Input() set workoutSessions(sessions: WorkoutSession[]) {
+    this.events = this.calendarService.mapToCalendarEvent(
+      sessions,
+      this.actions
+    );
+    this.refresh.next();
+  }
+  @Output() sessionInserted = new EventEmitter<Date>();
+  @Output() sessionRemoved = new EventEmitter<Date>();
+
+  events: CalendarEvent[] = [];
   refresh: Subject<any> = new Subject();
   CalendarView = CalendarView; // enum for template
   viewDate: Date = new Date();
   view: CalendarView = CalendarView.Week;
   activeDayIsOpen: boolean = true;
   modalData: { action: string; event: CalendarEvent } | undefined;
-
-  // subscriptions
-  subWorkoutSessionsSubject: Subscription;
 
   actions: CalendarEventAction[] = [
     {
@@ -44,22 +62,10 @@ export class CalendarComponent implements OnInit, OnDestroy {
       },
     },
   ];
-  events: CalendarEvent[] = [];
 
-  constructor(private store: DashboardStore, calendarService: CalendarService, private signallingService: SingnallingService) {
-    this.subWorkoutSessionsSubject =
-      this.store.workoutSessionsSubject.subscribe((sessions) => {
-        this.events = calendarService.mapToCalendarEvent(
-          sessions,
-          this.actions
-        );
-        this.refresh.next();
-      });
-  }
+  constructor(private calendarService: CalendarService, private cdr: ChangeDetectorRef) {}
 
-  ngOnDestroy(): void {
-    this.subWorkoutSessionsSubject?.unsubscribe();
-  }
+  ngOnDestroy(): void {}
 
   ngOnInit(): void {}
 
@@ -106,7 +112,7 @@ export class CalendarComponent implements OnInit, OnDestroy {
       case 'Edited':
         break;
       case 'Deleted':
-        this.removeSession(event)
+        this.removeSession(event);
         break;
     }
     this.modalData = { event, action };
@@ -127,14 +133,10 @@ export class CalendarComponent implements OnInit, OnDestroy {
   }
 
   hourClicked(date: Date) {
-    this.store.insertSession(date);
+    this.sessionInserted.emit(date);
   }
 
   removeSession(event: CalendarEvent) {
-    this.store.removeSession(event.start);
-  }
-
-  sendMessage(){
-    this.signallingService.sendMessage('hello world!');
+    this.sessionRemoved.emit(event.start);
   }
 }

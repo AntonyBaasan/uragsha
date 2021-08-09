@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { CalendarEvent } from 'angular-calendar';
-import { WorkoutSession } from '../models';
+import { WorkoutSession } from '../../models';
 
 @Injectable()
 export class CalendarService {

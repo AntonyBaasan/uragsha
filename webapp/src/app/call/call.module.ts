@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 
 import { CallRoutingModule } from './call-routing.module';
 import { CallPageComponent } from './call-page.component';
+import { FormsModule } from '@angular/forms';
 
 
 @NgModule({
@@ -10,6 +11,7 @@ import { CallPageComponent } from './call-page.component';
     CallPageComponent
   ],
   imports: [
+    FormsModule,
     CommonModule,
     CallRoutingModule
   ]

@@ -39,6 +39,7 @@ export class BackendService {
       },
       {
         start: startOfDay(new Date()),
+        end: addMinutes(new Date(), 30),
         title: 'An event with no end date',
         color: COLORS.yellow,
       },

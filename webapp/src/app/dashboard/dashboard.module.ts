@@ -5,14 +5,25 @@ import { adapterFactory } from 'angular-calendar/date-adapters/date-fns';
 
 import { DashboardRoutingModule } from './dashboard-routing.module';
 import { DashboardPageComponent } from './dashboard-page.component';
-import { CalendarComponent } from './calendar/calendar.component';
+import { CalendarComponent } from './calendar-tab/calendar/calendar.component';
 import { SessionComponent } from './session/session.component';
+import { FormsModule } from '@angular/forms';
+import { SessionUpcomingComponent } from './calendar-tab/session-upcoming/session-upcoming.component';
+import { CalendarTabComponent } from './calendar-tab/calendar-tab.component';
 
+const COMPONENTS = [
+  DashboardPageComponent,
+  CalendarComponent,
+  SessionComponent,
+  SessionUpcomingComponent,
+  CalendarTabComponent
+];
 @NgModule({
-  declarations: [DashboardPageComponent, CalendarComponent, SessionComponent],
+  declarations: [...COMPONENTS],
   imports: [
     CommonModule,
     DashboardRoutingModule,
+    FormsModule,
     CalendarModule.forRoot({
       provide: DateAdapter,
       useFactory: adapterFactory,

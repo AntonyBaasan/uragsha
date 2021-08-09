@@ -1,6 +1,6 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-import { CalendarComponent } from './calendar/calendar.component';
+import { CalendarTabComponent } from './calendar-tab/calendar-tab.component';
 import { DashboardPageComponent } from './dashboard-page.component';
 import { SessionComponent } from './session/session.component';
 
@@ -9,7 +9,7 @@ const routes: Routes = [
     path: '',
     component: DashboardPageComponent,
     children: [
-      { path: '', component: CalendarComponent },
+      { path: '', component: CalendarTabComponent },
       { path: 'session', component: SessionComponent },
     ],
   },

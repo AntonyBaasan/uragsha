@@ -1,0 +1,19 @@
+<h3>Upcoming</h3>
+<div *ngIf="workoutSessions.length === 0">
+  No sessions for planned. Please book it from Calendar
+</div>
+<div *ngIf="workoutSessions.length !== 0">
+  <ul class="list-group">
+    <li *ngFor="let session of workoutSessions; let i = index">
+      <div class="card">
+        <div class="card-body">
+          <div class="card-title">{{ session.title }}</div>
+          <div class="card-text">
+            {{ formatDayAndTime(session) }}
+          </div>
+          <a href="#" class="btn btn-primary" (click)="delete(session)">Delete</a>
+        </div>
+      </div>
+    </li>
+  </ul>
+</div>

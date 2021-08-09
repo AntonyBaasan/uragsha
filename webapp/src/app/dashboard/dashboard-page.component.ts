@@ -1,10 +1,16 @@
 import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
 import { BackendService } from '../services/backend.service';
-import { CalendarService } from './calendar/calendar.service';
+import { CalendarTabService } from './calendar-tab/calendar-tab.service';
+import { CalendarService } from './calendar-tab/calendar/calendar.service';
 import { DashboardStore } from './dashboard.store';
 import { SessionService } from './session/session.service';
 
-const SERVICES = [SessionService, DashboardStore, CalendarService];
+const SERVICES = [
+  SessionService,
+  DashboardStore,
+  CalendarService,
+  CalendarTabService,
+];
 
 @Component({
   selector: 'app-dashboard-page',

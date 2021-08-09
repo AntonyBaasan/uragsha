@@ -1,7 +1,9 @@
-
 export enum SignallingSendEvents {
   SendMessage = 'SendMessage',
+  JoinToRoom = 'JoinToRoom',
+  RemoveFromRoom = 'RemoveFromRoom',
 }
 export enum SignallingReceiveEvents {
-  ReceiveMessage = 'ReceiveMessage',
+  OnTextMessage = 'OnTextMessage',
+  OnWebRtcCallRequest = 'OnWebRtcCallRequest',
 }
