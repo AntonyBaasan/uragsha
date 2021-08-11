@@ -2,20 +2,27 @@ name: Deploy Webapp project to Firebase Webapp on push
 'on':
   push:
     branches:
-      - publish
-    path:
+      - main
+    paths:
       - 'webapp'
 jobs:
   build_and_deploy:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
-      - name: build webapp
+      - uses: actions/setup-node@v2
+        with:
+          node-version: '15'
+      - name: npm intall
+        run: npm install
         working-directory: webapp
+      - name: npm run build
         run: npm run build
+        working-directory: webapp
       - uses: FirebaseExtended/action-hosting-deploy@v0
         with:
           repoToken: '${{ secrets.GITHUB_TOKEN }}'
           firebaseServiceAccount: '${{ secrets.FIREBASE_SERVICE_ACCOUNT_URAGSHA_WEBAPP }}'
           channelId: live
           projectId: uragsha-webapp
+          entryPoint: webapp
