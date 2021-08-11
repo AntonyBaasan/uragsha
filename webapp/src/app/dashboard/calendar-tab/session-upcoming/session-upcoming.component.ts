@@ -1,5 +1,5 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { format } from 'date-fns/esm';
+import { ActivatedRoute, Router } from '@angular/router';
 import { WorkoutSession } from '../../models';
 
 @Component({
@@ -12,7 +12,7 @@ export class SessionUpcomingComponent implements OnInit {
   @Output() sessionInserted = new EventEmitter<Date>();
   @Output() sessionRemoved = new EventEmitter<Date>();
 
-  constructor() {}
+  constructor(private router: Router, private activatedRoute: ActivatedRoute) {}
 
   ngOnInit(): void {}
 
@@ -23,5 +23,11 @@ export class SessionUpcomingComponent implements OnInit {
 
   delete(session: WorkoutSession) {
     this.sessionRemoved.emit(session.start);
+  }
+
+  // TODO: this doesn't work. Had to use template routerLink
+  join(session: WorkoutSession) {
+    // this.router.navigate(['/call/'+session.id]);
+    this.router.navigateByUrl('/call/'+session.id);
   }
 }

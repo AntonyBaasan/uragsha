@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
+import { v4 as uuidv4 } from 'uuid';
 import { addMinutes, isEqual } from 'date-fns';
-import { BehaviorSubject, Subject } from 'rxjs';
+import { BehaviorSubject } from 'rxjs';
 import { COLORS } from '../shared/colors';
 import { WorkoutSession } from './models';
 
@@ -16,6 +17,7 @@ export class DashboardStore {
 
   insertSession(date: Date) {
     const newSession: WorkoutSession = {
+      id: uuidv4(),
       start: date,
       end: addMinutes(date, 30),
       title: 'New Session',

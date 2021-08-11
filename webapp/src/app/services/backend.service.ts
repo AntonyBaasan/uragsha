@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import { v4 as uuidv4 } from 'uuid';
 import { Observable, of } from 'rxjs';
 import { WorkoutSession } from '../dashboard/models';
 import { COLORS } from '../shared/colors';
@@ -32,24 +33,28 @@ export class BackendService {
 
     return of([
       {
+        id: uuidv4(),
         start: currentDate,
         end: addMinutes(currentDate, 30),
         title: 'A 30 min event',
         color: COLORS.red,
       },
       {
+        id: uuidv4(),
         start: startOfDay(new Date()),
         end: addMinutes(new Date(), 30),
         title: 'An event with no end date',
         color: COLORS.yellow,
       },
       {
+        id: uuidv4(),
         start: subDays(endOfMonth(new Date()), 3),
         end: addDays(endOfMonth(new Date()), 3),
         title: 'A long event that spans 2 months',
         color: COLORS.blue,
       },
       {
+        id: uuidv4(),
         start: addHours(startOfDay(new Date()), 2),
         end: addHours(new Date(), 2),
         title: 'A draggable and resizable event',
