@@ -1,4 +1,4 @@
-name: Build and deploy to Firebase Webapp on push
+name: Build and deploy Webapp project to Firebase Webapp on push
 'on':
   push:
     branches:
