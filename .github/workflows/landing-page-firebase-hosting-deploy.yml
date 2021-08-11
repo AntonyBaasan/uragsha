@@ -17,7 +17,7 @@ jobs:
         with:
           node-version: '14'
       - name: npm intall
-        run: npm run install
+        run: npm install
         working-directory: landing-page
       - name: build 
         run: npm run build
