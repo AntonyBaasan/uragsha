@@ -10,7 +10,7 @@ import { SingnallingService, StoreService } from '../../services';
   styleUrls: ['./calendar-tab.component.scss'],
 })
 export class CalendarTabComponent implements OnInit, OnDestroy {
-  SessionRequests: SessionRequest[] = [];
+  sessionRequests: SessionRequest[] = [];
   todaysWorkouts: SessionRequest[] = [];
   // subscriptions
   subSessionRequestsSubject: Subscription | undefined;
@@ -18,12 +18,13 @@ export class CalendarTabComponent implements OnInit, OnDestroy {
   constructor(
     private store: StoreService,
     private calendarTabService: CalendarTabService,
+    private signallingService: SingnallingService,
     private cdr: ChangeDetectorRef) {}
 
   ngOnInit(): void {
     this.subSessionRequestsSubject =
       this.store.SessionRequestsSubject.subscribe((sessions) => {
-        this.SessionRequests = [...sessions];
+        this.sessionRequests = [...sessions];
         this.todaysWorkouts = this.calendarTabService.getSessionsOfDay(new Date(), [...sessions]);
         this.cdr.detectChanges();
       });
@@ -36,10 +37,11 @@ export class CalendarTabComponent implements OnInit, OnDestroy {
   }
 
   insertSession(date: any) {
-    this.store.insertSessionRequest(date);
+    const request = this.calendarTabService.createSessionRequestByStartDate(date, this.store.getUserId());
+    this.signallingService.CreateSessionRequest(request);
   }
 
-  removeSession(date: any) {
-    this.store.removeSessionRequest(date);
+  removeSession(id: string) {
+    this.signallingService.DeleteSessionRequest(id);
   }
 }

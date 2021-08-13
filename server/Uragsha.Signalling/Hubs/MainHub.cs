@@ -83,15 +83,27 @@ namespace Uragsha.Signalling.Hubs
         public async Task GetUserSessionRequests(string userId)
         {
             var found = SessionRequestService.FindSessionRequest(userId);
-            var connections = GlobalInfo.UserConnections[userId];
+            var connections = GetUserConnections(userId);
             await Clients.Clients(connections).OnGetUserSessionRequests(found);
         }
 
-        public void CreateSessionRequest(SessionRequest sessionRequest)
+        public async Task CreateSessionRequest(SessionRequest sessionRequest)
         {
-            //TODO: UserId has to be set from here
+            var request = SessionRequestService.CreateSessionRequest(sessionRequest);
 
-            SessionRequestService.CreateSessionRequest(sessionRequest);
+            var connections = GetUserConnections(sessionRequest.UserId);
+            await Clients.Clients(connections).OnSessionRequestCreated(request);
+        }
+
+        public async Task DeleteSessionRequest(string sessionRequestId)
+        {
+            // TODO: check if this session is for this user
+
+            var found = SessionRequestService.GetSessionRequestById(sessionRequestId);
+            SessionRequestService.RemoveSessionRequest(found.Id);
+
+            var connections = GetUserConnections(found.UserId);
+            await Clients.Clients(connections).OnSessionRequestDeleted(found.Id);
         }
 
         public async Task CreateSession(SessionRequest sessionRequest)
@@ -102,9 +114,16 @@ namespace Uragsha.Signalling.Hubs
             {
                 SessionRequest request = SessionRequestService.GetSessionRequestById(requestId);
 
-                var connections = GlobalInfo.UserConnections[request.UserId];
+                var connections = GetUserConnections(sessionRequest.UserId);
                 await Clients.Clients(connections).OnSessionRequestUpdated(request);
             }
+        }
+
+
+        private List<string> GetUserConnections(string userId)
+        {
+            GlobalInfo.UserConnections.TryGetValue(userId, out List<string> connections);
+            return connections ?? new List<string>();
         }
     }
 

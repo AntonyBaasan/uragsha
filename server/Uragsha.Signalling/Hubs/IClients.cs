@@ -12,6 +12,9 @@ namespace Uragsha.Signalling.Hubs
         Task OnWebRtcCallRequest(object request);
 
         Task OnGetUserSessionRequests(List<SessionRequest> sessionRequests);
+        Task OnSessionRequestCreated(SessionRequest sessionRequest);
         Task OnSessionRequestUpdated(SessionRequest sessionRequest);
+        Task OnSessionRequestDeleted(string sessionRequestId);
+        
     }
 }

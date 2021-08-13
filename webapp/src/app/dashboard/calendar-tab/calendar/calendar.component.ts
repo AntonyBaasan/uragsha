@@ -17,7 +17,6 @@ import {
 } from 'angular-calendar';
 import { isSameDay, isSameMonth } from 'date-fns';
 import { Subject } from 'rxjs';
-import { SingnallingService } from 'src/app/services/signalling.service';
 import { SessionRequest } from '../../../models';
 import { CalendarService } from './calendar.service';
 
@@ -28,15 +27,15 @@ import { CalendarService } from './calendar.service';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class CalendarComponent implements OnInit, OnDestroy {
-  @Input() set SessionRequests(sessions: SessionRequest[]) {
+  @Input() set sessionRequests(sessions: SessionRequest[]) {
     this.events = this.calendarService.mapToCalendarEvent(
       sessions,
       this.actions
     );
     this.refresh.next();
   }
-  @Output() sessionInserted = new EventEmitter<Date>();
-  @Output() sessionRemoved = new EventEmitter<Date>();
+  @Output() sessionInsert = new EventEmitter<Date>();
+  @Output() sessionRemove = new EventEmitter<string>();
 
   events: CalendarEvent[] = [];
   refresh: Subject<any> = new Subject();
@@ -133,10 +132,10 @@ export class CalendarComponent implements OnInit, OnDestroy {
   }
 
   hourClicked(date: Date) {
-    this.sessionInserted.emit(date);
+    this.sessionInsert.emit(date);
   }
 
   removeSession(event: CalendarEvent) {
-    this.sessionRemoved.emit(event.start);
+    this.sessionRemove.emit(event.id as string);
   }
 }

@@ -24,6 +24,8 @@ export class DashboardPageComponent implements OnInit, OnDestroy {
   userName: string = '';
   private subOnGetUserSessionRequests: Subscription | undefined;
   private subOnSessionRequestUpdated: Subscription | undefined;
+  private subOnSessionRequestCreated: Subscription | undefined;
+  private subOnSessionRequestDeleted: Subscription | undefined;
 
   constructor(
     private backendService: BackendService,
@@ -32,6 +34,7 @@ export class DashboardPageComponent implements OnInit, OnDestroy {
   ) {}
 
   ngOnInit(): void {
+    this.userName = this.store.getUserId();
     this.subOnGetUserSessionRequests =
       this.signallingService.OnGetUserSessionRequests.subscribe(
         (sessionRequests: SessionRequest[]) =>
@@ -42,11 +45,23 @@ export class DashboardPageComponent implements OnInit, OnDestroy {
         (sessionRequest: SessionRequest) =>
           this.handleOnSessionRequestUpdate(sessionRequest)
       );
+    this.subOnSessionRequestCreated =
+      this.signallingService.OnSessionRequestCreated.subscribe(
+        (sessionRequest: SessionRequest) =>
+          this.handleOnSessionRequestCreated(sessionRequest)
+      );
+    this.subOnSessionRequestDeleted =
+      this.signallingService.OnSessionRequestDeleted.subscribe(
+        (sessionRequestId: string) =>
+          this.handleOnSessionRequestDeleted(sessionRequestId)
+      );
   }
+
 
   ngOnDestroy(): void {
     this.subOnGetUserSessionRequests?.unsubscribe();
     this.subOnSessionRequestUpdated?.unsubscribe();
+    this.subOnSessionRequestCreated?.unsubscribe();
   }
 
   setUserName() {
@@ -62,11 +77,19 @@ export class DashboardPageComponent implements OnInit, OnDestroy {
       });
   }
 
-  fetchSessionRequests() {
+  fetchAllSessionRequests() {
     this.signallingService.GetUserSessionRequests(this.store.getUserId());
   }
 
   private handleOnSessionRequestUpdate(sessionRequest: SessionRequest): void {
     this.store.updateSessionRequest(sessionRequest);
+  }
+
+  private handleOnSessionRequestCreated(sessionRequest: SessionRequest): void {
+    this.store.insertSessionRequest(sessionRequest);
+  }
+
+  private handleOnSessionRequestDeleted(sessionRequestId: string): void {
+    this.store.deleteSessionRequest(sessionRequestId);
   }
 }

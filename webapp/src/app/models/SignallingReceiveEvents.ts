@@ -4,4 +4,6 @@ export enum SignallingReceiveEvents {
 
   OnGetUserSessionRequests = 'OnGetUserSessionRequests',
   OnSessionRequestUpdated = 'OnSessionRequestUpdated',
+  OnSessionRequestCreated = 'OnSessionRequestCreated',
+  OnSessionRequestDeleted = 'OnSessionRequestDeleted'
 }

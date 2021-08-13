@@ -26,31 +26,31 @@ export class StoreService {
     this.SessionRequestsSubject.next(this.sessionRequests);
   }
 
-  insertSessionRequest(date: Date) {
-    const newSessionRequest: SessionRequest = {
-      id: uuidv4(),
-      start: date,
-      end: addMinutes(date, 30),
-      title: 'New Session',
-      status: SessionRequestStatus.Waiting,
-      userId: this.getUserId(),
-      color: COLORS.red,
-    };
-    this.sessionRequests.push(newSessionRequest);
-    this.SessionRequestsSubject.next(this.sessionRequests);
-  }
+  // removeSessionRequest(startDate: Date) {
+  //   this.sessionRequests = this.sessionRequests.filter(
+  //     (s) => !isEqual(s.start, startDate)
+  //   );
+  //   this.SessionRequestsSubject.next(this.sessionRequests);
+  // }
 
-  removeSessionRequest(startDate: Date) {
-    this.sessionRequests = this.sessionRequests.filter(
-      (s) => !isEqual(s.start, startDate)
-    );
+  insertSessionRequest(sessionRequest: SessionRequest) {
+    this.sessionRequests = [...this.sessionRequests, sessionRequest];
     this.SessionRequestsSubject.next(this.sessionRequests);
   }
 
   updateSessionRequest(sessionRequest: SessionRequest) {
-    this.sessionRequests = this.sessionRequests.filter(
+    const index = this.sessionRequests.findIndex(
       (s) => s.id === sessionRequest.id
     );
-    this.sessionRequests = [...this.sessionRequests, sessionRequest];
+    this.sessionRequests.splice(index, 1, sessionRequest);
+    this.sessionRequests = [...this.sessionRequests];
+    this.SessionRequestsSubject.next(this.sessionRequests);
+  }
+
+  deleteSessionRequest(sessionRequestId: string) {
+    this.sessionRequests = this.sessionRequests.filter(
+      (s) => s.id !== sessionRequestId
+    );
+    this.SessionRequestsSubject.next(this.sessionRequests);
   }
 }

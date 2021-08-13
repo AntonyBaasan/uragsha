@@ -1,16 +1,16 @@
 <div class="row">
   <div class="col-3">
     <app-session-upcoming
-      [SessionRequests]="todaysWorkouts"
-      (sessionInserted)="insertSession($event)"
-      (sessionRemoved)="removeSession($event)"
+      [sessionRequests]="todaysWorkouts"
+      (sessionInsert)="insertSession($event)"
+      (sessionRemove)="removeSession($event)"
     ></app-session-upcoming>
   </div>
   <div class="col">
     <app-calendar
-      [SessionRequests]="SessionRequests"
-      (sessionInserted)="insertSession($event)"
-      (sessionRemoved)="removeSession($event)"
+      [sessionRequests]="sessionRequests"
+      (sessionInsert)="insertSession($event)"
+      (sessionRemove)="removeSession($event)"
     ></app-calendar>
   </div>
 </div>

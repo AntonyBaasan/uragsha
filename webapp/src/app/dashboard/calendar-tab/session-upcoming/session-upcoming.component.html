@@ -1,9 +1,9 @@
 <h3>Upcoming</h3>
-<div *ngIf="SessionRequests.length === 0">
+<div *ngIf="sessionRequests.length === 0">
   No sessions for planned. Please book it from Calendar
 </div>
-<div *ngIf="SessionRequests.length !== 0">
-  <div class="card mb-1" *ngFor="let session of SessionRequests; let i = index">
+<div *ngIf="sessionRequests.length !== 0">
+  <div class="card mb-1" *ngFor="let session of sessionRequests; let i = index">
     <div class="card-body">
       <div class="card-title">{{ session.title }}</div>
       <div class="card-text">

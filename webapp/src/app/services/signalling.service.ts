@@ -21,6 +21,8 @@ export class SingnallingService implements OnDestroy {
   public onWebRtcRequest = new Subject<any>();
   public OnGetUserSessionRequests = new Subject<SessionRequest[]>();
   public OnSessionRequestUpdated = new Subject<SessionRequest>();
+  public OnSessionRequestCreated = new Subject<SessionRequest>();
+  public OnSessionRequestDeleted = new Subject<string>();
 
   constructor() {
     this.connection = new signalR.HubConnectionBuilder()
@@ -70,30 +72,44 @@ export class SingnallingService implements OnDestroy {
     this.connection.invoke(SignallingSendEvents.RemoveFromRoom, room);
   }
 
-  setUserName(userId: string) {
+  setUserName(userId: string): Promise<void> {
     if (!this.isConnected()) {
       console.log('Connection is not established!');
-      return;
+      return Promise.resolve();
     }
-    this.connection.invoke(SignallingSendEvents.SetMyName, userId);
+    return this.connection.invoke(SignallingSendEvents.SetMyName, userId);
   }
 
-  GetUserSessionRequests(userId: string) {
+  GetUserSessionRequests(userId: string): Promise<void> {
     if (!this.isConnected()) {
       console.log('Connection is not established!');
-      return;
+      return Promise.resolve();
     }
-    this.connection.invoke(SignallingSendEvents.GetUserSessionRequests, userId);
+    return this.connection.invoke(
+      SignallingSendEvents.GetUserSessionRequests,
+      userId
+    );
   }
 
-  CreateSessionRequest(sessionRequest: SessionRequest) {
+  CreateSessionRequest(sessionRequest: SessionRequest): Promise<void> {
     if (!this.isConnected()) {
       console.log('Connection is not established!');
-      return;
+      return Promise.resolve();
     }
-    this.connection.invoke(
+    return this.connection.invoke(
       SignallingSendEvents.CreateSessionRequest,
       sessionRequest
+    );
+  }
+
+  DeleteSessionRequest(sessionRequestId: string): Promise<void> {
+    if (!this.isConnected()) {
+      console.log('Connection is not established!');
+      return Promise.resolve();
+    }
+    return this.connection.invoke(
+      SignallingSendEvents.DeleteSessionRequest,
+      sessionRequestId
     );
   }
 
@@ -120,18 +136,35 @@ export class SingnallingService implements OnDestroy {
     this.connection.on(
       SignallingReceiveEvents.OnGetUserSessionRequests,
       (sessionRequests: SessionRequest[]) => {
-        this.OnGetUserSessionRequests.next(sessionRequests.map(s=>{
-          s.start = parseISO(s.start as any);
-          s.end = parseISO(s.end as any);
-          return s;
-        }));
+        this.OnGetUserSessionRequests.next(
+          sessionRequests.map((s) => this.mapStringToDate(s))
+        );
       }
     );
     this.connection.on(
       SignallingReceiveEvents.OnSessionRequestUpdated,
       (sessionRequest: SessionRequest) => {
-        this.OnSessionRequestUpdated.next(sessionRequest);
+        this.OnSessionRequestUpdated.next(this.mapStringToDate(sessionRequest));
       }
     );
+    this.connection.on(
+      SignallingReceiveEvents.OnSessionRequestCreated,
+      (sessionRequest: SessionRequest) => {
+        this.OnSessionRequestCreated.next(this.mapStringToDate(sessionRequest));
+      }
+    );
+    this.connection.on(
+      SignallingReceiveEvents.OnSessionRequestDeleted,
+      (sessionRequestId: string) => {
+        this.OnSessionRequestDeleted.next(sessionRequestId);
+      }
+    );
+  }
+
+  private mapStringToDate(sessionRequest: SessionRequest): SessionRequest {
+    return Object.assign(sessionRequest, {
+      start: parseISO(sessionRequest.start as any),
+      end: parseISO(sessionRequest.end as any),
+    });
   }
 }

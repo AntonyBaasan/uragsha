@@ -11,6 +11,7 @@ export class CalendarService {
     actions: any /*EventAction[]*/
   ): CalendarEvent[] {
     return SessionRequests.map((s) => ({
+      id: s.id,
       start: s.start,
       end: s.end,
       title: s.title,
