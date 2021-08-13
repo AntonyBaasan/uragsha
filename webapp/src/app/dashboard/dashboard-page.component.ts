@@ -57,11 +57,11 @@ export class DashboardPageComponent implements OnInit, OnDestroy {
       );
   }
 
-
   ngOnDestroy(): void {
     this.subOnGetUserSessionRequests?.unsubscribe();
     this.subOnSessionRequestUpdated?.unsubscribe();
     this.subOnSessionRequestCreated?.unsubscribe();
+    this.subOnSessionRequestDeleted?.unsubscribe();
   }
 
   setUserName() {
