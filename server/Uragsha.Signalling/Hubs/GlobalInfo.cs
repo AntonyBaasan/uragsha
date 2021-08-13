@@ -4,8 +4,9 @@ namespace Uragsha.Signalling.Hubs
 {
     public static class GlobalInfo
     {
-        public static HashSet<string> ConnectedIds = new HashSet<string>();
-        public static Dictionary<string, List<string>> Rooms = new Dictionary<string, List<string>>();
+        public readonly static Dictionary<string, List<string>> UserConnections = new();
+        public readonly static HashSet<string> ConnectedIds = new();
+        public readonly static Dictionary<string, List<string>> Rooms = new();
     }
 
 }

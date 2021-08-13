@@ -1,8 +1,13 @@
-import { Injectable, OnDestroy, OnInit } from '@angular/core';
+import { Injectable, OnDestroy } from '@angular/core';
 import * as signalR from '@microsoft/signalr';
+import { parseISO } from 'date-fns';
 import { Subject } from 'rxjs';
 import { environment } from 'src/environments/environment';
-import { SignallingReceiveEvents, SignallingSendEvents } from './models';
+import {
+  SessionRequest,
+  SignallingReceiveEvents,
+  SignallingSendEvents,
+} from '../models';
 
 @Injectable({
   providedIn: 'root',
@@ -14,6 +19,8 @@ export class SingnallingService implements OnDestroy {
 
   public onTextMessage = new Subject<string>();
   public onWebRtcRequest = new Subject<any>();
+  public OnGetUserSessionRequests = new Subject<SessionRequest[]>();
+  public OnSessionRequestUpdated = new Subject<SessionRequest>();
 
   constructor() {
     this.connection = new signalR.HubConnectionBuilder()
@@ -63,6 +70,33 @@ export class SingnallingService implements OnDestroy {
     this.connection.invoke(SignallingSendEvents.RemoveFromRoom, room);
   }
 
+  setUserName(userId: string) {
+    if (!this.isConnected()) {
+      console.log('Connection is not established!');
+      return;
+    }
+    this.connection.invoke(SignallingSendEvents.SetMyName, userId);
+  }
+
+  GetUserSessionRequests(userId: string) {
+    if (!this.isConnected()) {
+      console.log('Connection is not established!');
+      return;
+    }
+    this.connection.invoke(SignallingSendEvents.GetUserSessionRequests, userId);
+  }
+
+  CreateSessionRequest(sessionRequest: SessionRequest) {
+    if (!this.isConnected()) {
+      console.log('Connection is not established!');
+      return;
+    }
+    this.connection.invoke(
+      SignallingSendEvents.CreateSessionRequest,
+      sessionRequest
+    );
+  }
+
   private isConnected(): boolean {
     return (
       this.connection &&
@@ -81,6 +115,22 @@ export class SingnallingService implements OnDestroy {
       SignallingReceiveEvents.OnWebRtcCallRequest,
       (request: any) => {
         this.onWebRtcRequest.next(request);
+      }
+    );
+    this.connection.on(
+      SignallingReceiveEvents.OnGetUserSessionRequests,
+      (sessionRequests: SessionRequest[]) => {
+        this.OnGetUserSessionRequests.next(sessionRequests.map(s=>{
+          s.start = parseISO(s.start as any);
+          s.end = parseISO(s.end as any);
+          return s;
+        }));
+      }
+    );
+    this.connection.on(
+      SignallingReceiveEvents.OnSessionRequestUpdated,
+      (sessionRequest: SessionRequest) => {
+        this.OnSessionRequestUpdated.next(sessionRequest);
       }
     );
   }

@@ -18,7 +18,7 @@ const routes: Routes = [
     RouterModule.forRoot(routes, {
       preloadingStrategy: PreloadAllModules,
       relativeLinkResolution: 'corrected',
-      enableTracing: true
+      // enableTracing: true
     }),
   ],
   exports: [RouterModule],

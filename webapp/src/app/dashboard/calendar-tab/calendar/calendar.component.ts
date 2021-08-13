@@ -18,7 +18,7 @@ import {
 import { isSameDay, isSameMonth } from 'date-fns';
 import { Subject } from 'rxjs';
 import { SingnallingService } from 'src/app/services/signalling.service';
-import { WorkoutSession } from '../../models';
+import { SessionRequest } from '../../../models';
 import { CalendarService } from './calendar.service';
 
 @Component({
@@ -28,7 +28,7 @@ import { CalendarService } from './calendar.service';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class CalendarComponent implements OnInit, OnDestroy {
-  @Input() set workoutSessions(sessions: WorkoutSession[]) {
+  @Input() set SessionRequests(sessions: SessionRequest[]) {
     this.events = this.calendarService.mapToCalendarEvent(
       sessions,
       this.actions

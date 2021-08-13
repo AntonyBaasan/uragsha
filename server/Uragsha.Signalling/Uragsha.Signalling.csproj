@@ -10,4 +10,10 @@
     <PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.10.14" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\Uragsha.Models\Uragsha.Models.csproj" />
+    <ProjectReference Include="..\Uragsha.Scheduler.Interfaces\Uragsha.Scheduler.Interfaces.csproj" />
+    <ProjectReference Include="..\Uragsha.Scheduler.Memory\Uragsha.Scheduler.Memory.csproj" />
+  </ItemGroup>
+
 </Project>

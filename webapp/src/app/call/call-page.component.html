@@ -2,5 +2,14 @@ sessionId: {{sessionId}}
 <br/>
 <input type="text" [(ngModel)]="text" placeholder="text"/>
 <button (click)="sendMessage()">SendMessage</button><br/>
-<input type="text" [(ngModel)]="room" placeholder="room"/>
+<input type="text" [(ngModel)]="sessionId" placeholder="room"/>
 <button (click)="joinToRoom()">Join To Room</button><br/>
+<br/>
+<button class="btn btn-danger" (click)="leave()">Leave</button><br/>
+
+<div>
+  <h2>Messages:</h2>
+  <div *ngFor="let msg of messages">
+    {{msg}}
+  </div>
+</div>

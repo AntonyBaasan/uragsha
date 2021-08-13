@@ -1,13 +1,15 @@
 <h3>Upcoming</h3>
-<div *ngIf="workoutSessions.length === 0">
+<div *ngIf="SessionRequests.length === 0">
   No sessions for planned. Please book it from Calendar
 </div>
-<div *ngIf="workoutSessions.length !== 0">
-  <div class="card mb-1" *ngFor="let session of workoutSessions; let i = index">
+<div *ngIf="SessionRequests.length !== 0">
+  <div class="card mb-1" *ngFor="let session of SessionRequests; let i = index">
     <div class="card-body">
       <div class="card-title">{{ session.title }}</div>
       <div class="card-text">
         {{ formatDayAndTime(session) }}
+        <br/>
+        {{ getStatusText(session) }}
       </div>
       <div class="btn btn-danger m-1" (click)="delete(session)">Delete</div>
       <div class="btn btn-primary m-1" (click)="join(session)">Join</div>

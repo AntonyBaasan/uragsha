@@ -4,6 +4,8 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Uragsha.Scheduler.Interfaces;
+using Uragsha.Scheduler.Memory;
 using Uragsha.Signalling.Hubs;
 
 namespace Uragsha.Signalling
@@ -22,6 +24,9 @@ namespace Uragsha.Signalling
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddSingleton<ISessionRequestService, MemorySessionRequestService>();
+            services.AddSingleton<ISessionService, MemorySessionService>();
+
             services.AddCors(options =>
             {
                 options.AddPolicy(name: AllowUragshaWebOrigins,

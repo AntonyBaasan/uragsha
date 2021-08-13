@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { v4 as uuidv4 } from 'uuid';
 import { Observable, of } from 'rxjs';
-import { WorkoutSession } from '../dashboard/models';
+import { SessionRequest, SessionRequestStatus } from '../models';
 import { COLORS } from '../shared/colors';
 import {
   startOfDay,
@@ -22,7 +22,7 @@ export class BackendService {
     return 'hello world';
   }
 
-  getWorkoutSessions(date: Date): Observable<WorkoutSession[]> {
+  createDemoSessionRequests(userId: string): Observable<SessionRequest[]> {
     let currentDate = new Date();
     if (currentDate.getMinutes() > 30) {
       currentDate = addHours(currentDate, 1);
@@ -37,6 +37,8 @@ export class BackendService {
         start: currentDate,
         end: addMinutes(currentDate, 30),
         title: 'A 30 min event',
+        userId: userId,
+        status: SessionRequestStatus.Waiting,
         color: COLORS.red,
       },
       {
@@ -44,6 +46,8 @@ export class BackendService {
         start: startOfDay(new Date()),
         end: addMinutes(new Date(), 30),
         title: 'An event with no end date',
+        userId: userId,
+        status: SessionRequestStatus.Waiting,
         color: COLORS.yellow,
       },
       {
@@ -51,6 +55,8 @@ export class BackendService {
         start: subDays(endOfMonth(new Date()), 3),
         end: addDays(endOfMonth(new Date()), 3),
         title: 'A long event that spans 2 months',
+        userId: userId,
+        status: SessionRequestStatus.Waiting,
         color: COLORS.blue,
       },
       {
@@ -58,6 +64,8 @@ export class BackendService {
         start: addHours(startOfDay(new Date()), 2),
         end: addHours(new Date(), 2),
         title: 'A draggable and resizable event',
+        userId: userId,
+        status: SessionRequestStatus.Waiting,
         color: COLORS.yellow,
       },
     ]);

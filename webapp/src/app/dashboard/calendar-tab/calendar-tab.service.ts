@@ -1,10 +1,10 @@
 import { Injectable } from '@angular/core';
-import { compareAsc, getDate, getMonth, getYear } from 'date-fns';
-import { WorkoutSession } from '../models';
+import { compareAsc, getDate, getMonth, getYear, parseISO } from 'date-fns';
+import { SessionRequest } from '../../models';
 
 @Injectable()
 export class CalendarTabService {
-  getSessionsOfDay(date: Date, sessions: WorkoutSession[]): WorkoutSession[] {
+  getSessionsOfDay(date: Date, sessions: SessionRequest[]): SessionRequest[] {
     const dateWithoutTime = new Date(
       getYear(date),
       getMonth(date),

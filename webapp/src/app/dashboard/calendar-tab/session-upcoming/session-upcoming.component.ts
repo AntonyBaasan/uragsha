@@ -1,6 +1,7 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { WorkoutSession } from '../../models';
+import { fi } from 'date-fns/locale';
+import { SessionRequest, SessionRequestStatus } from '../../../models';
 
 @Component({
   selector: 'app-session-upcoming',
@@ -8,7 +9,7 @@ import { WorkoutSession } from '../../models';
   styleUrls: ['./session-upcoming.component.scss'],
 })
 export class SessionUpcomingComponent implements OnInit {
-  @Input() workoutSessions: WorkoutSession[] = [];
+  @Input() SessionRequests: SessionRequest[] = [];
   @Output() sessionInserted = new EventEmitter<Date>();
   @Output() sessionRemoved = new EventEmitter<Date>();
 
@@ -16,18 +17,28 @@ export class SessionUpcomingComponent implements OnInit {
 
   ngOnInit(): void {}
 
-  formatDayAndTime(session: WorkoutSession) {
+  formatDayAndTime(session: SessionRequest) {
     // return format(session.start, 'HH:mm') +'-'+ format(session.end, 'HH:mm');
     return session.start;
   }
 
-  delete(session: WorkoutSession) {
+  delete(session: SessionRequest) {
     this.sessionRemoved.emit(session.start);
   }
 
   // TODO: this doesn't work. Had to use template routerLink
-  join(session: WorkoutSession) {
-    // this.router.navigate(['/call/'+session.id]);
-    this.router.navigateByUrl('/call/'+session.id);
+  join(session: SessionRequest) {
+    this.router.navigate(['/call', session.id]);
+    // this.router.navigateByUrl('/call/'+session.id);
+  }
+
+  getStatusText(session: SessionRequest) {
+    if (session.status === SessionRequestStatus.Waiting) {
+      return 'Waiting...';
+    }
+    if (session.status === SessionRequestStatus.Scheduled) {
+      return 'Scheduled...';
+    }
+    return 'Unknown';
   }
 }
