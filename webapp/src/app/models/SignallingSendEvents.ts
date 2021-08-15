@@ -10,4 +10,6 @@ export enum SignallingSendEvents {
   DeleteSessionRequest = 'DeleteSessionRequest',
   StartOrJoinSession = 'StartOrJoinSession',
   UpdateSessionDetail = 'UpdateSessionDetail',
+  SendIceCandidate = 'SendIceCandidate',
 }
+

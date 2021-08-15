@@ -8,4 +8,5 @@ export enum SignallingReceiveEvents {
   OnSessionRequestDeleted = 'OnSessionRequestDeleted',
   OnStartOrJoinSession = 'OnStartOrJoinSession',
   OnSessionDetailUpdated = 'OnSessionDetailUpdated',
+  OnReceiveIceCandidate = 'OnReceiveIceCandidate',
 }

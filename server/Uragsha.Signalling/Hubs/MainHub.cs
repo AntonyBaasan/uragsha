@@ -84,6 +84,13 @@ namespace Uragsha.Signalling.Hubs
             await Clients.GroupExcept(sessionDetail.SessionId, new List<string> { Context.ConnectionId }).OnSessionDetailUpdated(sessionDetail);
         }
 
+        public async Task SendIceCandidate(string userId, string sessionId, object iceCandidate)
+        {
+
+            await Clients.GroupExcept(sessionId, new List<string> { Context.ConnectionId }).OnReceiveIceCandidate(iceCandidate);
+        }
+
+
         public async Task SendMessage(string message)
         {
             await Clients.All.OnTextMessage(message);

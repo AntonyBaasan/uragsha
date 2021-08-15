@@ -18,6 +18,7 @@ namespace Uragsha.Signalling.Hubs
 
         Task OnStartOrJoinSession(object info);
         Task OnSessionDetailUpdated(SessionDetail sessionDetail);
+        Task OnReceiveIceCandidate(object iceCandidate);
         
     }
 }

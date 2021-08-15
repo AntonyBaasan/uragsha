@@ -30,6 +30,7 @@ export class SingnallingService implements OnDestroy {
     sessionDetail: SessionDetail;
   }>();
   public OnSessionDetailUpdated = new Subject<SessionDetail>();
+  public OnReceiveIceCandidate = new Subject<any>();
 
   constructor() {
     this.connection = new signalR.HubConnectionBuilder()
@@ -144,6 +145,19 @@ export class SingnallingService implements OnDestroy {
     );
   }
 
+  SendIceCandidate(userId: string, sessionId: string, iceCandidate: any): Promise<void> {
+    if (!this.isConnected()) {
+      console.log('Connection is not established!');
+      return Promise.resolve();
+    }
+    return this.connection.invoke(
+      SignallingSendEvents.SendIceCandidate,
+      userId,
+      sessionId,
+      iceCandidate
+    );
+  }
+
   private isConnected(): boolean {
     return (
       this.connection &&
@@ -205,6 +219,12 @@ export class SingnallingService implements OnDestroy {
       SignallingReceiveEvents.OnSessionDetailUpdated,
       (sessionDetail: SessionDetail) => {
         this.OnSessionDetailUpdated.next(sessionDetail);
+      }
+    );
+    this.connection.on(
+      SignallingReceiveEvents.OnReceiveIceCandidate,
+      (iceCandidate: any) => {
+        this.OnReceiveIceCandidate.next(iceCandidate);
       }
     );
   }

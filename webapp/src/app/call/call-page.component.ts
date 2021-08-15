@@ -29,6 +29,11 @@ export class CallPageComponent implements OnInit, OnDestroy {
   private subWebRtc: Subscription | undefined;
   messages: string[] = [];
 
+  private webRtcConfiguration = {
+    iceServers: [{ urls: 'stun:stun.l.google.com:19302' }],
+  };
+  private peerConnection = new RTCPeerConnection(this.webRtcConfiguration);
+
   constructor(
     private signallingService: SingnallingService,
     private webrtcService: WebrtcService,
@@ -57,8 +62,19 @@ export class CallPageComponent implements OnInit, OnDestroy {
       }) => this.handleStartOrJoinResult(result)
     );
     this.signallingService.OnSessionDetailUpdated.subscribe(
-      (sessionDetail: SessionDetail) => console.log(sessionDetail)
+      (sessionDetail: SessionDetail) =>
+        this.handleSessionDetailUpdated(sessionDetail)
     );
+    this.signallingService.OnReceiveIceCandidate.subscribe(
+      (iceCandidate: any) => this.handleReceiveIceCandidate(iceCandidate)
+    );
+
+    this.peerConnection.addEventListener('icecandidate', (event) => {
+      if (event.candidate) {
+        // signalingChannel.send({ 'new-ice-candidate': event.candidate });
+        this.signallingService.SendIceCandidate(this.userName, event.candidate);
+      }
+    });
   }
 
   setUserName() {
@@ -66,34 +82,66 @@ export class CallPageComponent implements OnInit, OnDestroy {
     this.signallingService.setUserName(this.store.getUserId());
   }
 
-  handleStartOrJoinResult(result: {
+  async handleStartOrJoinResult(result: {
     sessionId: string;
     status: 'created' | 'joined';
     sessionDetail: SessionDetail;
   }) {
-    this.sessionDetail = result.sessionDetail;
+    let updatedSessionDetail: SessionDetail;
     if (result.status === 'created') {
-      this.sessionDetail.offer = {
-        userId: this.userName,
-        content: 'offer data',
-      };
-      this.signallingService.UpdateSessionDetail(
-        this.userName,
-        this.sessionDetail
-      );
+      updatedSessionDetail = await this.createOffer(result.sessionDetail);
     } else {
-      if (!result.sessionDetail.offer) {
-        console.log('Weird! Why offer object is empty?');
-      } else {
-        this.sessionDetail.answer = {
-          userId: this.userName,
-          content: 'answer data',
-        };
-        this.signallingService.UpdateSessionDetail(
-          this.userName,
-          this.sessionDetail
-        );
-      }
+      updatedSessionDetail = await this.createAnswer(result.sessionDetail);
+    }
+    this.signallingService.UpdateSessionDetail(
+      this.userName,
+      updatedSessionDetail
+    );
+    this.sessionDetail = updatedSessionDetail;
+  }
+
+  private async createOffer(sessionDetail: SessionDetail) {
+    const offer = await this.peerConnection.createOffer();
+    await this.peerConnection.setLocalDescription(offer);
+
+    sessionDetail.offer = {
+      userId: this.userName,
+      content: offer,
+    };
+    return sessionDetail;
+  }
+
+  private async createAnswer(sessionDetail: SessionDetail) {
+    if (!sessionDetail.offer) {
+      console.log('Weird! Why offer object is empty?');
+    } else {
+      this.peerConnection.setRemoteDescription(
+        new RTCSessionDescription(sessionDetail.offer.content)
+      );
+      const answer = await this.peerConnection.createAnswer();
+      await this.peerConnection.setLocalDescription(answer);
+      sessionDetail.answer = {
+        userId: this.userName,
+        content: answer,
+      };
+    }
+    return sessionDetail;
+  }
+
+  private async handleSessionDetailUpdated(sessionDetail: SessionDetail) {
+    if (sessionDetail.answer) {
+      const remoteDesc = new RTCSessionDescription(
+        sessionDetail.answer.content
+      );
+      await this.peerConnection.setRemoteDescription(remoteDesc);
+    }
+  }
+
+  private async handleReceiveIceCandidate(iceCandidate: any) {
+    try {
+      await this.peerConnection.addIceCandidate(iceCandidate);
+    } catch (e) {
+      console.error('Error adding received ice candidate', e);
     }
   }
 
