@@ -6,11 +6,6 @@ import { SingnallingService } from 'src/app/services/signalling.service';
   templateUrl: './session.component.html',
   styleUrls: ['./session.component.scss'],
 })
-export class SessionComponent implements OnInit {
-
+export class SessionComponent {
   constructor() {}
-
-  ngOnInit(): void {
-  }
-
 }

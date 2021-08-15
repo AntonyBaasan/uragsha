@@ -83,7 +83,7 @@ export class CallPageComponent implements OnInit, OnDestroy {
       );
     } else {
       if (!result.sessionDetail.offer) {
-        console.log("Weird! Why offer object is empty?")
+        console.log('Weird! Why offer object is empty?');
       } else {
         this.sessionDetail.answer = {
           userId: this.userName,

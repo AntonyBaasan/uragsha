@@ -15,7 +15,7 @@ import { SessionRequest, SessionRequestStatus } from '../../../models';
   styleUrls: ['./session-tile.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class SessionTileComponent implements OnInit {
+export class SessionTileComponent {
   @Input() sessionRequest: SessionRequest;
 
   @Output() sessionEdit = new EventEmitter<Date>();
@@ -23,8 +23,6 @@ export class SessionTileComponent implements OnInit {
   @Output() sessionJoin = new EventEmitter<string>();
 
   constructor(private router: Router, private activatedRoute: ActivatedRoute) {}
-
-  ngOnInit(): void {}
 
   formatDayAndTime() {
     // return format(session.start, 'HH:mm') +'-'+ format(session.end, 'HH:mm');

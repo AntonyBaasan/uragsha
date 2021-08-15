@@ -24,9 +24,9 @@ import { CalendarService } from './calendar.service';
   selector: 'app-calendar',
   templateUrl: './calendar.component.html',
   styleUrls: ['./calendar.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class CalendarComponent implements OnInit, OnDestroy {
+export class CalendarComponent {
   @Input() set sessionRequests(sessions: SessionRequest[]) {
     this.events = this.calendarService.mapToCalendarEvent(
       sessions,
@@ -62,11 +62,10 @@ export class CalendarComponent implements OnInit, OnDestroy {
     },
   ];
 
-  constructor(private calendarService: CalendarService, private cdr: ChangeDetectorRef) {}
-
-  ngOnDestroy(): void {}
-
-  ngOnInit(): void {}
+  constructor(
+    private calendarService: CalendarService,
+    private cdr: ChangeDetectorRef
+  ) {}
 
   /**
    * Listen windows resize event. If small screen than show CalendarView.Day

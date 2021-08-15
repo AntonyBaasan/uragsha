@@ -3,7 +3,6 @@ import {
   Component,
   EventEmitter,
   Input,
-  OnInit,
   Output,
 } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -15,15 +14,13 @@ import { SessionRequest, SessionRequestStatus } from '../../../models';
   styleUrls: ['./session-upcoming.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class SessionUpcomingComponent implements OnInit {
+export class SessionUpcomingComponent {
   @Input() sessionRequests: SessionRequest[] = [];
 
   @Output() sessionInsert = new EventEmitter<Date>();
   @Output() sessionRemove = new EventEmitter<string>();
 
   constructor(private router: Router, private activatedRoute: ActivatedRoute) {}
-
-  ngOnInit(): void {}
 
   formatDayAndTime(session: SessionRequest) {
     // return format(session.start, 'HH:mm') +'-'+ format(session.end, 'HH:mm');

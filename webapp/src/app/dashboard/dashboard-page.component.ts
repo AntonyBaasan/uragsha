@@ -5,7 +5,7 @@ import {
   OnInit,
 } from '@angular/core';
 import { Subscription } from 'rxjs';
-import { Session, SessionRequest } from '../models';
+import { SessionRequest } from '../models';
 import { BackendService, SingnallingService, StoreService } from '../services';
 import { CalendarTabService } from './calendar-tab/calendar-tab.service';
 import { CalendarService } from './calendar-tab/calendar/calendar.service';
