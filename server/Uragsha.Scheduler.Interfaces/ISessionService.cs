@@ -6,6 +6,7 @@ namespace Uragsha.Scheduler.Interfaces
     {
         Session GetSession(string sessionId);
         Session CreateSession(string sessionRequestId);
+        Session GetSessionBySessionRequestId(string sessionRequestId);
         void RemoveSession(string sessionId);
     }
 }

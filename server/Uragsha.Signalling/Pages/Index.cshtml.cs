@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.SignalR;
 using Microsoft.Extensions.Logging;
 using System.Collections.Generic;
 using System.Linq;
+using Uragsha.Models.Scheduling;
 using Uragsha.Signalling.Hubs;
 
 namespace Uragsha.Signalling.Pages
@@ -12,7 +13,7 @@ namespace Uragsha.Signalling.Pages
         private readonly ILogger<IndexModel> _logger;
         private readonly IHubContext<MainHub> _hubContext;
         public List<string> connections = new List<string>();
-        public Dictionary<string, List<string>> rooms = new Dictionary<string, List<string>>();
+        public Dictionary<string, SessionDetail> rooms = new ();
 
         public IndexModel(ILogger<IndexModel> logger, IHubContext<MainHub> hubContext)
         {
@@ -23,7 +24,7 @@ namespace Uragsha.Signalling.Pages
         public void OnGet()
         {
             connections = GlobalInfo.ConnectedIds.ToList();
-            rooms = GlobalInfo.Rooms;
+            rooms = GlobalInfo.ActiveSession;
         }
     }
 }

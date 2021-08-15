@@ -25,7 +25,7 @@ export class CalendarTabComponent implements OnInit, OnDestroy {
     this.subSessionRequestsSubject =
       this.store.SessionRequestsSubject.subscribe((sessions) => {
         this.sessionRequests = [...sessions];
-        this.todaysWorkouts = this.calendarTabService.getSessionsOfDay(new Date(), [...sessions]);
+        this.todaysWorkouts = this.calendarTabService.getSessionsClosest([...sessions]);
         this.cdr.detectChanges();
       });
   }
@@ -38,10 +38,10 @@ export class CalendarTabComponent implements OnInit, OnDestroy {
 
   insertSession(date: any) {
     const request = this.calendarTabService.createSessionRequestByStartDate(date, this.store.getUserId());
-    this.signallingService.CreateSessionRequest(request);
+    this.signallingService.createSessionRequest(request);
   }
 
   removeSession(id: string) {
-    this.signallingService.DeleteSessionRequest(id);
+    this.signallingService.deleteSessionRequest(id);
   }
 }

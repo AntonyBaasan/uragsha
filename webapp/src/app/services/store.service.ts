@@ -1,15 +1,12 @@
 import { Injectable } from '@angular/core';
-import { v4 as uuidv4 } from 'uuid';
-import { addMinutes, isEqual, isThisISOWeek } from 'date-fns';
-import { BehaviorSubject, Subject } from 'rxjs';
-import { COLORS } from '../shared/colors';
-import { SessionRequest, Session, SessionRequestStatus } from '../models';
+import { BehaviorSubject } from 'rxjs';
+import { SessionRequest } from '../models';
 
 @Injectable({
   providedIn: 'root',
 })
 export class StoreService {
-  private userId: string = '';
+  private userId: string;
   private sessionRequests: SessionRequest[] = [];
 
   public SessionRequestsSubject = new BehaviorSubject<SessionRequest[]>([]);

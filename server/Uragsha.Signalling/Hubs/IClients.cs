@@ -15,6 +15,9 @@ namespace Uragsha.Signalling.Hubs
         Task OnSessionRequestCreated(SessionRequest sessionRequest);
         Task OnSessionRequestUpdated(SessionRequest sessionRequest);
         Task OnSessionRequestDeleted(string sessionRequestId);
+
+        Task OnStartOrJoinSession(object info);
+        Task OnSessionDetailUpdated(SessionDetail sessionDetail);
         
     }
 }

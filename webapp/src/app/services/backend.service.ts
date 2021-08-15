@@ -27,7 +27,7 @@ export class BackendService {
     if (currentDate.getMinutes() > 30) {
       currentDate = addHours(currentDate, 1);
       currentDate.setMinutes(0, 0);
-    }else{
+    } else {
       currentDate.setMinutes(30, 0);
     }
 
@@ -43,9 +43,9 @@ export class BackendService {
       },
       {
         id: uuidv4(),
-        start: startOfDay(new Date()),
-        end: addMinutes(new Date(), 30),
-        title: 'An event with no end date',
+        start: addHours(currentDate, 4),
+        end: addHours(currentDate, 5),
+        title: 'An 1 hour event',
         userId: userId,
         status: SessionRequestStatus.Waiting,
         color: COLORS.yellow,

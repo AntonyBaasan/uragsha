@@ -10,13 +10,15 @@ import { SessionComponent } from './session/session.component';
 import { FormsModule } from '@angular/forms';
 import { SessionUpcomingComponent } from './calendar-tab/session-upcoming/session-upcoming.component';
 import { CalendarTabComponent } from './calendar-tab/calendar-tab.component';
+import { SessionTileComponent } from './calendar-tab/session-tile/session-tile.component';
 
 const COMPONENTS = [
   DashboardPageComponent,
   CalendarComponent,
   SessionComponent,
   SessionUpcomingComponent,
-  CalendarTabComponent
+  CalendarTabComponent,
+  SessionTileComponent,
 ];
 @NgModule({
   declarations: [...COMPONENTS],

@@ -21,7 +21,7 @@ const SERVICES = [SessionService, CalendarService, CalendarTabService];
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class DashboardPageComponent implements OnInit, OnDestroy {
-  userName: string = '';
+  userName: string = 'ant1';
   private subOnGetUserSessionRequests: Subscription | undefined;
   private subOnSessionRequestUpdated: Subscription | undefined;
   private subOnSessionRequestCreated: Subscription | undefined;
@@ -34,7 +34,7 @@ export class DashboardPageComponent implements OnInit, OnDestroy {
   ) {}
 
   ngOnInit(): void {
-    this.userName = this.store.getUserId();
+    this.userName = this.store.getUserId() ?? this.userName;
     this.subOnGetUserSessionRequests =
       this.signallingService.OnGetUserSessionRequests.subscribe(
         (sessionRequests: SessionRequest[]) =>
@@ -73,12 +73,12 @@ export class DashboardPageComponent implements OnInit, OnDestroy {
     this.backendService
       .createDemoSessionRequests(this.store.getUserId())
       .subscribe((sessions) => {
-        sessions.forEach((s) => this.signallingService.CreateSessionRequest(s));
+        sessions.forEach((s) => this.signallingService.createSessionRequest(s));
       });
   }
 
   fetchAllSessionRequests() {
-    this.signallingService.GetUserSessionRequests(this.store.getUserId());
+    this.signallingService.getUserSessionRequests(this.store.getUserId());
   }
 
   private handleOnSessionRequestUpdate(sessionRequest: SessionRequest): void {

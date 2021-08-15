@@ -3,5 +3,5 @@ export interface Session {
   start: Date;
   end: Date;
   sessionRequestIds?: string[];
-  liveUSers?: { userId: string; webRtcData: any };
+  liveUsers?: { userId: string; webRtcData: any };
 }

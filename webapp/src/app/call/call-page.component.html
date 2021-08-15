@@ -1,15 +1,18 @@
-sessionId: {{sessionId}}
-<br/>
-<input type="text" [(ngModel)]="text" placeholder="text"/>
-<button (click)="sendMessage()">SendMessage</button><br/>
-<input type="text" [(ngModel)]="sessionId" placeholder="room"/>
-<button (click)="joinToRoom()">Join To Room</button><br/>
-<br/>
-<button class="btn btn-danger" (click)="leave()">Leave</button><br/>
+sessionRequestId: {{ sessionRequestId }} sessionDetail:
+{{ sessionDetail | json }}
+<br />
+<input type="text" [(ngModel)]="userName" placeholder="text" />
+<button (click)="setUserName()">SetUserName</button><br />
+<input type="text" [(ngModel)]="text" placeholder="text" />
+<button (click)="sendMessage()">SendMessage</button><br />
+<input type="text" [(ngModel)]="sessionRequestId" placeholder="room" />
+<button (click)="startCall()">Start Call</button><br />
+<br />
+<button class="btn btn-danger" (click)="leave()">Leave</button><br />
 
 <div>
   <h2>Messages:</h2>
   <div *ngFor="let msg of messages">
-    {{msg}}
+    {{ msg }}
   </div>
 </div>

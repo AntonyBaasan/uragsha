@@ -4,6 +4,7 @@ import { parseISO } from 'date-fns';
 import { Subject } from 'rxjs';
 import { environment } from 'src/environments/environment';
 import {
+  SessionDetail,
   SessionRequest,
   SignallingReceiveEvents,
   SignallingSendEvents,
@@ -23,6 +24,12 @@ export class SingnallingService implements OnDestroy {
   public OnSessionRequestUpdated = new Subject<SessionRequest>();
   public OnSessionRequestCreated = new Subject<SessionRequest>();
   public OnSessionRequestDeleted = new Subject<string>();
+  public OnStartOrJoinSession = new Subject<{
+    sessionId: string;
+    status: 'created' | 'joined';
+    sessionDetail: SessionDetail;
+  }>();
+  public OnSessionDetailUpdated = new Subject<SessionDetail>();
 
   constructor() {
     this.connection = new signalR.HubConnectionBuilder()
@@ -80,7 +87,7 @@ export class SingnallingService implements OnDestroy {
     return this.connection.invoke(SignallingSendEvents.SetMyName, userId);
   }
 
-  GetUserSessionRequests(userId: string): Promise<void> {
+  getUserSessionRequests(userId: string): Promise<void> {
     if (!this.isConnected()) {
       console.log('Connection is not established!');
       return Promise.resolve();
@@ -91,7 +98,7 @@ export class SingnallingService implements OnDestroy {
     );
   }
 
-  CreateSessionRequest(sessionRequest: SessionRequest): Promise<void> {
+  createSessionRequest(sessionRequest: SessionRequest): Promise<void> {
     if (!this.isConnected()) {
       console.log('Connection is not established!');
       return Promise.resolve();
@@ -102,7 +109,7 @@ export class SingnallingService implements OnDestroy {
     );
   }
 
-  DeleteSessionRequest(sessionRequestId: string): Promise<void> {
+  deleteSessionRequest(sessionRequestId: string): Promise<void> {
     if (!this.isConnected()) {
       console.log('Connection is not established!');
       return Promise.resolve();
@@ -110,6 +117,30 @@ export class SingnallingService implements OnDestroy {
     return this.connection.invoke(
       SignallingSendEvents.DeleteSessionRequest,
       sessionRequestId
+    );
+  }
+
+  startOrJoinSession(userId: string, sessionRequestId: string): Promise<void> {
+    if (!this.isConnected()) {
+      console.log('Connection is not established!');
+      return Promise.resolve();
+    }
+    return this.connection.invoke(
+      SignallingSendEvents.StartOrJoinSession,
+      userId,
+      sessionRequestId
+    );
+  }
+
+  UpdateSessionDetail(userId: string, sessionDetail: SessionDetail): Promise<void> {
+    if (!this.isConnected()) {
+      console.log('Connection is not established!');
+      return Promise.resolve();
+    }
+    return this.connection.invoke(
+      SignallingSendEvents.UpdateSessionDetail,
+      userId,
+      sessionDetail
     );
   }
 
@@ -157,6 +188,23 @@ export class SingnallingService implements OnDestroy {
       SignallingReceiveEvents.OnSessionRequestDeleted,
       (sessionRequestId: string) => {
         this.OnSessionRequestDeleted.next(sessionRequestId);
+      }
+    );
+
+    this.connection.on(
+      SignallingReceiveEvents.OnStartOrJoinSession,
+      (result: {
+        sessionId: string;
+        status: 'created' | 'joined';
+        sessionDetail: SessionDetail;
+      }) => {
+        this.OnStartOrJoinSession.next(result);
+      }
+    );
+    this.connection.on(
+      SignallingReceiveEvents.OnSessionDetailUpdated,
+      (sessionDetail: SessionDetail) => {
+        this.OnSessionDetailUpdated.next(sessionDetail);
       }
     );
   }

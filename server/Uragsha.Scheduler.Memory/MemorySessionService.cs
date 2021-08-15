@@ -11,6 +11,7 @@ namespace Uragsha.Scheduler.Memory
         private readonly List<Session> sessions = new();
 
         public ISessionRequestService SessionRequestService { get; }
+
         public MemorySessionService(ISessionRequestService sessionRequestService)
         {
             SessionRequestService = sessionRequestService;
@@ -29,11 +30,10 @@ namespace Uragsha.Scheduler.Memory
 
             var allRequests = SessionRequestService.GetSessionRequestsByDate(sessionRequest.Start, SessionRequestStatus.Waiting);
 
-            var nextAvailableRequest = allRequests.First(r => !r.Id.Equals(sessionRequestId));
+            var nextAvailableRequest = allRequests.FirstOrDefault(r => !r.Id.Equals(sessionRequestId));
 
             // no available request
             if (nextAvailableRequest == null) { return null; }
-
 
             var newSession = new Session
             {
@@ -59,5 +59,10 @@ namespace Uragsha.Scheduler.Memory
             sessions.RemoveAll(s => s.Id.Equals(sessionId));
         }
 
+        public Session GetSessionBySessionRequestId(string sessionRequestId)
+        {
+            var result = sessions.FirstOrDefault(session => session.SessionRequestIds.Contains(sessionRequestId));
+            return result;
+        }
     }
 }

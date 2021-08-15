@@ -1,4 +1,11 @@
-import { ChangeDetectionStrategy, Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  EventEmitter,
+  Input,
+  OnInit,
+  Output,
+} from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { SessionRequest, SessionRequestStatus } from '../../../models';
 
@@ -6,7 +13,7 @@ import { SessionRequest, SessionRequestStatus } from '../../../models';
   selector: 'app-session-upcoming',
   templateUrl: './session-upcoming.component.html',
   styleUrls: ['./session-upcoming.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class SessionUpcomingComponent implements OnInit {
   @Input() sessionRequests: SessionRequest[] = [];
@@ -23,6 +30,8 @@ export class SessionUpcomingComponent implements OnInit {
     return session.start;
   }
 
+  edit(session: SessionRequest) {}
+
   delete(session: SessionRequest) {
     this.sessionRemove.emit(session.id as string);
   }
@@ -31,13 +40,5 @@ export class SessionUpcomingComponent implements OnInit {
     this.router.navigate(['/call', session.id]);
   }
 
-  getStatusText(session: SessionRequest) {
-    if (session.status === SessionRequestStatus.Waiting) {
-      return 'Waiting...';
-    }
-    if (session.status === SessionRequestStatus.Scheduled) {
-      return 'Scheduled...';
-    }
-    return 'Unknown';
-  }
+  bookNew() {}
 }

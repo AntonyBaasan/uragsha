@@ -8,14 +8,11 @@
     <h1 class="display-4">Rooms count: @Model.rooms.Keys.Count</h1>
     @foreach (var roomName in Model.rooms.Keys)
     {
-        <div>---@roomName---</div>
-        @foreach (var connectionInRoom in Model.rooms[roomName]){
-            <div>@connectionInRoom;</div>
-        }
+        <div>@Model.rooms[roomName].SessionId</div>
     }
     <h1 class="display-4">Connections count: @Model.connections.Count</h1>
     @foreach (var connection in Model.connections)
     {
-    <div>@connection</div>
+        <div>@connection</div>
     }
 </div>

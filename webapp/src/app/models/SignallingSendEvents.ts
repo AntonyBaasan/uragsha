@@ -8,4 +8,6 @@ export enum SignallingSendEvents {
   GetUserSessionRequests = 'GetUserSessionRequests',
   CreateSession = 'CreateSession',
   DeleteSessionRequest = 'DeleteSessionRequest',
+  StartOrJoinSession = 'StartOrJoinSession',
+  UpdateSessionDetail = 'UpdateSessionDetail',
 }

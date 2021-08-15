@@ -4,6 +4,8 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.SignalR;
 using Uragsha.Models.Scheduling;
 using Uragsha.Scheduler.Interfaces;
+using System.Text.Json;
+using System.Dynamic;
 
 namespace Uragsha.Signalling.Hubs
 {
@@ -27,10 +29,6 @@ namespace Uragsha.Signalling.Hubs
         public override Task OnDisconnectedAsync(Exception? exception)
         {
             GlobalInfo.ConnectedIds.Remove(Context.ConnectionId);
-            foreach (var roomName in GlobalInfo.Rooms.Keys)
-            {
-                GlobalInfo.Rooms[roomName].RemoveAll(value => value.Equals(Context.ConnectionId));
-            }
             foreach (var userId in GlobalInfo.UserConnections.Keys)
             {
                 GlobalInfo.UserConnections[userId].RemoveAll(value => value.Equals(Context.ConnectionId));
@@ -56,23 +54,34 @@ namespace Uragsha.Signalling.Hubs
             }
         }
 
-        public async Task JoinToRoom(string roomName)
+        public async Task StartOrJoinSession(string userId, string sessionRequestId)
         {
-            if (!GlobalInfo.Rooms.ContainsKey(roomName))
+            var session = SessionService.GetSessionBySessionRequestId(sessionRequestId);
+            Console.WriteLine("Session.id: " + session.Id);
+
+            dynamic info = new ExpandoObject();
+            info.sessionId = session.Id;
+            if (!GlobalInfo.ActiveSession.ContainsKey(session.Id))
             {
-                GlobalInfo.Rooms.Add(roomName, new List<string>());
+                info.status = "created";
+                info.sessionDetail = new SessionDetail { SessionId = session.Id, Started = new DateTime() };
+                GlobalInfo.ActiveSession.Add(session.Id, info.sessionDetail);
             }
-            GlobalInfo.Rooms[roomName].Add(Context.ConnectionId);
-            await Groups.AddToGroupAsync(Context.ConnectionId, roomName);
+            else
+            {
+                info.status = "joined";
+                info.sessionDetail = GlobalInfo.ActiveSession[session.Id];
+            }
+
+            await Groups.AddToGroupAsync(Context.ConnectionId, session.Id);
+
+            await Clients.Client(Context.ConnectionId).OnStartOrJoinSession(info);
         }
 
-        public async Task RemoveFromRoom(string roomName)
+        public async Task UpdateSessionDetail(string userId, SessionDetail sessionDetail)
         {
-            if (GlobalInfo.Rooms.ContainsKey(roomName))
-            {
-                GlobalInfo.Rooms[roomName].RemoveAll(value => value.Equals(Context.ConnectionId));
-            }
-            await Groups.RemoveFromGroupAsync(Context.ConnectionId, roomName);
+            GlobalInfo.ActiveSession[sessionDetail.SessionId] = sessionDetail;
+            await Clients.GroupExcept(sessionDetail.SessionId, new List<string> { Context.ConnectionId }).OnSessionDetailUpdated(sessionDetail);
         }
 
         public async Task SendMessage(string message)
@@ -89,10 +98,18 @@ namespace Uragsha.Signalling.Hubs
 
         public async Task CreateSessionRequest(SessionRequest sessionRequest)
         {
+            if (string.IsNullOrEmpty(sessionRequest.UserId))
+            {
+                Console.WriteLine("UserId is empty!");
+                return;
+            }
             var request = SessionRequestService.CreateSessionRequest(sessionRequest);
 
             var connections = GetUserConnections(sessionRequest.UserId);
             await Clients.Clients(connections).OnSessionRequestCreated(request);
+
+            // TODO: this has to be done in the hosted service
+            await CreateSession(request);
         }
 
         public async Task DeleteSessionRequest(string sessionRequestId)
@@ -109,16 +126,19 @@ namespace Uragsha.Signalling.Hubs
         public async Task CreateSession(SessionRequest sessionRequest)
         {
             Session session = SessionService.CreateSession(sessionRequest.Id);
+            if (session == null)
+            {
+                Console.WriteLine("Could not match!");
+                return;
+            }
 
             foreach (var requestId in session.SessionRequestIds)
             {
-                SessionRequest request = SessionRequestService.GetSessionRequestById(requestId);
-
-                var connections = GetUserConnections(sessionRequest.UserId);
+                var request = SessionRequestService.GetSessionRequestById(requestId);
+                var connections = GetUserConnections(request.UserId);
                 await Clients.Clients(connections).OnSessionRequestUpdated(request);
             }
         }
-
 
         private List<string> GetUserConnections(string userId)
         {
