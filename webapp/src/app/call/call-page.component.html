@@ -1,5 +1,6 @@
-sessionRequestId: {{ sessionRequestId }} sessionDetail:
-{{ sessionDetail | json }}
+<br/> sessionRequestId: {{ sessionRequestId }} sessionDetail:
+<br/> {{ sessionDetail?.sessionId  }}
+<!-- <br/> {{ sessionDetail | json }} -->
 <br />
 <input type="text" [(ngModel)]="userName" placeholder="text" />
 <button (click)="setUserName()">SetUserName</button><br />
@@ -7,9 +8,12 @@ sessionRequestId: {{ sessionRequestId }} sessionDetail:
 <button (click)="sendMessage()">SendMessage</button><br />
 <input type="text" [(ngModel)]="sessionRequestId" placeholder="room" />
 <button (click)="startCall()">Start Call</button><br />
+<button (click)="endCall()">End Call</button><br />
 <br />
 <button class="btn btn-danger" (click)="leave()">Leave</button><br />
-
+<video id="device" controls autoplay #remote>
+</video>
+<video id="me" controls autoplay #me></video>
 <div>
   <h2>Messages:</h2>
   <div *ngFor="let msg of messages">

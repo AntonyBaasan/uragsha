@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { Session, SessionDetail } from '../models';
@@ -27,12 +27,18 @@ export class CallPageComponent implements OnInit, OnDestroy {
   private subParam: Subscription | undefined;
   private subTextMessage: Subscription | undefined;
   private subWebRtc: Subscription | undefined;
+  private subOnStartOrJoinSession: Subscription | undefined;
+  private subOnSessionDetailUpdated: Subscription | undefined;
+  private subOnReceiveIceCandidate: Subscription | undefined;
   messages: string[] = [];
 
   private webRtcConfiguration = {
     iceServers: [{ urls: 'stun:stun.l.google.com:19302' }],
   };
   private peerConnection = new RTCPeerConnection(this.webRtcConfiguration);
+  @ViewChild('me') me: any;
+  @ViewChild('remote') remote: any;
+  private localStream: MediaStream;
 
   constructor(
     private signallingService: SingnallingService,
@@ -54,32 +60,54 @@ export class CallPageComponent implements OnInit, OnDestroy {
       (request) => console.log(request)
     );
 
-    this.signallingService.OnStartOrJoinSession.subscribe(
+    this.subOnStartOrJoinSession = this.signallingService.OnStartOrJoinSession.subscribe(
       (result: {
         sessionId: string;
         status: 'created' | 'joined';
         sessionDetail: SessionDetail;
       }) => this.handleStartOrJoinResult(result)
     );
-    this.signallingService.OnSessionDetailUpdated.subscribe(
+    this.subOnSessionDetailUpdated = this.signallingService.OnSessionDetailUpdated.subscribe(
       (sessionDetail: SessionDetail) =>
         this.handleSessionDetailUpdated(sessionDetail)
     );
-    this.signallingService.OnReceiveIceCandidate.subscribe(
+    this.subOnReceiveIceCandidate = this.signallingService.OnReceiveIceCandidate.subscribe(
       (iceCandidate: any) => this.handleReceiveIceCandidate(iceCandidate)
     );
 
     this.peerConnection.addEventListener('icecandidate', (event) => {
       if (event.candidate) {
         // signalingChannel.send({ 'new-ice-candidate': event.candidate });
-        this.signallingService.SendIceCandidate(this.userName, event.candidate);
+        if (this.sessionDetail) {
+          this.signallingService.SendIceCandidate(
+            this.userName,
+            this.sessionDetail.sessionId,
+            event.candidate
+          );
+        }
       }
     });
+    // remote stream was added, so start listen
+    this.peerConnection.addEventListener('track', (event) => {
+      this.remote.nativeElement.srcObject = event.streams[0];
+    });
+
+    this.showMe();
   }
 
   setUserName() {
     this.store.setUserId(this.userName);
     this.signallingService.setUserName(this.store.getUserId());
+  }
+
+  showMe() {
+    navigator.mediaDevices
+      .getUserMedia({ audio: true, video: true })
+      .then((stream) => (this.me.nativeElement.srcObject = stream))
+      .then((stream) => {
+        (this.peerConnection as any).addStream(stream);
+        this.localStream = stream;
+      });
   }
 
   async handleStartOrJoinResult(result: {
@@ -146,9 +174,14 @@ export class CallPageComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy() {
+    this.peerConnection.close();
     this.subParam?.unsubscribe();
     this.subTextMessage?.unsubscribe();
     this.subWebRtc?.unsubscribe();
+    this.subOnStartOrJoinSession?.unsubscribe();
+    this.subOnSessionDetailUpdated?.unsubscribe();
+    this.subOnReceiveIceCandidate?.unsubscribe();
+
   }
 
   sendMessage() {
@@ -157,10 +190,18 @@ export class CallPageComponent implements OnInit, OnDestroy {
 
   startCall() {
     if (this.sessionRequestId) {
-      // this.signallingService.joinToRoom(this.sessionRequestId);
       this.signallingService.startOrJoinSession(
         this.store.getUserId(),
         this.sessionRequestId
+      );
+    }
+  }
+
+  endCall() {
+    if (this.sessionDetail) {
+      this.signallingService.leaveSession(
+        this.store.getUserId(),
+        this.sessionDetail.sessionId
       );
     }
   }

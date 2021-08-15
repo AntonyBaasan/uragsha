@@ -133,6 +133,18 @@ export class SingnallingService implements OnDestroy {
     );
   }
 
+  leaveSession(userId: string, sessionId: string){
+    if (!this.isConnected()) {
+      console.log('Connection is not established!');
+      return Promise.resolve();
+    }
+    return this.connection.invoke(
+      SignallingSendEvents.LeaveSession,
+      userId,
+      sessionId
+    );
+  }
+
   UpdateSessionDetail(userId: string, sessionDetail: SessionDetail): Promise<void> {
     if (!this.isConnected()) {
       console.log('Connection is not established!');
@@ -227,6 +239,13 @@ export class SingnallingService implements OnDestroy {
         this.OnReceiveIceCandidate.next(iceCandidate);
       }
     );
+    this.connection.on(
+      SignallingReceiveEvents.OnUserLeaveSession,
+      (iceCandidate: any) => {
+        this.OnReceiveIceCandidate.next(iceCandidate);
+      }
+    );
+
   }
 
   private mapStringToDate(sessionRequest: SessionRequest): SessionRequest {
