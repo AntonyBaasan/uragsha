@@ -175,6 +175,7 @@ export class CallPageComponent implements OnInit, OnDestroy {
 
   ngOnDestroy() {
     this.peerConnection.close();
+
     this.subParam?.unsubscribe();
     this.subTextMessage?.unsubscribe();
     this.subWebRtc?.unsubscribe();

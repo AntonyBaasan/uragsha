@@ -78,6 +78,10 @@ namespace Uragsha.Signalling.Hubs
             await Clients.Client(Context.ConnectionId).OnStartOrJoinSession(info);
         }
 
+        public async Task LeaveSession(string userId, string sessionId)
+        {
+        }
+
         public async Task UpdateSessionDetail(string userId, SessionDetail sessionDetail)
         {
             GlobalInfo.ActiveSession[sessionDetail.SessionId] = sessionDetail;
