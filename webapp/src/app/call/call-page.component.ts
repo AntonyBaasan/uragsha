@@ -1,7 +1,7 @@
 import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Subscription } from 'rxjs';
-import { Session, SessionDetail } from '../models';
+import { SessionDetail } from '../models';
 import { StoreService } from '../services';
 import { SingnallingService } from '../services/signalling.service';
 import { WebrtcService } from '../services/webrtc.service';
@@ -49,7 +49,7 @@ export class CallPageComponent implements OnInit, OnDestroy {
   ) {}
 
   ngOnInit(): void {
-    this.userName = this.store.getUserId() ?? this.userName;
+    this.userName = this.store.getUser()?.uid ?? this.userName;
     this.subParam = this.route.params.subscribe((params) => {
       this.sessionRequestId = params['sessionRequestId'];
     });
@@ -96,8 +96,8 @@ export class CallPageComponent implements OnInit, OnDestroy {
   }
 
   setUserName() {
-    this.store.setUserId(this.userName);
-    this.signallingService.setUserName(this.store.getUserId());
+    // this.store.setUserId(this.userName);
+    this.signallingService.setUserName(this.store.getUser()?.uid);
   }
 
   showMe() {
@@ -192,7 +192,7 @@ export class CallPageComponent implements OnInit, OnDestroy {
   startCall() {
     if (this.sessionRequestId) {
       this.signallingService.startOrJoinSession(
-        this.store.getUserId(),
+        this.store.getUser().uid,
         this.sessionRequestId
       );
     }
@@ -201,7 +201,7 @@ export class CallPageComponent implements OnInit, OnDestroy {
   endCall() {
     if (this.sessionDetail) {
       this.signallingService.leaveSession(
-        this.store.getUserId(),
+        this.store.getUser().uid,
         this.sessionDetail.sessionId
       );
     }

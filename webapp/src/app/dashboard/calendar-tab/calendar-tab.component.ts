@@ -37,7 +37,7 @@ export class CalendarTabComponent implements OnInit, OnDestroy {
   }
 
   insertSession(date: any) {
-    const request = this.calendarTabService.createSessionRequestByStartDate(date, this.store.getUserId());
+    const request = this.calendarTabService.createSessionRequestByStartDate(date, this.store.getUser().uid);
     this.signallingService.createSessionRequest(request);
   }
 

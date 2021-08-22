@@ -1,5 +1,6 @@
 import {
   ChangeDetectionStrategy,
+  ChangeDetectorRef,
   Component,
   OnDestroy,
   OnInit,
@@ -7,6 +8,7 @@ import {
 import { Subscription } from 'rxjs';
 import { SessionRequest } from '../models';
 import { BackendService, SingnallingService, StoreService } from '../services';
+import { AuthService } from '../services/auth.service';
 import { CalendarTabService } from './calendar-tab/calendar-tab.service';
 import { CalendarService } from './calendar-tab/calendar/calendar.service';
 import { SessionService } from './session/session.service';
@@ -30,11 +32,21 @@ export class DashboardPageComponent implements OnInit, OnDestroy {
   constructor(
     private backendService: BackendService,
     private signallingService: SingnallingService,
-    private store: StoreService
-  ) {}
+    private store: StoreService,
+    public auth: AuthService,
+    private cdr: ChangeDetectorRef
+  ) { }
 
   ngOnInit(): void {
-    this.userName = this.store.getUserId() ?? this.userName;
+    this.auth.onLogin.subscribe(user => {
+      this.store.setUser(user);
+      this.userName = this.store.getUser().uid;
+      this.cdr.detectChanges();
+    });
+    this.auth.onLogout.subscribe(() => {
+        this.userName = '';
+      this.cdr.detectChanges();
+    });
     this.subOnGetUserSessionRequests =
       this.signallingService.OnGetUserSessionRequests.subscribe(
         (sessionRequests: SessionRequest[]) =>
@@ -65,20 +77,19 @@ export class DashboardPageComponent implements OnInit, OnDestroy {
   }
 
   setUserName() {
-    this.store.setUserId(this.userName);
-    this.signallingService.setUserName(this.store.getUserId());
+    this.signallingService.setUserName(this.store.getUser().uid);
   }
 
   saveDemoData() {
     this.backendService
-      .createDemoSessionRequests(this.store.getUserId())
+      .createDemoSessionRequests(this.store.getUser().uid)
       .subscribe((sessions) => {
         sessions.forEach((s) => this.signallingService.createSessionRequest(s));
       });
   }
 
   fetchAllSessionRequests() {
-    this.signallingService.getUserSessionRequests(this.store.getUserId());
+    this.signallingService.getUserSessionRequests(this.store.getUser().uid);
   }
 
   private handleOnSessionRequestUpdate(sessionRequest: SessionRequest): void {

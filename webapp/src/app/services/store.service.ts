@@ -1,21 +1,21 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
-import { SessionRequest } from '../models';
+import { SessionRequest, User } from '../models';
 
 @Injectable({
   providedIn: 'root',
 })
 export class StoreService {
-  private userId: string;
+  private user: User;
   private sessionRequests: SessionRequest[] = [];
 
   public SessionRequestsSubject = new BehaviorSubject<SessionRequest[]>([]);
 
-  setUserId(userId: string) {
-    this.userId = userId;
+  setUser(user: User) {
+    this.user = user;
   }
-  getUserId() {
-    return this.userId;
+  getUser(): User {
+    return this.user;
   }
 
   setSessionRequests(SessionRequests: SessionRequest[]) {
