@@ -19,6 +19,10 @@ export class StoreService {
     return this.userSubject.getValue();
   }
 
+  isLoggedIn(): boolean {
+    return this.getUser() != null;
+  }
+
   setSessionRequests(SessionRequests: SessionRequest[]) {
     this.sessionRequests = SessionRequests;
     this.SessionRequestsSubject.next(this.sessionRequests);
