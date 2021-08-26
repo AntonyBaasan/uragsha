@@ -85,10 +85,7 @@ export class DashboardPageComponent implements OnInit, OnDestroy {
   }
 
   fetchAllSessionRequests() {
-    const user = this.store.getUser();
-    if (user) {
-      this.signallingService.getUserSessionRequests(user.uid);
-    }
+    this.signallingService.getUserSessionRequests();
   }
 
   private handleOnSessionRequestUpdate(sessionRequest: SessionRequest): void {

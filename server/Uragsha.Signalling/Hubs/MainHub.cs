@@ -8,9 +8,12 @@ using System.Dynamic;
 using Uragsha.Signalling.Dto;
 using Security.Interfaces.Services;
 using Security.Interfaces.Identity;
+using Microsoft.AspNetCore.Authorization;
+using System.Linq;
 
 namespace Uragsha.Signalling.Hubs
 {
+    [Authorize]
     public class MainHub : Hub<IClients>
     {
         public ISessionRequestService SessionRequestService { get; }
@@ -32,6 +35,7 @@ namespace Uragsha.Signalling.Hubs
             return base.OnConnectedAsync();
         }
 
+        [AllowAnonymous]
         public override Task OnDisconnectedAsync(Exception? exception)
         {
             GlobalInfo.ConnectedIds.Remove(Context.ConnectionId);
@@ -46,30 +50,32 @@ namespace Uragsha.Signalling.Hubs
         // Debug: until bring auth
         public void Login(UserDto userDto)
         {
+            string uid = this.GetCurrentUid();
+
             var user = new User
             {
-                Uid = userDto.Uid,
+                Uid = uid,
                 DisplayName = userDto.DisplayName,
                 Email = userDto.Email,
                 PhotoUrl = userDto.PhotoUrl,
                 Plan = UserPlan.Free,
                 Status = UserStatus.Active,
             };
-            if (UserService.UserExist(userDto.Uid))
+            if (UserService.UserExist(uid))
             {
                 UserService.AddUser(user);
             }
 
-            if (!GlobalInfo.UserConnections.ContainsKey(user.Uid))
+            if (!GlobalInfo.UserConnections.ContainsKey(uid))
             {
-                GlobalInfo.UserConnections.Add(user.Uid, new List<string>());
-                GlobalInfo.UserConnections[user.Uid].Add(Context.ConnectionId);
+                GlobalInfo.UserConnections.Add(uid, new List<string>());
+                GlobalInfo.UserConnections[uid].Add(Context.ConnectionId);
             }
             else
             {
-                if (!GlobalInfo.UserConnections[user.Uid].Contains(Context.ConnectionId))
+                if (!GlobalInfo.UserConnections[uid].Contains(Context.ConnectionId))
                 {
-                    GlobalInfo.UserConnections[user.Uid].Add(Context.ConnectionId);
+                    GlobalInfo.UserConnections[uid].Add(Context.ConnectionId);
                 }
             }
         }
@@ -114,8 +120,9 @@ namespace Uragsha.Signalling.Hubs
             await Clients.All.OnTextMessage(message);
         }
 
-        public async Task GetUserSessionRequests(string userId)
+        public async Task GetUserSessionRequests()
         {
+            string userId = GetCurrentUid();
             var found = SessionRequestService.FindSessionRequest(userId);
             var connections = GetUserConnections(userId);
             await Clients.Clients(connections).OnGetUserSessionRequests(found);
@@ -169,6 +176,12 @@ namespace Uragsha.Signalling.Hubs
         {
             GlobalInfo.UserConnections.TryGetValue(userId, out List<string> connections);
             return connections ?? new List<string>();
+        }
+
+        private string GetCurrentUid()
+        {
+            var uid = this.Context.User.Claims.FirstOrDefault(c => c.Type == "user_id");
+            return uid != null ? uid.Value : "";
         }
     }
 

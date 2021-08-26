@@ -42,26 +42,26 @@ export class SingnallingService implements OnDestroy {
       .then(() => console.log('SignalR connection started'));
   }
 
-  connect(user:User) {
+  connect(user: User) {
     this.connection = new signalR.HubConnectionBuilder()
-    .withUrl(this.signallingUrl + '/' + this.hubName)
-    .withAutomaticReconnect()
-    .build();
+      .withUrl(this.signallingUrl + '/' + this.hubName, { accessTokenFactory: () => user.token })
+      .withAutomaticReconnect()
+      .build();
 
     this.subscribeToEvents();
     console.log('SingnallingService created!');
     return this.connection
-    .start()
-    .then(() => {
-      this.login(user);
-      console.log('SignalR connection started');
-    })
-    .catch((err) => {
-      return console.error(err.toString());
-    });
+      .start()
+      .then(() => {
+        this.login(user);
+        console.log('SignalR connection started');
+      })
+      .catch((err) => {
+        return console.error(err.toString());
+      });
   }
 
-  disconnect(user:User) {
+  disconnect(user: User) {
     return this.connection.stop();
   }
 
@@ -98,14 +98,13 @@ export class SingnallingService implements OnDestroy {
     return this.connection.invoke(SignallingSendEvents.Login, user);
   }
 
-  getUserSessionRequests(userId: string): Promise<void> {
+  getUserSessionRequests(): Promise<void> {
     if (!this.isConnected()) {
       console.log('Connection is not established!');
       return Promise.resolve();
     }
     return this.connection.invoke(
-      SignallingSendEvents.GetUserSessionRequests,
-      userId
+      SignallingSendEvents.GetUserSessionRequests
     );
   }
 
