@@ -4,8 +4,10 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.SignalR;
 using Uragsha.Models.Scheduling;
 using Uragsha.Scheduler.Interfaces;
-using System.Text.Json;
 using System.Dynamic;
+using Uragsha.Signalling.Dto;
+using Security.Interfaces.Services;
+using Security.Interfaces.Identity;
 
 namespace Uragsha.Signalling.Hubs
 {
@@ -13,11 +15,15 @@ namespace Uragsha.Signalling.Hubs
     {
         public ISessionRequestService SessionRequestService { get; }
         public ISessionService SessionService { get; }
+        public IUserService UserService { get; }
 
-        public MainHub(ISessionRequestService sessionRequestService, ISessionService sessionService)
+        public MainHub(ISessionRequestService sessionRequestService,
+            ISessionService sessionService,
+            IUserService userService)
         {
             SessionRequestService = sessionRequestService;
             SessionService = sessionService;
+            UserService = userService;
         }
 
         public override Task OnConnectedAsync()
@@ -38,18 +44,32 @@ namespace Uragsha.Signalling.Hubs
         }
 
         // Debug: until bring auth
-        public void SetMyName(string userName)
+        public void Login(UserDto userDto)
         {
-            if (!GlobalInfo.UserConnections.ContainsKey(userName))
+            var user = new User
             {
-                GlobalInfo.UserConnections.Add(userName, new List<string>());
-                GlobalInfo.UserConnections[userName].Add(Context.ConnectionId);
+                Uid = userDto.Uid,
+                DisplayName = userDto.DisplayName,
+                Email = userDto.Email,
+                PhotoUrl = userDto.PhotoUrl,
+                Plan = UserPlan.Free,
+                Status = UserStatus.Active,
+            };
+            if (UserService.UserExist(userDto.Uid))
+            {
+                UserService.AddUser(user);
+            }
+
+            if (!GlobalInfo.UserConnections.ContainsKey(user.Uid))
+            {
+                GlobalInfo.UserConnections.Add(user.Uid, new List<string>());
+                GlobalInfo.UserConnections[user.Uid].Add(Context.ConnectionId);
             }
             else
             {
-                if (!GlobalInfo.UserConnections[userName].Contains(Context.ConnectionId))
+                if (!GlobalInfo.UserConnections[user.Uid].Contains(Context.ConnectionId))
                 {
-                    GlobalInfo.UserConnections[userName].Add(Context.ConnectionId);
+                    GlobalInfo.UserConnections[user.Uid].Add(Context.ConnectionId);
                 }
             }
         }
@@ -78,10 +98,6 @@ namespace Uragsha.Signalling.Hubs
             await Clients.Client(Context.ConnectionId).OnStartOrJoinSession(info);
         }
 
-        public async Task LeaveSession(string userId, string sessionId)
-        {
-        }
-
         public async Task UpdateSessionDetail(string userId, SessionDetail sessionDetail)
         {
             GlobalInfo.ActiveSession[sessionDetail.SessionId] = sessionDetail;
@@ -90,10 +106,8 @@ namespace Uragsha.Signalling.Hubs
 
         public async Task SendIceCandidate(string userId, string sessionId, object iceCandidate)
         {
-
             await Clients.GroupExcept(sessionId, new List<string> { Context.ConnectionId }).OnReceiveIceCandidate(iceCandidate);
         }
-
 
         public async Task SendMessage(string message)
         {
@@ -111,7 +125,7 @@ namespace Uragsha.Signalling.Hubs
         {
             if (string.IsNullOrEmpty(sessionRequest.UserId))
             {
-                Console.WriteLine("UserId is empty!");
+                Console.WriteLine("Uid can't be empty!");
                 return;
             }
             var request = SessionRequestService.CreateSessionRequest(sessionRequest);
@@ -139,7 +153,7 @@ namespace Uragsha.Signalling.Hubs
             Session session = SessionService.CreateSession(sessionRequest.Id);
             if (session == null)
             {
-                Console.WriteLine("Could not match!");
+                Console.WriteLine("Can't find matching partner!");
                 return;
             }
 

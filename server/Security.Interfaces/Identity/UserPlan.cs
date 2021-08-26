@@ -1,4 +1,4 @@
-﻿namespace Uragsha.Models.Identity
+﻿namespace Security.Interfaces.Identity
 {
     public enum UserPlan
     {

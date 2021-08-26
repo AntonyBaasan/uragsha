@@ -6,16 +6,17 @@ import { SessionRequest, User } from '../models';
   providedIn: 'root',
 })
 export class StoreService {
-  private user: User;
   private sessionRequests: SessionRequest[] = [];
 
   public SessionRequestsSubject = new BehaviorSubject<SessionRequest[]>([]);
+  public userSubject = new BehaviorSubject<User | null>(null);
 
-  setUser(user: User) {
-    this.user = user;
+  setUser(user: User | null) {
+    this.userSubject.next(user);
   }
-  getUser(): User {
-    return this.user;
+
+  getUser() {
+    return this.userSubject.getValue();
   }
 
   setSessionRequests(SessionRequests: SessionRequest[]) {

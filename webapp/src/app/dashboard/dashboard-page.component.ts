@@ -1,3 +1,4 @@
+import { ThrowStmt } from '@angular/compiler';
 import {
   ChangeDetectionStrategy,
   ChangeDetectorRef,
@@ -33,20 +34,15 @@ export class DashboardPageComponent implements OnInit, OnDestroy {
     private backendService: BackendService,
     private signallingService: SingnallingService,
     private store: StoreService,
-    public auth: AuthService,
     private cdr: ChangeDetectorRef
   ) { }
 
   ngOnInit(): void {
-    this.auth.onLogin.subscribe(user => {
-      this.store.setUser(user);
-      this.userName = this.store.getUser().uid;
+    this.store.userSubject.subscribe(user => {
+      this.userName = user && user.uid ? user.uid : '';
       this.cdr.detectChanges();
-    });
-    this.auth.onLogout.subscribe(() => {
-        this.userName = '';
-      this.cdr.detectChanges();
-    });
+    })
+
     this.subOnGetUserSessionRequests =
       this.signallingService.OnGetUserSessionRequests.subscribe(
         (sessionRequests: SessionRequest[]) =>
@@ -76,20 +72,23 @@ export class DashboardPageComponent implements OnInit, OnDestroy {
     this.subOnSessionRequestDeleted?.unsubscribe();
   }
 
-  setUserName() {
-    this.signallingService.setUserName(this.store.getUser().uid);
-  }
-
   saveDemoData() {
-    this.backendService
-      .createDemoSessionRequests(this.store.getUser().uid)
-      .subscribe((sessions) => {
-        sessions.forEach((s) => this.signallingService.createSessionRequest(s));
-      });
+    // reads demo data from backend service and save into DB using signalling
+    const user = this.store.getUser();
+    if (user) {
+      this.backendService
+        .createDemoSessionRequests(user.uid)
+        .subscribe((sessions) => {
+          sessions.forEach((s) => this.signallingService.createSessionRequest(s));
+        });
+    }
   }
 
   fetchAllSessionRequests() {
-    this.signallingService.getUserSessionRequests(this.store.getUser().uid);
+    const user = this.store.getUser();
+    if (user) {
+      this.signallingService.getUserSessionRequests(user.uid);
+    }
   }
 
   private handleOnSessionRequestUpdate(sessionRequest: SessionRequest): void {

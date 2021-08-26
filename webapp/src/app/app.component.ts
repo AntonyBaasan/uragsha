@@ -1,36 +1,47 @@
-import { Component } from '@angular/core';
-import { AngularFireAuth } from '@angular/fire/compat/auth';
-import { GoogleAuthProvider, FacebookAuthProvider } from "firebase/auth";
+import { ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
+import { Subscription } from 'rxjs';
+import { AuthService, SingnallingService, StoreService } from './services';
 
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.scss']
 })
-export class AppComponent {
+export class AppComponent implements OnInit, OnDestroy {
   title = 'webapp';
-  constructor(public auth: AngularFireAuth) {
-  }
-  loginGoogle() {
-    var provider = new GoogleAuthProvider();
-    // force to select an account, otherwise will login automatically
-    provider.setCustomParameters({
-      prompt: "select_account"
+
+  private subLogin: Subscription;
+  private subLogout: Subscription;
+
+  constructor(
+    public signallingService: SingnallingService,
+    public authService: AuthService,
+    private store: StoreService,
+    private cdr: ChangeDetectorRef
+  ) {
+    this.subLogin = this.authService.onLogin.subscribe(user => {
+      this.signallingService.connect(user).then(() => {
+        this.store.setUser(user);
+        this.cdr.detectChanges();
+      });
     });
-    this.login(provider);
+    this.subLogout = this.authService.onLogout.subscribe(() => {
+      const user = this.store.getUser();
+      if (user) {
+        this.signallingService.disconnect(user).then(() => {
+          this.store.setUser(null);
+          this.cdr.detectChanges();
+        });
+      }
+    });
   }
-  loginFacebook() {
-    var provider = new FacebookAuthProvider();
-    // force reauthenticate, otherwise will login automatically
-    provider.setCustomParameters({ auth_type: 'reauthenticate' })
-    provider.addScope('public_profile,email');
-    this.login(provider);
+
+  ngOnDestroy(): void {
+    this.subLogin?.unsubscribe();
+    this.subLogout?.unsubscribe();
   }
-  private login(provider: any) {
-    // const auth = getAuth();
-    this.auth.signInWithPopup(provider);
-  }
-  logout() {
-    this.auth.signOut();
+
+  ngOnInit(): void {
+    console.log('');
   }
 }

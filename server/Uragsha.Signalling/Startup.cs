@@ -4,6 +4,8 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Security.Interfaces.Services;
+using Security.Memory;
 using Uragsha.Scheduler.Interfaces;
 using Uragsha.Scheduler.Memory;
 using Uragsha.Signalling.Hubs;
@@ -26,6 +28,7 @@ namespace Uragsha.Signalling
         {
             services.AddSingleton<ISessionRequestService, MemorySessionRequestService>();
             services.AddSingleton<ISessionService, MemorySessionService>();
+            services.AddSingleton<IUserService, MemoryUserService>();
 
             services.AddCors(options =>
             {

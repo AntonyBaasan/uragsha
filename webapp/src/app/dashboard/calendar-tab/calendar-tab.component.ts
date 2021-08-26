@@ -19,7 +19,7 @@ export class CalendarTabComponent implements OnInit, OnDestroy {
     private store: StoreService,
     private calendarTabService: CalendarTabService,
     private signallingService: SingnallingService,
-    private cdr: ChangeDetectorRef) {}
+    private cdr: ChangeDetectorRef) { }
 
   ngOnInit(): void {
     this.subSessionRequestsSubject =
@@ -37,8 +37,11 @@ export class CalendarTabComponent implements OnInit, OnDestroy {
   }
 
   insertSession(date: any) {
-    const request = this.calendarTabService.createSessionRequestByStartDate(date, this.store.getUser().uid);
-    this.signallingService.createSessionRequest(request);
+    const user = this.store.getUser();
+    if (user) {
+      const request = this.calendarTabService.createSessionRequestByStartDate(date, user.uid);
+      this.signallingService.createSessionRequest(request);
+    }
   }
 
   removeSession(id: string) {

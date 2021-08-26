@@ -46,7 +46,7 @@ export class CallPageComponent implements OnInit, OnDestroy {
     private store: StoreService,
     private route: ActivatedRoute,
     private router: Router
-  ) {}
+  ) { }
 
   ngOnInit(): void {
     this.userName = this.store.getUser()?.uid ?? this.userName;
@@ -93,11 +93,6 @@ export class CallPageComponent implements OnInit, OnDestroy {
     });
 
     this.showMe();
-  }
-
-  setUserName() {
-    // this.store.setUserId(this.userName);
-    this.signallingService.setUserName(this.store.getUser()?.uid);
   }
 
   showMe() {
@@ -190,18 +185,20 @@ export class CallPageComponent implements OnInit, OnDestroy {
   }
 
   startCall() {
-    if (this.sessionRequestId) {
+    const user = this.store.getUser();
+    if (this.sessionRequestId && user) {
       this.signallingService.startOrJoinSession(
-        this.store.getUser().uid,
+        user.uid,
         this.sessionRequestId
       );
     }
   }
 
   endCall() {
-    if (this.sessionDetail) {
+    const user = this.store.getUser();
+    if (this.sessionDetail && user) {
       this.signallingService.leaveSession(
-        this.store.getUser().uid,
+        user.uid,
         this.sessionDetail.sessionId
       );
     }

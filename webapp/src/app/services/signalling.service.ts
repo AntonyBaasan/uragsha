@@ -8,6 +8,7 @@ import {
   SessionRequest,
   SignallingReceiveEvents,
   SignallingSendEvents,
+  User,
 } from '../models';
 
 @Injectable({
@@ -33,27 +34,35 @@ export class SingnallingService implements OnDestroy {
   public OnReceiveIceCandidate = new Subject<any>();
 
   constructor() {
-    this.connection = new signalR.HubConnectionBuilder()
-      .withUrl(this.signallingUrl + '/' + this.hubName)
-      .withAutomaticReconnect()
-      .build();
-
-    this.subscribeToEvents();
-    this.connection
-      .start()
-      .then(() => {
-        console.log('SignalR connection started');
-      })
-      .catch((err) => {
-        return console.error(err.toString());
-      });
-    console.log('SingnallingService created!');
   }
 
   ngOnDestroy(): void {
     this.connection
       .stop()
       .then(() => console.log('SignalR connection started'));
+  }
+
+  connect(user:User) {
+    this.connection = new signalR.HubConnectionBuilder()
+    .withUrl(this.signallingUrl + '/' + this.hubName)
+    .withAutomaticReconnect()
+    .build();
+
+    this.subscribeToEvents();
+    console.log('SingnallingService created!');
+    return this.connection
+    .start()
+    .then(() => {
+      this.login(user);
+      console.log('SignalR connection started');
+    })
+    .catch((err) => {
+      return console.error(err.toString());
+    });
+  }
+
+  disconnect(user:User) {
+    return this.connection.stop();
   }
 
   sendMessage(text: string) {
@@ -80,12 +89,13 @@ export class SingnallingService implements OnDestroy {
     this.connection.invoke(SignallingSendEvents.RemoveFromRoom, room);
   }
 
-  setUserName(userId: string): Promise<void> {
+  // called always after connection
+  private login(user: User): Promise<void> {
     if (!this.isConnected()) {
       console.log('Connection is not established!');
       return Promise.resolve();
     }
-    return this.connection.invoke(SignallingSendEvents.SetMyName, userId);
+    return this.connection.invoke(SignallingSendEvents.Login, user);
   }
 
   getUserSessionRequests(userId: string): Promise<void> {
@@ -133,7 +143,7 @@ export class SingnallingService implements OnDestroy {
     );
   }
 
-  leaveSession(userId: string, sessionId: string){
+  leaveSession(userId: string, sessionId: string) {
     if (!this.isConnected()) {
       console.log('Connection is not established!');
       return Promise.resolve();

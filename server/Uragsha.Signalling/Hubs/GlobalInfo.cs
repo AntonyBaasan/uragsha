@@ -3,6 +3,7 @@ using Uragsha.Models.Scheduling;
 
 namespace Uragsha.Signalling.Hubs
 {
+    // will move as service
     public static class GlobalInfo
     {
         public readonly static Dictionary<string, List<string>> UserConnections = new();
