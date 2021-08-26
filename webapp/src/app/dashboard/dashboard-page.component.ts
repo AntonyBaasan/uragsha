@@ -1,4 +1,3 @@
-import { ThrowStmt } from '@angular/compiler';
 import {
   ChangeDetectionStrategy,
   ChangeDetectorRef,
@@ -9,7 +8,6 @@ import {
 import { Subscription } from 'rxjs';
 import { SessionRequest } from '../models';
 import { BackendService, SingnallingService, StoreService } from '../services';
-import { AuthService } from '../services/auth.service';
 import { CalendarTabService } from './calendar-tab/calendar-tab.service';
 import { CalendarService } from './calendar-tab/calendar/calendar.service';
 import { SessionService } from './session/session.service';
