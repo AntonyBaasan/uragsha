@@ -14,7 +14,8 @@ namespace Uragsha.Signalling.Hubs
         Task OnSessionRequestUpdated(SessionRequest sessionRequest);
         Task OnSessionRequestDeleted(string sessionRequestId);
 
-        Task OnStartVideoCall(object info);
+        Task OnOfferVideoCall(object info);
+        Task OnAnswerVideoCall(object info);
         Task OnSessionDetailUpdated(SessionDetail sessionDetail);
         Task OnReceiveIceCandidate(object iceCandidate);
 

@@ -11,13 +11,13 @@ export class VideoComponent implements OnInit {
   @ViewChild('remote') remote: ElementRef;
 
   @Input()
-  public set localStreams(tracks: MediaStreamTrack[]) {
-    this.setStream(this.me, tracks);
+  public set localStream(stream: MediaStream | null) {
+    this.setStream(this.me, stream);
   }
 
   @Input()
-  public set remoteStreams(tracks: MediaStreamTrack[]) {
-    this.setStream(this.remote, tracks);
+  public set remoteStream(stream: MediaStream | null) {
+    this.setStream(this.remote, stream);
   }
 
   constructor() { }
@@ -26,13 +26,9 @@ export class VideoComponent implements OnInit {
     console.log('');
   }
 
-  private setStream(element: ElementRef, tracks: MediaStreamTrack[]) {
+  private setStream(element: ElementRef, stream: MediaStream | null) {
     if (!element) { return; }
-    if (tracks && tracks.length > 0) {
-      element.nativeElement.srcObject = new MediaStream(tracks);
-    } else {
-      element.nativeElement.srcObject = null;
-    }
+    element.nativeElement.srcObject = stream;
   }
 
 }

@@ -80,7 +80,7 @@ namespace Uragsha.Signalling.Hubs
             }
         }
 
-        public async Task StartVideoCall(string sessionRequestId)
+        public async Task OfferVideoCall(string sessionRequestId, object offer)
         {
             var session = SessionService.GetSessionBySessionRequestId(sessionRequestId);
 
@@ -97,20 +97,7 @@ namespace Uragsha.Signalling.Hubs
 
             GlobalInfo.ActiveSession.TryGetValue(session.Id, out SessionDetail sessionDetail);
 
-            dynamic info = new ExpandoObject();
-            info.sessionId = session.Id;
-
-            if (sessionDetail.Offer == null)
-            {
-                info.status = "offer";
-                info.sessionDetail = sessionDetail;
-            }
-            else if (sessionDetail.Answer == null)
-            {
-                info.status = "answer";
-                info.sessionDetail = GlobalInfo.ActiveSession[session.Id];
-            }
-            else
+            if (sessionDetail.Offer != null)
             {
                 Console.WriteLine("Video call is already started. Can't start video call!");
                 return;
@@ -118,7 +105,45 @@ namespace Uragsha.Signalling.Hubs
 
             await Groups.AddToGroupAsync(Context.ConnectionId, session.Id);
 
-            await Clients.GroupExcept(session.Id, new List<string> { Context.ConnectionId }).OnStartVideoCall(info);
+            sessionDetail.Offer = new WebRtcMessage { UserId = GetCurrentUid(), Content = offer };
+            dynamic info = new ExpandoObject();
+            info.sessionId = session.Id;
+            info.sessionDetail = sessionDetail;
+
+            await Clients.GroupExcept(session.Id, new List<string> { Context.ConnectionId }).OnOfferVideoCall(info);
+        }
+
+        public async Task AnswerVideoCall(string sessionRequestId, object answer)
+        {
+            var session = SessionService.GetSessionBySessionRequestId(sessionRequestId);
+
+            if (session == null)
+            {
+                Console.WriteLine("Session doesn't exist!");
+                return;
+            }
+            if (!GlobalInfo.ActiveSession.ContainsKey(session.Id))
+            {
+                Console.WriteLine("Session detail haven't created. Something went wrong!");
+                return;
+            }
+
+            GlobalInfo.ActiveSession.TryGetValue(session.Id, out SessionDetail sessionDetail);
+
+            if (sessionDetail.Answer != null)
+            {
+                Console.WriteLine("Video call is already started. Can't start!");
+                return;
+            }
+
+            await Groups.AddToGroupAsync(Context.ConnectionId, session.Id);
+
+            sessionDetail.Answer = new WebRtcMessage { UserId = GetCurrentUid(), Content = answer };
+            dynamic info = new ExpandoObject();
+            info.sessionId = session.Id;
+            info.sessionDetail = sessionDetail;
+
+            await Clients.GroupExcept(session.Id, new List<string> { Context.ConnectionId }).OnAnswerVideoCall(info);
         }
 
         public async Task JoinSession(string sessionRequestId)

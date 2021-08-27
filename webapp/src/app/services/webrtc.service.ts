@@ -1,31 +1,33 @@
 import { Injectable, OnDestroy } from '@angular/core';
 import { BehaviorSubject, Subject } from 'rxjs';
 import { environment } from 'src/environments/environment';
-import { SingnallingService } from './signalling.service';
 
 @Injectable()
 export class WebrtcService implements OnDestroy {
-  public remoteStreamAddedSubject = new BehaviorSubject<MediaStream | null>(null);
+  public remoteStreamAddedSubject = new Subject<MediaStream>();
   public iceCandidateEventSubject = new Subject<RTCIceCandidate>();
 
   private webRtcConfiguration = {
     iceServers: environment.iceServers,
   };
 
-  private peerConnection = new RTCPeerConnection(this.webRtcConfiguration);
+  private peerConnection: RTCPeerConnection;
 
   init() {
+    this.peerConnection = new RTCPeerConnection(this.webRtcConfiguration);
     this.peerConnection.addEventListener('icecandidate', (event) => {
       if (event.candidate) {
         this.iceCandidateEventSubject.next(event.candidate);
-
       }
     });
 
     // remote stream was added, so start listen
-    this.peerConnection.addEventListener('track', (event) => {
-      this.remoteStreamAddedSubject.next(event.streams[0])
-    });
+    // this.peerConnection.addEventListener('track', (event) => {
+    //   this.remoteStreamAddedSubject.next(event?.streams[0])
+    // });
+    this.peerConnection.ontrack = (event) => {
+      this.remoteStreamAddedSubject.next(event?.streams[0])
+    };
   }
 
   ngOnDestroy(): void {
@@ -54,9 +56,11 @@ export class WebrtcService implements OnDestroy {
     await this.peerConnection.setRemoteDescription(new RTCSessionDescription(answer));
   }
 
-  addTrack(tracks: MediaStreamTrack[]) {
+  addStream(stream: MediaStream) {
+    // in this case tracks var passes as placeholder, on the other side we only use stream
+    var tracks = stream.getTracks();
     for (const track of tracks) {
-      this.peerConnection.addTrack(track);
+      this.peerConnection.addTrack(track, stream);
     }
   }
 

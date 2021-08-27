@@ -22,10 +22,11 @@ export class CallPageComponent implements OnInit, OnDestroy {
   otherUserInfo: any = {};
   userId: string = '';
 
-  localStreams: MediaStreamTrack[] = [];
-  remoteStreams: MediaStreamTrack[] = [];
+  localStream: MediaStream | null;
+  remoteStream: MediaStream | null;
 
-  private subOnStartVideoCall: Subscription | undefined;
+  private subOnOfferVideoCall: Subscription | undefined;
+  private subOnAnswerVideoCall: Subscription | undefined;
   private subOnSessionDetailUpdated: Subscription | undefined;
   private subOnReceiveIceCandidate: Subscription | undefined;
   private subOnUserJoinSession: Subscription | undefined;
@@ -54,12 +55,17 @@ export class CallPageComponent implements OnInit, OnDestroy {
   };
 
   private listenSignallingServiceEvents() {
-    this.subOnStartVideoCall = this.signallingService.OnStartVideoCall.subscribe(
+    this.subOnOfferVideoCall = this.signallingService.OnOfferVideoCall.subscribe(
       (result: {
         sessionId: string;
-        status: 'offer' | 'answer';
         sessionDetail: SessionDetail;
-      }) => this.handleStartOrJoinResult(result)
+      }) => this.handleOfferVideoCall(result)
+    );
+    this.subOnAnswerVideoCall = this.signallingService.OnAnswerVideoCall.subscribe(
+      (result: {
+        sessionId: string;
+        sessionDetail: SessionDetail;
+      }) => this.handleAnswerVideoCall(result)
     );
     this.subOnSessionDetailUpdated = this.signallingService.OnSessionDetailUpdated.subscribe(
       (sessionDetail: SessionDetail) => this.handleSessionDetailUpdated(sessionDetail)
@@ -76,16 +82,19 @@ export class CallPageComponent implements OnInit, OnDestroy {
   }
 
   private listenWebRtcServiceEvents() {
-    this.webRtcService.remoteStreamAddedSubject.subscribe(remoteStream => {
-      // this.remote.nativeElement.srcObject = event.streams[0];
-      console.log(remoteStream);
+    this.webRtcService.init();
+    this.webRtcService.remoteStreamAddedSubject.subscribe(stream => {
+      this.remoteStream = stream;
+      // console.log(remoteStream);
     });
     this.webRtcService.iceCandidateEventSubject.subscribe(candidate => {
       // signalingChannel.send({ 'new-ice-candidate': event.candidate });
-      this.signallingService.SendIceCandidate(
-        this.sessionDetail.sessionId,
-        candidate
-      );
+      if (this.sessionDetail) {
+        this.signallingService.SendIceCandidate(
+          this.sessionDetail.sessionId,
+          candidate
+        );
+      }
     });
   }
 
@@ -93,65 +102,52 @@ export class CallPageComponent implements OnInit, OnDestroy {
     navigator.mediaDevices
       .getUserMedia({ audio: true, video: true })
       .then((stream) => {
-        this.localStreams = stream.getTracks();
-        this.webRtcService.addTrack(this.localStreams);
+        this.localStream = stream;
+        this.webRtcService.addStream(this.localStream);
       });
   }
 
   stop() {
-    this.localStreams = [];
-    this.remoteStreams = [];
+    this.localStream = null;
+    this.remoteStream = null;
     this.webRtcService.ngOnDestroy();
   }
 
-  async handleStartOrJoinResult(result: {
+  // came from a user who started video
+  // so this user has to create answer
+  async handleOfferVideoCall(result: {
     sessionId: string;
-    status: 'offer' | 'answer';
     sessionDetail: SessionDetail;
   }) {
-    let updatedSessionDetail: SessionDetail;
-    if (result.status === 'offer') {
-      updatedSessionDetail = await this.createOffer(result.sessionDetail);
-    } else {
-      updatedSessionDetail = await this.createAnswer(result.sessionDetail);
+
+    if (!result.sessionDetail.offer) {
+      console.error('Weird! Why offer object is empty?');
+      return;
     }
 
-    this.signallingService.UpdateSessionDetail(
-      this.userId,
-      updatedSessionDetail
+    this.sessionDetail = result.sessionDetail;
+    this.webRtcService.setRemoteDescription(this.sessionDetail.offer.content);
+    const answer = await this.webRtcService.createAnswer();
+
+    this.signallingService.answerVideoCall(
+      this.sessionRequestId,
+      answer
     );
 
-    this.sessionDetail = updatedSessionDetail;
   }
-
-  private async createOffer(sessionDetail: SessionDetail) {
-    const offer = await this.webRtcService.createOffer();
-
-    sessionDetail.offer = {
-      userId: this.userId,
-      content: offer,
-    };
-    return sessionDetail;
-  }
-
-  private async createAnswer(sessionDetail: SessionDetail) {
-    if (!sessionDetail.offer) {
-      console.log('Weird! Why offer object is empty?');
-    } else {
-      this.webRtcService.setRemoteDescription(sessionDetail.offer.content);
-      const answer = await this.webRtcService.createAnswer();
-      sessionDetail.answer = {
-        userId: this.userId,
-        content: answer,
-      };
+  // came from a user who started video
+  // so this user has to create answer
+  async handleAnswerVideoCall(result: {
+    sessionId: string;
+    sessionDetail: SessionDetail;
+  }) {
+    this.sessionDetail = result.sessionDetail;
+    if (this.sessionDetail.answer) {
+      this.webRtcService.setRemoteDescription(this.sessionDetail.answer.content);
     }
-    return sessionDetail;
   }
 
   private async handleSessionDetailUpdated(sessionDetail: SessionDetail) {
-    if (sessionDetail.answer) {
-      this.webRtcService.setRemoteDescription(sessionDetail.answer.content);
-    }
     this.sessionDetail = sessionDetail;
   }
 
@@ -183,18 +179,25 @@ export class CallPageComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy() {
-    this.subOnStartVideoCall?.unsubscribe();
+    this.subOnOfferVideoCall?.unsubscribe();
+    this.subOnAnswerVideoCall?.unsubscribe();
     this.subOnSessionDetailUpdated?.unsubscribe();
     this.subOnReceiveIceCandidate?.unsubscribe();
     this.subOnUserJoinSession?.unsubscribe();
     this.subOnUserLeaveSession?.unsubscribe();
   }
 
-  startCall() {
+  async startCall() {
+    if (this.sessionDetail?.offer) {
+      console.log('Video call is already in progress!')
+      return;
+    }
     const user = this.store.getUser();
     if (this.sessionRequestId && user) {
-      this.signallingService.startVideoCall(
-        this.sessionRequestId
+      const offer = await this.webRtcService.createOffer();
+      this.signallingService.offerVideoCall(
+        this.sessionRequestId,
+        offer
       );
     }
   }

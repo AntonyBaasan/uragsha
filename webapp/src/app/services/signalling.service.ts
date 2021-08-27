@@ -25,9 +25,12 @@ export class SingnallingService implements OnDestroy {
   public OnSessionRequestUpdated = new Subject<SessionRequest>();
   public OnSessionRequestCreated = new Subject<SessionRequest>();
   public OnSessionRequestDeleted = new Subject<string>();
-  public OnStartVideoCall = new Subject<{
+  public OnOfferVideoCall = new Subject<{
     sessionId: string;
-    status: 'offer' | 'answer';
+    sessionDetail: SessionDetail;
+  }>();
+  public OnAnswerVideoCall = new Subject<{
+    sessionId: string;
     sessionDetail: SessionDetail;
   }>();
   public OnSessionDetailUpdated = new Subject<SessionDetail>();
@@ -128,14 +131,27 @@ export class SingnallingService implements OnDestroy {
     );
   }
 
-  startVideoCall(sessionRequestId: string): Promise<void> {
+  offerVideoCall(sessionRequestId: string, offer: RTCSessionDescriptionInit): Promise<void> {
     if (!this.isConnected()) {
       console.log('Connection is not established!');
       return Promise.resolve();
     }
     return this.connection.invoke(
-      SignallingSendEvents.StartVideoCall,
-      sessionRequestId
+      SignallingSendEvents.OfferVideoCall,
+      sessionRequestId,
+      offer
+    );
+  }
+
+  answerVideoCall(sessionRequestId: string, answer: RTCSessionDescriptionInit): Promise<void> {
+    if (!this.isConnected()) {
+      console.log('Connection is not established!');
+      return Promise.resolve();
+    }
+    return this.connection.invoke(
+      SignallingSendEvents.AnswerVideoCall,
+      sessionRequestId,
+      answer
     );
   }
 
@@ -227,13 +243,21 @@ export class SingnallingService implements OnDestroy {
     );
 
     this.connection.on(
-      SignallingReceiveEvents.OnStartVideoCall,
+      SignallingReceiveEvents.OnOfferVideoCall,
       (result: {
         sessionId: string;
-        status: 'offer' | 'answer';
         sessionDetail: SessionDetail;
       }) => {
-        this.OnStartVideoCall.next(result);
+        this.OnOfferVideoCall.next(result);
+      }
+    );
+    this.connection.on(
+      SignallingReceiveEvents.OnAnswerVideoCall,
+      (result: {
+        sessionId: string;
+        sessionDetail: SessionDetail;
+      }) => {
+        this.OnAnswerVideoCall.next(result);
       }
     );
     this.connection.on(

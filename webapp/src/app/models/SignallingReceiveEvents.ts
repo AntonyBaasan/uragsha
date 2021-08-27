@@ -6,7 +6,8 @@ export enum SignallingReceiveEvents {
   OnSessionRequestCreated = 'OnSessionRequestCreated',
   OnSessionRequestDeleted = 'OnSessionRequestDeleted',
 
-  OnStartVideoCall = 'OnStartVideoCall',
+  OnOfferVideoCall = 'OnOfferVideoCall',
+  OnAnswerVideoCall = 'OnAnswerVideoCall',
   OnSessionDetailUpdated = 'OnSessionDetailUpdated',
   OnReceiveIceCandidate = 'OnReceiveIceCandidate',
 
