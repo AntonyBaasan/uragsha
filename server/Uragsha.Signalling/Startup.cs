@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -16,6 +17,7 @@ namespace Uragsha.Signalling
 {
     public class Startup
     {
+        readonly string HubName = "/mainHub";
         readonly string AllowUragshaWebOrigins = "_allowUragshaWebOrigins";
 
         public Startup(IConfiguration configuration)
@@ -57,6 +59,23 @@ namespace Uragsha.Signalling
                        ValidAudience = "uragsha-webapp",
                        ValidateLifetime = true
                    };
+                   options.Events = new JwtBearerEvents
+                   {
+                       OnMessageReceived = context =>
+                       {
+                           var accessToken = context.Request.Query["access_token"];
+
+                           // If the request is for our hub...
+                           var path = context.HttpContext.Request.Path;
+                           if (!string.IsNullOrEmpty(accessToken) &&
+                               (path.StartsWithSegments(HubName)))
+                           {
+                               // Read the token out of the query string
+                               context.Token = accessToken;
+                           }
+                           return Task.CompletedTask;
+                       }
+                   };
                });
 
             services.AddRazorPages();
@@ -81,7 +100,7 @@ namespace Uragsha.Signalling
             app.UseStaticFiles();
 
             app.UseCors(AllowUragshaWebOrigins);
-            
+
             app.UseAuthentication();
 
             app.UseRouting();
@@ -91,7 +110,7 @@ namespace Uragsha.Signalling
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapRazorPages();
-                endpoints.MapHub<MainHub>("/mainHub");
+                endpoints.MapHub<MainHub>(HubName);
             });
         }
     }

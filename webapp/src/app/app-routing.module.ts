@@ -1,5 +1,6 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes, PreloadAllModules } from '@angular/router';
+import { AngularFireAuthGuard } from '@angular/fire/compat/auth-guard';
 
 const routes: Routes = [
   {
@@ -10,6 +11,7 @@ const routes: Routes = [
   {
     path: 'call',
     loadChildren: () => import('./call/call.module').then((m) => m.CallModule),
+    // canActivate: [AngularFireAuthGuard]
   },
 ];
 
@@ -23,4 +25,4 @@ const routes: Routes = [
   ],
   exports: [RouterModule],
 })
-export class AppRoutingModule {}
+export class AppRoutingModule { }
