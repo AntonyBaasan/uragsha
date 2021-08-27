@@ -22,7 +22,8 @@ const SERVICES = [SessionService, CalendarService, CalendarTabService];
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class DashboardPageComponent implements OnInit, OnDestroy {
-  userName: string = 'ant1';
+  userName: string = '';
+
   private subOnGetUserSessionRequests: Subscription | undefined;
   private subOnSessionRequestUpdated: Subscription | undefined;
   private subOnSessionRequestCreated: Subscription | undefined;
@@ -39,7 +40,7 @@ export class DashboardPageComponent implements OnInit, OnDestroy {
     this.store.userSubject.subscribe(user => {
       this.userName = user && user.uid ? user.uid : '';
       this.cdr.detectChanges();
-    })
+    });
 
     this.subOnGetUserSessionRequests =
       this.signallingService.OnGetUserSessionRequests.subscribe(

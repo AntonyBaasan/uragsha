@@ -1,21 +1,19 @@
-<br/> sessionRequestId: {{ sessionRequestId }} sessionDetail:
-<br/> {{ sessionDetail?.sessionId  }}
-<!-- <br/> {{ sessionDetail | json }} -->
 <br />
-<input type="text" [(ngModel)]="userName" placeholder="text" />
-<input type="text" [(ngModel)]="text" placeholder="text" />
-<button (click)="sendMessage()">SendMessage</button><br />
-<input type="text" [(ngModel)]="sessionRequestId" placeholder="room" />
-<button (click)="startCall()">Start Call</button><br />
-<button (click)="endCall()">End Call</button><br />
+sessionRequestId: {{ sessionRequestId }}<br />
+sessionId:{{ sessionDetail?.sessionId }}<br />
+userId:{{ userId }}<br />
+
 <br />
-<button class="btn btn-danger" (click)="leave()">Leave</button><br />
-<video id="device" controls autoplay #remote>
-</video>
-<video id="me" controls autoplay #me></video>
-<div>
-  <h2>Messages:</h2>
-  <div *ngFor="let msg of messages">
-    {{ msg }}
-  </div>
-</div>
+
+<button (click)="startCall()">Start Call</button>
+<button (click)="endCall()">End Call</button>
+<button (click)="showMe()">Show Me</button>
+<button (click)="stop()">Stop</button><br />
+<br />
+
+<app-video
+  [localStreams]="localStreams"
+  [remoteStreams]="remoteStreams"
+></app-video>
+
+<app-messages></app-messages>

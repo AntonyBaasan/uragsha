@@ -6,6 +6,10 @@ export const environment = {
   production: false,
   webApiUrl: 'https://localhost:6001',
   signallingUrl: 'https://localhost:7001',
+  iceServers: [
+    { urls: 'stun:stun.services.mozilla.com' },
+    { urls: 'stun:stun.l.google.com:19302' },
+  ],
   firebaseConfig: {
     apiKey: 'AIzaSyCn5u0EXpCp9u8WmxAPre4gyM-nGzqq7tY',
     authDomain: 'uragsha-webapp.firebaseapp.com',

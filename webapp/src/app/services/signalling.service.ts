@@ -25,20 +25,18 @@ export class SingnallingService implements OnDestroy {
   public OnSessionRequestUpdated = new Subject<SessionRequest>();
   public OnSessionRequestCreated = new Subject<SessionRequest>();
   public OnSessionRequestDeleted = new Subject<string>();
-  public OnStartOrJoinSession = new Subject<{
+  public OnStartVideoCall = new Subject<{
     sessionId: string;
-    status: 'created' | 'joined';
+    status: 'offer' | 'answer';
     sessionDetail: SessionDetail;
   }>();
   public OnSessionDetailUpdated = new Subject<SessionDetail>();
   public OnReceiveIceCandidate = new Subject<any>();
-
-  constructor() {
-  }
+  public OnUserLeaveSesson = new Subject<string>();
+  public OnUserJoinSession = new Subject<string>();
 
   ngOnDestroy(): void {
-    this.connection
-      .stop()
+    this.connection?.stop()
       .then(() => console.log('SignalR connection started'));
   }
 
@@ -130,26 +128,35 @@ export class SingnallingService implements OnDestroy {
     );
   }
 
-  startOrJoinSession(userId: string, sessionRequestId: string): Promise<void> {
+  startVideoCall(sessionRequestId: string): Promise<void> {
     if (!this.isConnected()) {
       console.log('Connection is not established!');
       return Promise.resolve();
     }
     return this.connection.invoke(
-      SignallingSendEvents.StartOrJoinSession,
-      userId,
+      SignallingSendEvents.StartVideoCall,
       sessionRequestId
     );
   }
 
-  leaveSession(userId: string, sessionId: string) {
+  joinSession(sessionRequestId: string) {
+    if (!this.isConnected()) {
+      console.log('Connection is not established!');
+      return Promise.resolve();
+    }
+    return this.connection.invoke(
+      SignallingSendEvents.JoinSession,
+      sessionRequestId
+    );
+  }
+
+  leaveSession(sessionId: string) {
     if (!this.isConnected()) {
       console.log('Connection is not established!');
       return Promise.resolve();
     }
     return this.connection.invoke(
       SignallingSendEvents.LeaveSession,
-      userId,
       sessionId
     );
   }
@@ -166,14 +173,13 @@ export class SingnallingService implements OnDestroy {
     );
   }
 
-  SendIceCandidate(userId: string, sessionId: string, iceCandidate: any): Promise<void> {
+  SendIceCandidate(sessionId: string, iceCandidate: RTCIceCandidate): Promise<void> {
     if (!this.isConnected()) {
       console.log('Connection is not established!');
       return Promise.resolve();
     }
     return this.connection.invoke(
       SignallingSendEvents.SendIceCandidate,
-      userId,
       sessionId,
       iceCandidate
     );
@@ -191,12 +197,6 @@ export class SingnallingService implements OnDestroy {
       SignallingReceiveEvents.OnTextMessage,
       (data: string) => {
         this.onTextMessage.next(data);
-      }
-    );
-    this.connection.on(
-      SignallingReceiveEvents.OnWebRtcCallRequest,
-      (request: any) => {
-        this.onWebRtcRequest.next(request);
       }
     );
     this.connection.on(
@@ -227,13 +227,13 @@ export class SingnallingService implements OnDestroy {
     );
 
     this.connection.on(
-      SignallingReceiveEvents.OnStartOrJoinSession,
+      SignallingReceiveEvents.OnStartVideoCall,
       (result: {
         sessionId: string;
-        status: 'created' | 'joined';
+        status: 'offer' | 'answer';
         sessionDetail: SessionDetail;
       }) => {
-        this.OnStartOrJoinSession.next(result);
+        this.OnStartVideoCall.next(result);
       }
     );
     this.connection.on(
@@ -248,13 +248,19 @@ export class SingnallingService implements OnDestroy {
         this.OnReceiveIceCandidate.next(iceCandidate);
       }
     );
+
     this.connection.on(
-      SignallingReceiveEvents.OnUserLeaveSession,
-      (iceCandidate: any) => {
-        this.OnReceiveIceCandidate.next(iceCandidate);
+      SignallingReceiveEvents.OnUserJoinSession,
+      (userId: any) => {
+        this.OnUserJoinSession.next(userId);
       }
     );
-
+    this.connection.on(
+      SignallingReceiveEvents.OnUserLeaveSession,
+      (userId: any) => {
+        this.OnUserLeaveSesson.next(userId);
+      }
+    );
   }
 
   private mapStringToDate(sessionRequest: SessionRequest): SessionRequest {

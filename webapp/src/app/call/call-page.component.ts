@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { SessionDetail } from '../models';
@@ -6,7 +6,7 @@ import { StoreService } from '../services';
 import { SingnallingService } from '../services/signalling.service';
 import { WebrtcService } from '../services/webrtc.service';
 
-const SERVICES = [SingnallingService, WebrtcService];
+const SERVICES = [WebrtcService];
 
 @Component({
   selector: 'app-call-page',
@@ -19,116 +19,116 @@ export class CallPageComponent implements OnInit, OnDestroy {
   sessionRequestId = '';
   sessionDetail: SessionDetail;
 
-  user: any;
   otherUserInfo: any = {};
-  text: string = 'hello world!';
-  userName: string = 'ant';
+  userId: string = '';
 
-  private subParam: Subscription | undefined;
-  private subTextMessage: Subscription | undefined;
-  private subWebRtc: Subscription | undefined;
-  private subOnStartOrJoinSession: Subscription | undefined;
+  localStreams: MediaStreamTrack[] = [];
+  remoteStreams: MediaStreamTrack[] = [];
+
+  private subOnStartVideoCall: Subscription | undefined;
   private subOnSessionDetailUpdated: Subscription | undefined;
   private subOnReceiveIceCandidate: Subscription | undefined;
-  messages: string[] = [];
-
-  private webRtcConfiguration = {
-    iceServers: [{ urls: 'stun:stun.l.google.com:19302' }],
-  };
-  private peerConnection = new RTCPeerConnection(this.webRtcConfiguration);
-  @ViewChild('me') me: any;
-  @ViewChild('remote') remote: any;
-  private localStream: MediaStream;
+  private subOnUserJoinSession: Subscription | undefined;
+  private subOnUserLeaveSession: Subscription | undefined;
 
   constructor(
     private signallingService: SingnallingService,
-    private webrtcService: WebrtcService,
+    private webRtcService: WebrtcService,
     private store: StoreService,
     private route: ActivatedRoute,
-    private router: Router
+    private router: Router,
+    private cdr: ChangeDetectorRef
   ) { }
 
   ngOnInit(): void {
-    this.userName = this.store.getUser()?.uid ?? this.userName;
-    this.subParam = this.route.params.subscribe((params) => {
-      this.sessionRequestId = params['sessionRequestId'];
-    });
-    this.subTextMessage = this.signallingService.onTextMessage.subscribe(
-      (message: string) => this.handleTextMessage(message)
-    );
-    this.subWebRtc = this.signallingService.onWebRtcRequest.subscribe(
-      (request) => console.log(request)
-    );
+    this.sessionRequestId = this.route.snapshot.params['sessionRequestId'];
 
-    this.subOnStartOrJoinSession = this.signallingService.OnStartOrJoinSession.subscribe(
+    this.store.userSubject.subscribe(user => {
+      this.userId = user && user.uid ? user.uid : '';
+      this.signallingService.joinSession(this.sessionRequestId);
+      this.cdr.detectChanges();
+    });
+
+    this.listenSignallingServiceEvents();
+    this.listenWebRtcServiceEvents();
+  };
+
+  private listenSignallingServiceEvents() {
+    this.subOnStartVideoCall = this.signallingService.OnStartVideoCall.subscribe(
       (result: {
         sessionId: string;
-        status: 'created' | 'joined';
+        status: 'offer' | 'answer';
         sessionDetail: SessionDetail;
       }) => this.handleStartOrJoinResult(result)
     );
     this.subOnSessionDetailUpdated = this.signallingService.OnSessionDetailUpdated.subscribe(
-      (sessionDetail: SessionDetail) =>
-        this.handleSessionDetailUpdated(sessionDetail)
+      (sessionDetail: SessionDetail) => this.handleSessionDetailUpdated(sessionDetail)
     );
     this.subOnReceiveIceCandidate = this.signallingService.OnReceiveIceCandidate.subscribe(
-      (iceCandidate: any) => this.handleReceiveIceCandidate(iceCandidate)
+      (iceCandidate: RTCIceCandidate) => this.handleReceiveIceCandidate(iceCandidate)
     );
+    this.subOnUserJoinSession = this.signallingService.OnUserJoinSession.subscribe(
+      (joinedUserId: string) => this.handleUserJoinSession(joinedUserId)
+    );
+    this.subOnUserLeaveSession = this.signallingService.OnUserLeaveSesson.subscribe(
+      (leftUserId: string) => this.handleUserLeaveSession(leftUserId)
+    );
+  }
 
-    this.peerConnection.addEventListener('icecandidate', (event) => {
-      if (event.candidate) {
-        // signalingChannel.send({ 'new-ice-candidate': event.candidate });
-        if (this.sessionDetail) {
-          this.signallingService.SendIceCandidate(
-            this.userName,
-            this.sessionDetail.sessionId,
-            event.candidate
-          );
-        }
-      }
+  private listenWebRtcServiceEvents() {
+    this.webRtcService.remoteStreamAddedSubject.subscribe(remoteStream => {
+      // this.remote.nativeElement.srcObject = event.streams[0];
+      console.log(remoteStream);
     });
-    // remote stream was added, so start listen
-    this.peerConnection.addEventListener('track', (event) => {
-      this.remote.nativeElement.srcObject = event.streams[0];
+    this.webRtcService.iceCandidateEventSubject.subscribe(candidate => {
+      // signalingChannel.send({ 'new-ice-candidate': event.candidate });
+      this.signallingService.SendIceCandidate(
+        this.sessionDetail.sessionId,
+        candidate
+      );
     });
-
-    this.showMe();
   }
 
   showMe() {
     navigator.mediaDevices
       .getUserMedia({ audio: true, video: true })
-      .then((stream) => (this.me.nativeElement.srcObject = stream))
       .then((stream) => {
-        (this.peerConnection as any).addStream(stream);
-        this.localStream = stream;
+        this.localStreams = stream.getTracks();
+        this.webRtcService.addTrack(this.localStreams);
       });
+  }
+
+  stop() {
+    this.localStreams = [];
+    this.remoteStreams = [];
+    this.webRtcService.ngOnDestroy();
   }
 
   async handleStartOrJoinResult(result: {
     sessionId: string;
-    status: 'created' | 'joined';
+    status: 'offer' | 'answer';
     sessionDetail: SessionDetail;
   }) {
     let updatedSessionDetail: SessionDetail;
-    if (result.status === 'created') {
+    if (result.status === 'offer') {
       updatedSessionDetail = await this.createOffer(result.sessionDetail);
     } else {
       updatedSessionDetail = await this.createAnswer(result.sessionDetail);
     }
+
     this.signallingService.UpdateSessionDetail(
-      this.userName,
+      this.userId,
       updatedSessionDetail
     );
+
     this.sessionDetail = updatedSessionDetail;
   }
 
   private async createOffer(sessionDetail: SessionDetail) {
-    const offer = await this.peerConnection.createOffer();
-    await this.peerConnection.setLocalDescription(offer);
+    const offer = await this.webRtcService.createOffer();
 
     sessionDetail.offer = {
-      userId: this.userName,
+      userId: this.userId,
       content: offer,
     };
     return sessionDetail;
@@ -138,13 +138,10 @@ export class CallPageComponent implements OnInit, OnDestroy {
     if (!sessionDetail.offer) {
       console.log('Weird! Why offer object is empty?');
     } else {
-      this.peerConnection.setRemoteDescription(
-        new RTCSessionDescription(sessionDetail.offer.content)
-      );
-      const answer = await this.peerConnection.createAnswer();
-      await this.peerConnection.setLocalDescription(answer);
+      this.webRtcService.setRemoteDescription(sessionDetail.offer.content);
+      const answer = await this.webRtcService.createAnswer();
       sessionDetail.answer = {
-        userId: this.userName,
+        userId: this.userId,
         content: answer,
       };
     }
@@ -153,42 +150,50 @@ export class CallPageComponent implements OnInit, OnDestroy {
 
   private async handleSessionDetailUpdated(sessionDetail: SessionDetail) {
     if (sessionDetail.answer) {
-      const remoteDesc = new RTCSessionDescription(
-        sessionDetail.answer.content
-      );
-      await this.peerConnection.setRemoteDescription(remoteDesc);
+      this.webRtcService.setRemoteDescription(sessionDetail.answer.content);
     }
+    this.sessionDetail = sessionDetail;
   }
 
-  private async handleReceiveIceCandidate(iceCandidate: any) {
+  private async handleReceiveIceCandidate(iceCandidate: RTCIceCandidate) {
     try {
-      await this.peerConnection.addIceCandidate(iceCandidate);
+      await this.webRtcService.addIceCandidate(iceCandidate)
     } catch (e) {
       console.error('Error adding received ice candidate', e);
     }
   }
 
-  ngOnDestroy() {
-    this.peerConnection.close();
+  private handleUserJoinSession(joinedUserId: string): void {
+    if (this.userId === joinedUserId) {
 
-    this.subParam?.unsubscribe();
-    this.subTextMessage?.unsubscribe();
-    this.subWebRtc?.unsubscribe();
-    this.subOnStartOrJoinSession?.unsubscribe();
-    this.subOnSessionDetailUpdated?.unsubscribe();
-    this.subOnReceiveIceCandidate?.unsubscribe();
-
+    } else {
+      // other user joined this session
+      // TODO: start video call
+      console.log('joinedUserId:', joinedUserId);
+    }
   }
 
-  sendMessage() {
-    this.signallingService.sendMessage(this.text);
+  private handleUserLeaveSession(leftUserId: string): void {
+    if (this.userId === leftUserId) {
+
+    } else {
+      // other user left this session
+      this.stop();
+    }
+  }
+
+  ngOnDestroy() {
+    this.subOnStartVideoCall?.unsubscribe();
+    this.subOnSessionDetailUpdated?.unsubscribe();
+    this.subOnReceiveIceCandidate?.unsubscribe();
+    this.subOnUserJoinSession?.unsubscribe();
+    this.subOnUserLeaveSession?.unsubscribe();
   }
 
   startCall() {
     const user = this.store.getUser();
     if (this.sessionRequestId && user) {
-      this.signallingService.startOrJoinSession(
-        user.uid,
+      this.signallingService.startVideoCall(
         this.sessionRequestId
       );
     }
@@ -198,7 +203,6 @@ export class CallPageComponent implements OnInit, OnDestroy {
     const user = this.store.getUser();
     if (this.sessionDetail && user) {
       this.signallingService.leaveSession(
-        user.uid,
         this.sessionDetail.sessionId
       );
     }
@@ -208,7 +212,4 @@ export class CallPageComponent implements OnInit, OnDestroy {
     this.router.navigate(['/']);
   }
 
-  private handleTextMessage(message: string): void {
-    this.messages.unshift(message);
-  }
 }

@@ -1,16 +1,31 @@
-import { OnInit } from '@angular/core';
 import { Injectable, OnDestroy } from '@angular/core';
+import { BehaviorSubject, Subject } from 'rxjs';
 import { environment } from 'src/environments/environment';
 import { SingnallingService } from './signalling.service';
 
 @Injectable()
 export class WebrtcService implements OnDestroy {
-  senderId: string;
-  peerConnection: RTCPeerConnection | undefined;
+  public remoteStreamAddedSubject = new BehaviorSubject<MediaStream | null>(null);
+  public iceCandidateEventSubject = new Subject<RTCIceCandidate>();
 
-  constructor(private signallinService: SingnallingService) {
-    this.senderId = this.guid();
-    this.setupWebRtc();
+  private webRtcConfiguration = {
+    iceServers: environment.iceServers,
+  };
+
+  private peerConnection = new RTCPeerConnection(this.webRtcConfiguration);
+
+  init() {
+    this.peerConnection.addEventListener('icecandidate', (event) => {
+      if (event.candidate) {
+        this.iceCandidateEventSubject.next(event.candidate);
+
+      }
+    });
+
+    // remote stream was added, so start listen
+    this.peerConnection.addEventListener('track', (event) => {
+      this.remoteStreamAddedSubject.next(event.streams[0])
+    });
   }
 
   ngOnDestroy(): void {
@@ -19,30 +34,31 @@ export class WebrtcService implements OnDestroy {
     }
   }
 
-  private setupWebRtc() {
-    this.signallinService.onWebRtcRequest.subscribe((request) =>
-      this.handleWebRtcRequest(request)
-    );
-
-    try {
-      this.peerConnection = new RTCPeerConnection({
-        iceServers: [
-          { urls: 'stun:stun.services.mozilla.com' },
-          { urls: 'stun:stun.l.google.com:19302' },
-        ],
-      });
-    } catch (error) {
-      console.log(error);
-      this.peerConnection = new RTCPeerConnection({
-        iceServers: [
-          { urls: 'stun:stun.services.mozilla.com' },
-          { urls: 'stun:stun.l.google.com:19302' },
-        ],
-      });
-    }
+  async addIceCandidate(iceCandidate: RTCIceCandidate) {
+    return await this.peerConnection.addIceCandidate(iceCandidate);
   }
 
-  handleWebRtcRequest(request: any): void {}
+  async createOffer(): Promise<RTCSessionDescriptionInit> {
+    const offer = await this.peerConnection.createOffer();
+    await this.peerConnection.setLocalDescription(offer);
+    return offer;
+  }
+
+  async createAnswer(): Promise<RTCSessionDescriptionInit> {
+    const answer = await this.peerConnection.createAnswer();
+    await this.peerConnection.setLocalDescription(answer);
+    return answer
+  }
+
+  async setRemoteDescription(answer: RTCSessionDescriptionInit) {
+    await this.peerConnection.setRemoteDescription(new RTCSessionDescription(answer));
+  }
+
+  addTrack(tracks: MediaStreamTrack[]) {
+    for (const track of tracks) {
+      this.peerConnection.addTrack(track);
+    }
+  }
 
   guid() {
     return (

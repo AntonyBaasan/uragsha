@@ -2,7 +2,10 @@ export const environment = {
   production: true,
   webApiUrl: 'https://uragsha-webapi.azurewebsites.net',
   signallingUrl: 'https://uragsha-signalling.azurewebsites.net',
-
+  iceServers: [
+    { urls: 'stun:stun.services.mozilla.com' },
+    { urls: 'stun:stun.l.google.com:19302' },
+  ],
   firebaseConfig: {
     apiKey: 'AIzaSyCn5u0EXpCp9u8WmxAPre4gyM-nGzqq7tY',
     authDomain: 'uragsha-webapp.firebaseapp.com',

@@ -36,7 +36,7 @@ namespace Uragsha.Signalling.Hubs
         }
 
         [AllowAnonymous]
-        public override Task OnDisconnectedAsync(Exception? exception)
+        public override Task OnDisconnectedAsync(Exception exception)
         {
             GlobalInfo.ConnectedIds.Remove(Context.ConnectionId);
             foreach (var userId in GlobalInfo.UserConnections.Keys)
@@ -80,28 +80,99 @@ namespace Uragsha.Signalling.Hubs
             }
         }
 
-        public async Task StartOrJoinSession(string userId, string sessionRequestId)
+        public async Task StartVideoCall(string sessionRequestId)
         {
             var session = SessionService.GetSessionBySessionRequestId(sessionRequestId);
-            Console.WriteLine("Session.id: " + session.Id);
+
+            if (session == null)
+            {
+                Console.WriteLine("Session doesn't exist!");
+                return;
+            }
+            if (!GlobalInfo.ActiveSession.ContainsKey(session.Id))
+            {
+                Console.WriteLine("Session detail haven't created. Something went wrong!");
+                return;
+            }
+
+            GlobalInfo.ActiveSession.TryGetValue(session.Id, out SessionDetail sessionDetail);
 
             dynamic info = new ExpandoObject();
             info.sessionId = session.Id;
-            if (!GlobalInfo.ActiveSession.ContainsKey(session.Id))
+
+            if (sessionDetail.Offer == null)
             {
-                info.status = "created";
-                info.sessionDetail = new SessionDetail { SessionId = session.Id, Started = new DateTime() };
-                GlobalInfo.ActiveSession.Add(session.Id, info.sessionDetail);
+                info.status = "offer";
+                info.sessionDetail = sessionDetail;
+            }
+            else if (sessionDetail.Answer == null)
+            {
+                info.status = "answer";
+                info.sessionDetail = GlobalInfo.ActiveSession[session.Id];
             }
             else
             {
-                info.status = "joined";
-                info.sessionDetail = GlobalInfo.ActiveSession[session.Id];
+                Console.WriteLine("Video call is already started. Can't start video call!");
+                return;
             }
 
             await Groups.AddToGroupAsync(Context.ConnectionId, session.Id);
 
-            await Clients.Client(Context.ConnectionId).OnStartOrJoinSession(info);
+            await Clients.GroupExcept(session.Id, new List<string> { Context.ConnectionId }).OnStartVideoCall(info);
+        }
+
+        public async Task JoinSession(string sessionRequestId)
+        {
+            var userId = GetCurrentUid();
+            var sessionRequest = SessionRequestService.GetSessionRequestById(sessionRequestId);
+            if (sessionRequest == null)
+            {
+                Console.WriteLine("Can't find session request by sessionRequestId: " + sessionRequestId);
+                return;
+            }
+            if (sessionRequest.UserId != userId)
+            {
+                Console.WriteLine("User doesn't belong to session request" + sessionRequestId);
+                return;
+            }
+            var session = SessionService.GetSessionBySessionRequestId(sessionRequestId);
+            if (session == null)
+            {
+                Console.WriteLine("Can't find any session for sessionRequestId: " + sessionRequestId);
+                return;
+            }
+            Console.WriteLine("Session.id: " + session.Id);
+
+            if (!GlobalInfo.ActiveSession.ContainsKey(session.Id))
+            {
+                var sessionDetail = new SessionDetail { SessionId = session.Id, Started = new DateTime() };
+                GlobalInfo.ActiveSession.Add(session.Id, sessionDetail);
+            }
+
+            await Groups.AddToGroupAsync(Context.ConnectionId, session.Id);
+            await Clients.GroupExcept(session.Id, new List<string> { Context.ConnectionId }).OnUserJoinSession(userId);
+        }
+
+        public async Task LeaveSession(string sessionId)
+        {
+            var userId = GetCurrentUid();
+            if (!GlobalInfo.ActiveSession.ContainsKey(sessionId))
+            {
+                Console.WriteLine("Can't find session with id:" + sessionId);
+                return;
+            }
+            var sessionDetail = GlobalInfo.ActiveSession[sessionId];
+            if (sessionDetail.Offer.UserId != userId && sessionDetail.Answer.UserId != userId)
+            {
+                Console.WriteLine("Trying to leave a session that user doesn't belong!");
+                return;
+            }
+
+            await Clients.GroupExcept(sessionId, new List<string> { Context.ConnectionId }).OnUserLeaveSession(userId);
+
+            sessionDetail.Answer = null;
+            sessionDetail.Offer = null;
+            await Clients.GroupExcept(sessionDetail.SessionId, new List<string> { Context.ConnectionId }).OnSessionDetailUpdated(sessionDetail);
         }
 
         public async Task UpdateSessionDetail(string userId, SessionDetail sessionDetail)
@@ -110,7 +181,7 @@ namespace Uragsha.Signalling.Hubs
             await Clients.GroupExcept(sessionDetail.SessionId, new List<string> { Context.ConnectionId }).OnSessionDetailUpdated(sessionDetail);
         }
 
-        public async Task SendIceCandidate(string userId, string sessionId, object iceCandidate)
+        public async Task SendIceCandidate(string sessionId, object iceCandidate)
         {
             await Clients.GroupExcept(sessionId, new List<string> { Context.ConnectionId }).OnReceiveIceCandidate(iceCandidate);
         }

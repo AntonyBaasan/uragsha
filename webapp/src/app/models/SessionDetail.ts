@@ -7,5 +7,5 @@ export interface SessionDetail {
 
 export interface WebRtcMessage {
   userId: string;
-  content: any;
+  content: RTCSessionDescriptionInit;
 }

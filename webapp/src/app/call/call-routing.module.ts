@@ -8,4 +8,4 @@ const routes: Routes = [{ path: ':sessionRequestId', component: CallPageComponen
   imports: [RouterModule.forChild(routes)],
   exports: [RouterModule],
 })
-export class CallRoutingModule {}
+export class CallRoutingModule { }

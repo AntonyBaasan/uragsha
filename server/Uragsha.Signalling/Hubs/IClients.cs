@@ -9,16 +9,16 @@ namespace Uragsha.Signalling.Hubs
         // Debug
         Task OnTextMessage(string message);
 
-        Task OnWebRtcCallRequest(object request);
-
         Task OnGetUserSessionRequests(List<SessionRequest> sessionRequests);
         Task OnSessionRequestCreated(SessionRequest sessionRequest);
         Task OnSessionRequestUpdated(SessionRequest sessionRequest);
         Task OnSessionRequestDeleted(string sessionRequestId);
 
-        Task OnStartOrJoinSession(object info);
+        Task OnStartVideoCall(object info);
         Task OnSessionDetailUpdated(SessionDetail sessionDetail);
         Task OnReceiveIceCandidate(object iceCandidate);
-        
+
+        Task OnUserJoinSession(string userId);
+        Task OnUserLeaveSession(string userId);
     }
 }
