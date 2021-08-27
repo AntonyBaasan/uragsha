@@ -11,7 +11,7 @@ const routes: Routes = [
   {
     path: 'call',
     loadChildren: () => import('./call/call.module').then((m) => m.CallModule),
-    // canActivate: [AngularFireAuthGuard]
+    canActivate: [AngularFireAuthGuard]
   },
 ];
 
