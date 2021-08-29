@@ -11,6 +11,7 @@ import { FormsModule } from '@angular/forms';
 import { SessionUpcomingComponent } from './calendar-tab/session-upcoming/session-upcoming.component';
 import { CalendarTabComponent } from './calendar-tab/calendar-tab.component';
 import { SessionTileComponent } from './calendar-tab/session-tile/session-tile.component';
+import { SharedModule } from '../shared/shared.module';
 
 const COMPONENTS = [
   DashboardPageComponent,
@@ -23,6 +24,7 @@ const COMPONENTS = [
 @NgModule({
   declarations: [...COMPONENTS],
   imports: [
+    SharedModule,
     CommonModule,
     DashboardRoutingModule,
     FormsModule,
@@ -32,4 +34,4 @@ const COMPONENTS = [
     }),
   ],
 })
-export class DashboardModule {}
+export class DashboardModule { }

@@ -30,8 +30,8 @@ export class LoginViewComponent {
     this.login(provider);
   }
   private login(provider: any) {
-    // const auth = getAuth();
-    this.auth.signInWithPopup(provider);
+    // this.auth.signInWithPopup(provider);
+    this.auth.signInWithRedirect(provider);
   }
   logout() {
     this.auth.signOut();

@@ -3,21 +3,19 @@ import { CommonModule } from '@angular/common';
 
 import { LoginPageComponent } from './login-page.component';
 import { FormsModule } from '@angular/forms';
-import { LoginViewComponent } from '../shared/login-view/login-view.component';
+import { LogindRoutingModule } from './login-routing.module';
+import { SharedModule } from '../shared/shared.module';
 
-
+const COMPONENTS = [
+  LoginPageComponent,
+];
 @NgModule({
-  declarations: [
-    LoginPageComponent,
-    LoginViewComponent
-  ],
+  declarations: [...COMPONENTS],
   imports: [
+    SharedModule,
+    LogindRoutingModule,
     FormsModule,
     CommonModule,
   ],
-  exports: [
-    LoginPageComponent
-  ],
-  // bootstrap: [LoginPageComponent]
 })
 export class LoginModule { }
