@@ -1,16 +1,18 @@
-<h3>Upcoming</h3>
-<div *ngIf="sessionRequests.length === 0">
-  No sessions for planned. Please book it from Calendar
-</div>
-<div *ngIf="sessionRequests.length !== 0">
-  <ng-container *ngFor="let session of sessionRequests; let i = index">
-    <app-session-tile
-      [sessionRequest]="session"
-      (sessionEdit)="edit(session)"
-      (sessionRemove)="delete(session)"
-      (sessionJoin)="join(session)"
-    ></app-session-tile>
-  </ng-container>
-</div>
+  <h3>Upcoming</h3>
+  <div *ngIf="sessionRequests.length === 0">
+    No sessions for planned. Please book it from Calendar
+  </div>
+  <div *ngIf="sessionRequests.length !== 0">
+    <ng-container *ngFor="let session of sessionRequests; let i = index">
+      <app-session-tile
+        [sessionRequest]="session"
+        (sessionEdit)="edit(session)"
+        (sessionRemove)="delete(session)"
+        (sessionJoin)="join(session)"
+      ></app-session-tile>
+    </ng-container>
+  </div>
 
-<button type="button" class="btn btn-primary" (click)="bookNew">New Book</button>
+  <button type="button" class="btn btn-primary" (click)="(bookNew)">
+    New Book
+  </button>

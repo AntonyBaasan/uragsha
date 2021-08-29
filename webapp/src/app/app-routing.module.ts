@@ -13,6 +13,10 @@ const routes: Routes = [
     loadChildren: () => import('./call/call.module').then((m) => m.CallModule),
     canActivate: [AngularFireAuthGuard]
   },
+  {
+    path: 'login',
+    loadChildren: () => import('./login/login.module').then((m) => m.LoginModule),
+  },
 ];
 
 @NgModule({

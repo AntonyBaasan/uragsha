@@ -8,7 +8,7 @@ import { AuthService, SingnallingService, StoreService } from './services';
   styleUrls: ['./app.component.scss']
 })
 export class AppComponent implements OnInit, OnDestroy {
-  title = 'webapp';
+  title = 'Uragsha';
 
   private subLogin: Subscription;
   private subLogout: Subscription;

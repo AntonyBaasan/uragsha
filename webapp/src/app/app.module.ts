@@ -7,10 +7,9 @@ import { PERSISTENCE } from '@angular/fire/compat/auth';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { environment } from '../environments/environment';
-import { LoginViewComponent } from './shared/login-view/login-view.component';
 
 @NgModule({
-  declarations: [AppComponent, LoginViewComponent],
+  declarations: [AppComponent],
   imports: [
     BrowserModule,
     AppRoutingModule,
