@@ -7,7 +7,7 @@ import {
 } from '@angular/core';
 import { Subscription } from 'rxjs';
 import { SessionRequest } from '../models';
-import { BackendService, SingnallingService, StoreService } from '../services';
+import { AuthService, BackendService, SingnallingService, StoreService } from '../services';
 import { CalendarTabService } from './calendar-tab/calendar-tab.service';
 import { CalendarService } from './calendar-tab/calendar/calendar.service';
 import { SessionService } from './session/session.service';
@@ -30,6 +30,7 @@ export class DashboardPageComponent implements OnInit, OnDestroy {
   private subOnSessionRequestDeleted: Subscription | undefined;
 
   constructor(
+    public authService: AuthService,
     private backendService: BackendService,
     private signallingService: SingnallingService,
     private store: StoreService,
@@ -75,6 +76,10 @@ export class DashboardPageComponent implements OnInit, OnDestroy {
     const user = this.store.userSubject.getValue();
     if (user) { return user.displayName; }
     return 'Sign In';
+  }
+
+  logout() {
+    this.authService.logout();
   }
 
   saveDemoData() {

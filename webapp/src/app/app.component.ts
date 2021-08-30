@@ -10,8 +10,7 @@ import { AuthService, SingnallingService, StoreService } from './services';
 export class AppComponent implements OnInit, OnDestroy {
   title = 'Uragsha';
 
-  private subLogin: Subscription;
-  private subLogout: Subscription;
+  private subCurrentUserChange: Subscription;
 
   constructor(
     public signallingService: SingnallingService,
@@ -19,26 +18,26 @@ export class AppComponent implements OnInit, OnDestroy {
     private store: StoreService,
     private cdr: ChangeDetectorRef
   ) {
-    this.subLogin = this.authService.onLogin.subscribe(user => {
-      this.signallingService.connect(user).then(() => {
-        this.store.setUser(user);
-        this.cdr.detectChanges();
-      });
-    });
-    this.subLogout = this.authService.onLogout.subscribe(() => {
-      const user = this.store.getUser();
+    this.subCurrentUserChange = this.authService.currentUser.subscribe(user => {
       if (user) {
-        this.signallingService.disconnect(user).then(() => {
-          this.store.setUser(null);
+        this.signallingService.connect(user).then(() => {
+          this.store.setUser(user);
           this.cdr.detectChanges();
         });
+      } else {
+        const user = this.store.getUser();
+        if (user) {
+          this.signallingService.disconnect(user).then(() => {
+            this.store.setUser(null);
+            this.cdr.detectChanges();
+          });
+        }
       }
     });
   }
 
   ngOnDestroy(): void {
-    this.subLogin?.unsubscribe();
-    this.subLogout?.unsubscribe();
+    this.subCurrentUserChange?.unsubscribe();
   }
 
   ngOnInit(): void {

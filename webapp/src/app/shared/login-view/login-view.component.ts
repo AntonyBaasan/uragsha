@@ -1,6 +1,5 @@
 import { Component } from '@angular/core';
-import { AngularFireAuth } from '@angular/fire/compat/auth';
-import { GoogleAuthProvider, FacebookAuthProvider, TwitterAuthProvider } from "firebase/auth";
+import { AuthService } from 'src/app/services';
 
 @Component({
   selector: 'app-login-view',
@@ -8,32 +7,21 @@ import { GoogleAuthProvider, FacebookAuthProvider, TwitterAuthProvider } from "f
   styleUrls: ['./login-view.component.scss']
 })
 export class LoginViewComponent {
-  constructor(public auth: AngularFireAuth) {
+  constructor(public auth: AuthService) {
+  }
+  isLoggedIn() {
+    return this.auth.currentUser == null;
   }
   loginGoogle() {
-    var provider = new GoogleAuthProvider();
-    // force to select an account, otherwise will login automatically
-    provider.setCustomParameters({
-      prompt: "select_account"
-    });
-    this.login(provider);
+    this.auth.loginGoogle();
   }
   loginFacebook() {
-    var provider = new FacebookAuthProvider();
-    // force reauthenticate, otherwise will login automatically
-    provider.setCustomParameters({ auth_type: 'reauthenticate' })
-    provider.addScope('public_profile,email');
-    this.login(provider);
+    this.auth.loginFacebook();
   }
   loginTwitter() {
-    var provider = new TwitterAuthProvider();
-    this.login(provider);
-  }
-  private login(provider: any) {
-    // this.auth.signInWithPopup(provider);
-    this.auth.signInWithRedirect(provider);
+    this.auth.loginTwitter();
   }
   logout() {
-    this.auth.signOut();
+    this.auth.logout();
   }
 }

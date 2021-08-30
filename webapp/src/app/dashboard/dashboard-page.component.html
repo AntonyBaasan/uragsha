@@ -22,10 +22,42 @@
       >Sessions</a
     >
     <a
+      *ngIf="authService.currentUser | async as user; else userProfile"
       class="me-3 py-2 ms-sm-auto text-light text-decoration-none"
-      routerLink="/login"
-      >{{getLoginButton()}}</a
     >
+      <div class="dropdown">
+        <div
+          id="dropdownMenuButton1"
+          data-bs-toggle="dropdown"
+          aria-expanded="false"
+        >
+          {{ getLoginButton() }}
+        </div>
+        <ul
+          class="dropdown-menu dropdown-menu-dark dropdown-menu-end"
+          aria-labelledby="dropdownMenuButton1"
+        >
+          <li>
+            <a class="dropdown-item text-light text-decoration-none">Profile</a>
+          </li>
+          <li>
+            <a
+              class="dropdown-item text-light text-decoration-none"
+              (click)="logout()"
+              >Logout</a
+            >
+          </li>
+        </ul>
+      </div>
+    </a>
+    <ng-template #userProfile>
+      <a
+        class="me-3 py-2 ms-sm-auto text-light text-decoration-none"
+        routerLink="/login"
+      >
+        Sign In
+      </a>
+    </ng-template>
   </nav>
 </header>
 
