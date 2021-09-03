@@ -14,7 +14,8 @@ connection status:{{ connectionState }}<br />
 
 <app-video
   [sessionRequestId]="sessionRequestId"
-  [sessionDetail]="sessionDetail"
+  [sessionId]="sessionDetail?.sessionId"
+  (sessionDetailUpdated)="handleSessionDetailUpdated($event)"
 ></app-video>
 
 <app-messages></app-messages>

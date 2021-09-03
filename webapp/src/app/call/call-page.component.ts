@@ -97,7 +97,8 @@ export class CallPageComponent implements OnInit, OnDestroy {
 
   private handleUserLeaveSession(leftUserId: string): void {
     if (this.userId === leftUserId) {
-
+      // TODO: more logic
+      this.stop();
     } else {
       // other user left this session
       this.stop();
@@ -119,23 +120,19 @@ export class CallPageComponent implements OnInit, OnDestroy {
     const user = this.store.getUser();
     if (this.sessionRequestId && user) {
       const offer = await this.webRtcService.createOffer();
-      this.signallingService.offerVideoCall(
-        this.sessionRequestId,
-        offer
-      );
+      this.signallingService.offerVideoCall(this.sessionRequestId, offer);
     }
   }
 
   endCall() {
     const user = this.store.getUser();
     if (this.sessionDetail && user) {
-      this.signallingService.leaveSession(
-        this.sessionDetail.sessionId
-      );
+      this.signallingService.leaveSession(this.sessionDetail.sessionId);
     }
+
   }
 
-  private async handleSessionDetailUpdated(sessionDetail: SessionDetail) {
+  handleSessionDetailUpdated(sessionDetail: SessionDetail) {
     this.sessionDetail = sessionDetail;
   }
 

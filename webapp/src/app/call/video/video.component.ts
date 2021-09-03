@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, ElementRef, Input, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { ChangeDetectorRef, Component, ElementRef, EventEmitter, Input, OnDestroy, OnInit, Output, ViewChild } from '@angular/core';
 import { Subscription } from 'rxjs';
 import { SessionDetail } from 'src/app/models';
 import { SingnallingService, WebrtcService } from 'src/app/services';
@@ -13,8 +13,9 @@ export class VideoComponent implements OnInit, OnDestroy {
   @ViewChild('me') me: ElementRef;
   @ViewChild('remote') remote: ElementRef;
 
+  @Input() sessionId: string | undefined;
   @Input() sessionRequestId: string;
-  @Input() sessionDetail: SessionDetail;
+  @Output() sessionDetailUpdated = new EventEmitter<SessionDetail>();
 
   private subOnOfferVideoCall: Subscription | undefined;
   private subOnAnswerVideoCall: Subscription | undefined;
@@ -57,16 +58,10 @@ export class VideoComponent implements OnInit, OnDestroy {
 
   private listenSignallingServiceEvents() {
     this.subOnOfferVideoCall = this.signallingService.OnOfferVideoCall.subscribe(
-      (result: {
-        sessionId: string;
-        sessionDetail: SessionDetail;
-      }) => this.handleOfferVideoCall(result)
+      (result: { sessionId: string; sessionDetail: SessionDetail; }) => this.handleOfferVideoCall(result)
     );
     this.subOnAnswerVideoCall = this.signallingService.OnAnswerVideoCall.subscribe(
-      (result: {
-        sessionId: string;
-        sessionDetail: SessionDetail;
-      }) => this.handleAnswerVideoCall(result)
+      (result: { sessionId: string; sessionDetail: SessionDetail; }) => this.handleAnswerVideoCall(result)
     );
     this.subOnReceiveIceCandidate = this.signallingService.OnReceiveIceCandidate.subscribe(
       (iceCandidate: RTCIceCandidate) => this.handleReceiveIceCandidate(iceCandidate)
@@ -79,8 +74,8 @@ export class VideoComponent implements OnInit, OnDestroy {
       this.setRemoteStream(stream);
     });
     this.webRtcService.OnIceCandidateEventSubject.subscribe(candidate => {
-      if (this.sessionDetail) {
-        this.signallingService.SendIceCandidate(this.sessionDetail.sessionId, candidate);
+      if (this.sessionId) {
+        this.signallingService.SendIceCandidate(this.sessionId, candidate);
       }
     });
   }
@@ -97,8 +92,8 @@ export class VideoComponent implements OnInit, OnDestroy {
       return;
     }
 
-    this.sessionDetail = result.sessionDetail;
-    this.webRtcService.setRemoteDescription(this.sessionDetail.offer.content);
+    this.sessionDetailUpdated.emit(result.sessionDetail);
+    this.webRtcService.setRemoteDescription(result.sessionDetail.offer.content);
     const answer = await this.webRtcService.createAnswer();
 
     this.signallingService.answerVideoCall(this.sessionRequestId, answer);
@@ -110,9 +105,9 @@ export class VideoComponent implements OnInit, OnDestroy {
     sessionId: string;
     sessionDetail: SessionDetail;
   }) {
-    this.sessionDetail = result.sessionDetail;
-    if (this.sessionDetail.answer) {
-      this.webRtcService.setRemoteDescription(this.sessionDetail.answer.content);
+    this.sessionDetailUpdated.emit(result.sessionDetail);
+    if (result.sessionDetail.answer) {
+      this.webRtcService.setRemoteDescription(result.sessionDetail.answer.content);
     }
   }
 
