@@ -2,6 +2,7 @@
 sessionRequestId: {{ sessionRequestId }}<br />
 sessionId:{{ sessionDetail?.sessionId }}<br />
 userId:{{ userId }}<br />
+connection status:{{ connectionState }}<br />
 
 <br />
 
@@ -12,8 +13,8 @@ userId:{{ userId }}<br />
 <br />
 
 <app-video
-  [localStream]="localStream"
-  [remoteStream]="remoteStream"
+  [sessionRequestId]="sessionRequestId"
+  [sessionDetail]="sessionDetail"
 ></app-video>
 
 <app-messages></app-messages>
