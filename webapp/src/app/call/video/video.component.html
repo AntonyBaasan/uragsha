@@ -1,4 +1,37 @@
-<div>
-  <video id="device" controls autoplay #remote></video>
-  <video id="me" controls autoplay #me></video>
+<div class="vertical" *ngIf="orientation==='vertical'">
+  <div class="d-flex flex-column">
+    <div class="video-wrapper d-flex justify-content-center">
+      <video id="device" class="video-player" autoplay #remote></video>
+    </div>
+    <div class="video-wrapper d-flex justify-content-center">
+      <video id="me" class="video-player" autoplay #me></video>
+    </div>
+  </div>
+</div>
+
+<div class="horizontal" *ngIf="orientation==='horizontal'">
+  <div class="d-flex flex-row justify-content-around">
+    <div
+      class="
+        video-wrapper
+        flex-fill
+        d-flex
+        justify-content-center
+        align-items-stretch
+      "
+    >
+      <video id="device" class="video-player" autoplay #remote></video>
+    </div>
+    <div
+      class="
+        video-wrapper
+        flex-fill
+        d-flex
+        justify-content-center
+        align-items-stretch
+      "
+    >
+      <video id="me" class="video-player" autoplay #me></video>
+    </div>
+  </div>
 </div>

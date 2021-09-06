@@ -12,6 +12,7 @@ export class VideoComponent implements OnInit, OnDestroy {
 
   @ViewChild('me') me: ElementRef;
   @ViewChild('remote') remote: ElementRef;
+  @Input() orientation: 'horizontal' | 'vertical';
 
   @Input() sessionId: string | undefined;
   @Input() sessionRequestId: string;
@@ -45,7 +46,10 @@ export class VideoComponent implements OnInit, OnDestroy {
       .getUserMedia({ audio: true, video: true })
       .then((stream) => {
         this.webRtcService.addStream(stream);
-        this.setLocalStream(stream);
+        // for the local only video is important!
+        this.setLocalStream(new MediaStream(stream.getVideoTracks()));
+        // TODO: debug
+        this.setRemoteStream(new MediaStream(stream.getVideoTracks()));
       });
   }
 

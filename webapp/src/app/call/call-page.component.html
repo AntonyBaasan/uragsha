@@ -1,4 +1,5 @@
 <app-video
+  [orientation]='orientation'
   [sessionRequestId]="sessionRequestId"
   [sessionId]="sessionDetail?.sessionId"
   (sessionDetailUpdated)="handleSessionDetailUpdated($event)"

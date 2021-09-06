@@ -1,0 +1,29 @@
+.video-wrapper {
+  background-color: black;
+}
+.video-player {
+  transform: scaleX(-1);
+  -webkit-transform: scaleX(-1); /* Safari and Chrome */
+  -moz-transform: scaleX(-1); /* Firefox */
+}
+
+.vertical {
+  .video-wrapper {
+    height: 50vh;
+  }
+
+  .video-player {
+    width: 100%;
+  }
+}
+.horizontal {
+  .video-wrapper {
+    width: 100vh;
+    height: 100vh;
+  }
+
+  .video-player {
+    width: 100% !important;
+    height: auto !important;
+  }
+}

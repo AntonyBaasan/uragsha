@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { ChangeDetectorRef, Component, HostListener, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { SessionDetail } from '../models';
@@ -18,6 +18,7 @@ const SERVICES = [WebrtcService];
 export class CallPageComponent implements OnInit, OnDestroy {
   @ViewChild(VideoComponent) videoComponent: VideoComponent;
 
+  orientation: 'horizontal' | 'vertical' = 'horizontal';
   connectedToSessionRoom = false;
   sessionRequestId = '';
   sessionDetail: SessionDetail;
@@ -52,7 +53,16 @@ export class CallPageComponent implements OnInit, OnDestroy {
 
     this.listenSignallingServiceEvents();
     this.listenWebRtcServiceEvents();
-  };
+
+    this.detectOrietation();
+
+    this.showMe();
+  }
+
+  private detectOrietation() {
+    this.orientation =
+      window.innerWidth > window.innerHeight ? 'horizontal' : 'vertical';
+  }
 
   private listenSignallingServiceEvents() {
     this.subOnSessionDetailUpdated = this.signallingService.OnSessionDetailUpdated.subscribe(
@@ -65,6 +75,7 @@ export class CallPageComponent implements OnInit, OnDestroy {
       (leftUserId: string) => this.handleUserLeaveSession(leftUserId)
     );
   }
+
   private listenWebRtcServiceEvents() {
     this.subOnConnectionStateChangedSubject = this.webRtcService.OnConnectionStateChangedSubject.subscribe(
       (state: RTCPeerConnectionState) => {
