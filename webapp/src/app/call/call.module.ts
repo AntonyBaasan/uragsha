@@ -7,6 +7,7 @@ import { FormsModule } from '@angular/forms';
 import { MessagesComponent } from './messages/messages.component';
 import { VideoComponent } from './video/video.component';
 import { OptionsComponent } from './options/options.component';
+import { TimerComponent } from './timer/timer.component';
 
 
 @NgModule({
@@ -14,7 +15,8 @@ import { OptionsComponent } from './options/options.component';
     CallPageComponent,
     MessagesComponent,
     VideoComponent,
-    OptionsComponent
+    OptionsComponent,
+    TimerComponent
   ],
   imports: [
     FormsModule,

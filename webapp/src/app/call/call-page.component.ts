@@ -26,11 +26,14 @@ export class CallPageComponent implements OnInit, OnDestroy {
 
   otherUserInfo: any = {};
   userId: string = '';
+  secondsLeft: number = 1800; // 30min
 
   private subOnSessionDetailUpdated: Subscription | undefined;
   private subOnUserJoinSession: Subscription | undefined;
   private subOnUserLeaveSession: Subscription | undefined;
   private subOnConnectionStateChangedSubject: Subscription | undefined;
+
+
 
   constructor(
     private signallingService: SingnallingService,
@@ -148,6 +151,10 @@ export class CallPageComponent implements OnInit, OnDestroy {
 
   leave() {
     this.router.navigate(['/']);
+  }
+
+  timeDone(){
+    console.log('timeDone!');
   }
 
 }
