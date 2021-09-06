@@ -1,6 +1,9 @@
 .video-wrapper {
   background-color: black;
+  display: flex;
+  justify-content: center;
 }
+
 .video-player {
   transform: scaleX(-1);
   -webkit-transform: scaleX(-1); /* Safari and Chrome */
@@ -20,6 +23,8 @@
   .video-wrapper {
     width: 100vh;
     height: 100vh;
+    flex: 1 1 auto !important; // flex-fill
+    align-items: stretch !important; // align-item-stretch
   }
 
   .video-player {

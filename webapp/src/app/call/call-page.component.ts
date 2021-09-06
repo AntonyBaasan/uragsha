@@ -157,4 +157,14 @@ export class CallPageComponent implements OnInit, OnDestroy {
     console.log('timeDone!');
   }
 
+  /**
+   * Listen windows resize event. If small screen than show CalendarView.Day
+   * if bigger screen show CalendarView.Week
+   * @param event
+   */
+   @HostListener('window:resize', ['$event'])
+   onResize(event: any) {
+    this.detectOrietation();
+   }
+
 }

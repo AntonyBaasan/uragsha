@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, ElementRef, EventEmitter, Input, OnDestroy, OnInit, Output, ViewChild } from '@angular/core';
+import { ChangeDetectorRef, Component, ElementRef, EventEmitter, HostListener, Input, OnDestroy, OnInit, Output, ViewChild } from '@angular/core';
 import { Subscription } from 'rxjs';
 import { SessionDetail } from 'src/app/models';
 import { SingnallingService, WebrtcService } from 'src/app/services';
@@ -133,5 +133,6 @@ export class VideoComponent implements OnInit, OnDestroy {
     if (!element) { return; }
     element.nativeElement.srcObject = stream;
   }
+
 
 }
