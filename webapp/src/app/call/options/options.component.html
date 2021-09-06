@@ -1,0 +1,48 @@
+<div class="options">
+  <div class="options-panel collapse" id="options-panel">
+    <div class="card border-secondary mb-3">
+      <div class="card-header">
+        <div class="row">
+          <div class="col-md-10 d-flex align-items-center">Options</div>
+          <button
+            class="col-md-2 btn btn-primary float-right"
+            data-bs-toggle="collapse"
+            data-bs-target="#options-panel"
+          >
+            X
+          </button>
+        </div>
+      </div>
+      <div class="card-body text-secondary">
+        <h5 class="card-title">Debug</h5>
+        <p class="card-text">
+          <br />
+          <!-- sessionRequestId: {{ sessionRequestId }}<br />
+  sessionId:{{ sessionDetail?.sessionId }}<br />
+  userId:{{ userId }}<br /> -->
+          Connection status:{{ connectionState }}<br />
+          <br />
+
+          <button (click)="startCall()">Start Call</button><br />
+          <button (click)="endCall()">End Call</button><br />
+          <button (click)="showMe()">Show Me</button><br />
+          <button (click)="stop()">Stop</button><br />
+          <br />
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <div class="options-buttons d-flex justify-content-end">
+    <button
+      class="btn btn-primary options-button m-1"
+      data-bs-toggle="collapse"
+      data-bs-target="#options-panel"
+    >
+      Options
+    </button>
+    <button class="btn btn-danger options-button m-1" (click)="leave()">
+      Leave
+    </button>
+  </div>
+</div>

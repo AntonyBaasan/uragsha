@@ -6,13 +6,15 @@ import { CallPageComponent } from './call-page.component';
 import { FormsModule } from '@angular/forms';
 import { MessagesComponent } from './messages/messages.component';
 import { VideoComponent } from './video/video.component';
+import { OptionsComponent } from './options/options.component';
 
 
 @NgModule({
   declarations: [
     CallPageComponent,
     MessagesComponent,
-    VideoComponent
+    VideoComponent,
+    OptionsComponent
   ],
   imports: [
     FormsModule,

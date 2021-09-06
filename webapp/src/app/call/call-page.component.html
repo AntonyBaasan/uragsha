@@ -1,21 +1,10 @@
-<br />
-sessionRequestId: {{ sessionRequestId }}<br />
-sessionId:{{ sessionDetail?.sessionId }}<br />
-userId:{{ userId }}<br />
-connection status:{{ connectionState }}<br />
-
-<br />
-
-<button (click)="startCall()">Start Call</button>
-<button (click)="endCall()">End Call</button>
-<button (click)="showMe()">Show Me</button>
-<button (click)="stop()">Stop</button><br />
-<br />
-
 <app-video
   [sessionRequestId]="sessionRequestId"
   [sessionId]="sessionDetail?.sessionId"
   (sessionDetailUpdated)="handleSessionDetailUpdated($event)"
 ></app-video>
+<app-options
+  [connectionState]="connectionState"
+></app-options>
 
-<app-messages></app-messages>
+<!-- <app-messages></app-messages> -->

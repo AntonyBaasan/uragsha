@@ -129,7 +129,6 @@ export class CallPageComponent implements OnInit, OnDestroy {
     if (this.sessionDetail && user) {
       this.signallingService.leaveSession(this.sessionDetail.sessionId);
     }
-
   }
 
   handleSessionDetailUpdated(sessionDetail: SessionDetail) {
