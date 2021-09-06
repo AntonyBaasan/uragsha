@@ -3,7 +3,6 @@ $option = Read-Host "Which project you want to run?
     2. Uragsha.Signalling
     3. Uragsha.WebApi
 "
-Write-Output $option
 switch ($option)
 {
     2 {Start-Process -FilePath 'dotnet' -WorkingDirectory '.' -ArgumentList 'run --project ./Uragsha.Signalling'; Break}
