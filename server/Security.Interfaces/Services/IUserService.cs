@@ -1,11 +1,6 @@
-﻿using Security.Interfaces.Identity;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using Identity.Interfaces.Identity;
 
-namespace Security.Interfaces.Services
+namespace Identity.Interfaces.Services
 {
     public interface IUserService
     {

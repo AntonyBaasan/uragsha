@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk.Web">
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
 
   <PropertyGroup>
     <TargetFramework>net5.0</TargetFramework>
@@ -12,8 +12,10 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Security.Interfaces\Security.Interfaces.csproj" />
-    <ProjectReference Include="..\Security.Memory\Security.Memory.csproj" />
+    <ProjectReference Include="..\Identity.Entity\Identity.Entity.csproj" />
+    <ProjectReference Include="..\Identity.InMemory\Identity.Entity.InMemory.csproj" />
+    <ProjectReference Include="..\Identity\Identity.csproj" />
+    <ProjectReference Include="..\Security.Interfaces\Identity.Interfaces.csproj" />
     <ProjectReference Include="..\Uragsha.Models\Uragsha.Models.csproj" />
     <ProjectReference Include="..\Uragsha.Scheduler.Interfaces\Uragsha.Scheduler.Interfaces.csproj" />
     <ProjectReference Include="..\Uragsha.Scheduler.Memory\Uragsha.Scheduler.Memory.csproj" />

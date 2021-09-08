@@ -1,5 +1,8 @@
-using System.Collections.Generic;
 using System.Threading.Tasks;
+using Identity.Entity;
+using Identity.Entity.InMemory;
+using Identity.Interfaces.Services;
+using Identity.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -7,8 +10,6 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.IdentityModel.Tokens;
-using Security.Interfaces.Services;
-using Security.Memory;
 using Uragsha.Scheduler.Interfaces;
 using Uragsha.Scheduler.Memory;
 using Uragsha.Signalling.Hubs;
@@ -30,9 +31,10 @@ namespace Uragsha.Signalling
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddSingleton<ISessionRequestService, MemorySessionRequestService>();
-            services.AddSingleton<ISessionService, MemorySessionService>();
-            services.AddSingleton<IUserService, MemoryUserService>();
+            services.AddSingleton<ISessionRequestService, SessionRequestService>();
+            services.AddSingleton<ISessionService, SessionService>();
+            services.AddSingleton<IUserService, UserService>();
+            services.AddSingleton<IUserEntityService, MemoryUserEntityService>();
 
             services.AddCors(options =>
             {

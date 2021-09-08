@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace Security.Interfaces.Identity
+namespace Identity.Interfaces.Identity
 {
     public class User
     {

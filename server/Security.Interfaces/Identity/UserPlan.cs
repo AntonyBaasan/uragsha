@@ -1,4 +1,4 @@
-﻿namespace Security.Interfaces.Identity
+﻿namespace Identity.Interfaces.Identity
 {
     public enum UserPlan
     {

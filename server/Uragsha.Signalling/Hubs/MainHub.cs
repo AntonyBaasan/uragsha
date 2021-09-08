@@ -6,10 +6,10 @@ using Uragsha.Models.Scheduling;
 using Uragsha.Scheduler.Interfaces;
 using System.Dynamic;
 using Uragsha.Signalling.Dto;
-using Security.Interfaces.Services;
-using Security.Interfaces.Identity;
 using Microsoft.AspNetCore.Authorization;
 using System.Linq;
+using Identity.Interfaces.Services;
+using Identity.Interfaces.Identity;
 
 namespace Uragsha.Signalling.Hubs
 {

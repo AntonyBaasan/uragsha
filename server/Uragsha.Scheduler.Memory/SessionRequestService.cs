@@ -6,7 +6,7 @@ using Uragsha.Scheduler.Interfaces;
 
 namespace Uragsha.Scheduler.Memory
 {
-    public class MemorySessionRequestService : ISessionRequestService
+    public class SessionRequestService : ISessionRequestService
     {
         private readonly List<SessionRequest> requests = new();
 

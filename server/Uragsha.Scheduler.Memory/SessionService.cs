@@ -6,13 +6,13 @@ using Uragsha.Scheduler.Interfaces;
 
 namespace Uragsha.Scheduler.Memory
 {
-    public class MemorySessionService : ISessionService
+    public class SessionService : ISessionService
     {
         private readonly List<Session> sessions = new();
 
         public ISessionRequestService SessionRequestService { get; }
 
-        public MemorySessionService(ISessionRequestService sessionRequestService)
+        public SessionService(ISessionRequestService sessionRequestService)
         {
             SessionRequestService = sessionRequestService;
         }

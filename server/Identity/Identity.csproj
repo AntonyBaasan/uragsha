@@ -1,0 +1,12 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net5.0</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Identity.Entity\Identity.Entity.csproj" />
+    <ProjectReference Include="..\Security.Interfaces\Identity.Interfaces.csproj" />
+  </ItemGroup>
+
+</Project>
