@@ -8,12 +8,11 @@
 
   <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="5.0.9" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.InMemory" Version="5.0.9" />
     <PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.10.14" />
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Identity.Entity\Identity.Entity.csproj" />
-    <ProjectReference Include="..\Identity.InMemory\Identity.Entity.InMemory.csproj" />
     <ProjectReference Include="..\Identity\Identity.csproj" />
     <ProjectReference Include="..\Security.Interfaces\Identity.Interfaces.csproj" />
     <ProjectReference Include="..\Uragsha.Models\Uragsha.Models.csproj" />

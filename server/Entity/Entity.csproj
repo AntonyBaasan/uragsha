@@ -5,9 +5,12 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Common.DataAccess\Common.DataAccess.csproj" />
-    <ProjectReference Include="..\Identity.Entity\Identity.Entity.csproj" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="5.0.9" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\Security.Interfaces\Identity.Interfaces.csproj" />
+    <ProjectReference Include="..\Uragsha.Models\Uragsha.Models.csproj" />
   </ItemGroup>
 
 </Project>

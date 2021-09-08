@@ -1,10 +1,11 @@
 ﻿using Identity.Interfaces.Identity;
+using System.Threading.Tasks;
 
 namespace Identity.Interfaces.Services
 {
     public interface IUserService
     {
-        public User GetUserById(string userId);
+        public Task<User> GetUserByIdAsync(string userId);
         public void AddUser(User user);
         public void UpdateUser(User user);
         public void DeleteUser(string userId);

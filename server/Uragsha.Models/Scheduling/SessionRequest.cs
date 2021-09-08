@@ -1,9 +1,11 @@
 ﻿using System;
+using System.ComponentModel.DataAnnotations;
 
 namespace Uragsha.Models.Scheduling
 {
     public class SessionRequest
     {
+        [Key]
         public string Id { get; set; }
         public DateTime Start { get; set; }
         public DateTime End { get; set; }

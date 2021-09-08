@@ -54,14 +54,14 @@ namespace Uragsha.Signalling.Hubs
 
             var user = new User
             {
-                Uid = uid,
+                Id = uid,
                 DisplayName = userDto.DisplayName,
                 Email = userDto.Email,
                 PhotoUrl = userDto.PhotoUrl,
                 Plan = UserPlan.Free,
                 Status = UserStatus.Active,
             };
-            if (UserService.UserExist(uid))
+            if (!UserService.UserExist(uid))
             {
                 UserService.AddUser(user);
             }

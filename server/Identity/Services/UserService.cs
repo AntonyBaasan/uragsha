@@ -1,40 +1,44 @@
-﻿using Identity.Entity;
+﻿using Entity;
 using Identity.Interfaces.Identity;
 using Identity.Interfaces.Services;
+using Microsoft.Extensions.DependencyInjection;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace Identity.Services
 {
     public class UserService : IUserService
     {
-        private readonly IUserEntityService userEntityService;
+        private readonly UserEntityService userEntityService;
 
-        public UserService(IUserEntityService userEntityService)
+        public UserService(UserEntityService userEntityService)
         {
             this.userEntityService = userEntityService;
         }
+
         public void AddUser(User user)
         {
-           //this.userEntityService.
+            this.userEntityService.AddUser(user);
         }
 
         public void DeleteUser(string userId)
         {
-            throw new System.NotImplementedException();
+            this.userEntityService.DeleteUser(userId);
         }
 
-        public User GetUserById(string userId)
+        public async Task<User> GetUserByIdAsync(string userId)
         {
-            throw new System.NotImplementedException();
+            return await this.userEntityService.GetUserByIdAsync(userId);
         }
 
         public void UpdateUser(User user)
         {
-            throw new System.NotImplementedException();
+            this.userEntityService.UpdateUser(user);
         }
 
         public bool UserExist(string userId)
         {
-            throw new System.NotImplementedException();
+            return this.userEntityService.Exist(userId);
         }
     }
 }
