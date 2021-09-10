@@ -1,59 +1,57 @@
-﻿using Entity.Models;
+﻿using System.Threading.Tasks;
 using Microsoft.Extensions.DependencyInjection;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace Entity.Services
 {
-    public class UserEntityService
+    class CrudEntityService<T>
     {
         private readonly IServiceScopeFactory scopeFactory;
 
-        public UserEntityService(IServiceScopeFactory scopeFactory)
+        public CrudEntityService(IServiceScopeFactory scopeFactory)
         {
             this.scopeFactory = scopeFactory;
         }
 
-        public void AddUser(UserEntity user)
+        public void Add(T entity)
         {
             using var scope = scopeFactory.CreateScope();
             var dbContext = scope.ServiceProvider.GetRequiredService<MainDbContext>();
-            dbContext.Users.Add(user);
+            dbContext.Add(entity);
             dbContext.SaveChangesAsync();
         }
 
-        public void DeleteUser(string userId)
+        public void Delete(T entity)
         {
             using var scope = scopeFactory.CreateScope();
             var dbContext = scope.ServiceProvider.GetRequiredService<MainDbContext>();
-            var user = new UserEntity() { Id = userId };
-            dbContext.Attach(user);
-            dbContext.Remove(user);
+            dbContext.Attach(entity);
+            dbContext.Remove(entity);
             dbContext.SaveChangesAsync();
         }
 
-        public async Task<UserEntity> GetUserByIdAsync(string userId)
+        // TODO: how can I not pass 'type' as param, where T is already exist.
+        public async Task<T> GetUserByIdAsync(System.Type type, string id)
         {
             using var scope = scopeFactory.CreateScope();
             var dbContext = scope.ServiceProvider.GetRequiredService<MainDbContext>();
-            var user = await dbContext.Users.FindAsync(userId);
-            return user;
+            var user = await dbContext.FindAsync(type, id);
+            return (T)user;
         }
 
-        public void UpdateUser(UserEntity user)
+        public void Update(T entity)
         {
             using var scope = scopeFactory.CreateScope();
             var dbContext = scope.ServiceProvider.GetRequiredService<MainDbContext>();
-            dbContext.Users.Update(user);
+            dbContext.Update(entity);
             dbContext.SaveChangesAsync();
         }
 
-        public bool Exist(string userId)
+        public async Task<bool> ExistAsync(System.Type type, object id)
         {
             using var scope = scopeFactory.CreateScope();
             var dbContext = scope.ServiceProvider.GetRequiredService<MainDbContext>();
-            var exist = dbContext.Users.Where(u=> u.Id.Equals(userId)).FirstOrDefault();
-            return exist != null;
+            var entity = await dbContext.FindAsync(type, id);
+            return entity != null;
         }
     }
 }

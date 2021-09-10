@@ -47,7 +47,7 @@ namespace Uragsha.Signalling.Hubs
             return base.OnDisconnectedAsync(exception);
         }
 
-        public void AfterLogin(UserDto userDto)
+        public async void AfterLogin(UserDto userDto)
         {
             string uid = this.GetCurrentUid();
 
@@ -59,8 +59,9 @@ namespace Uragsha.Signalling.Hubs
                 PhotoUrl = userDto.PhotoUrl,
                 Plan = UserPlan.Free,
                 Status = UserStatus.Active,
+                Roles = new List<UserRole> { new UserRole { Name = "User" } }
             };
-            if (!UserService.UserExist(uid))
+            if (!await UserService.UserExistAsync(uid))
             {
                 UserService.AddUser(user);
             }

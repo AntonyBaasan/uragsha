@@ -9,10 +9,10 @@ namespace Identity.Services
 {
     public class UserService : IUserService
     {
-        private readonly UserEntityService userEntityService;
+        private readonly IUserEntityService userEntityService;
         private readonly IMapper mapper;
 
-        public UserService(UserEntityService userEntityService, IMapper mapper)
+        public UserService(IUserEntityService userEntityService, IMapper mapper)
         {
             this.userEntityService = userEntityService;
             this.mapper = mapper;
@@ -43,14 +43,10 @@ namespace Identity.Services
             userEntityService.UpdateUser(userEntity);
         }
 
-        public bool UserExist(string userId)
+        public Task<bool> UserExistAsync(string userId)
         {
-            return userEntityService.Exist(userId);
+            return userEntityService.ExistAsync(userId);
         }
 
-        Task<User> IUserService.GetUserByIdAsync(string userId)
-        {
-            throw new System.NotImplementedException();
-        }
     }
 }

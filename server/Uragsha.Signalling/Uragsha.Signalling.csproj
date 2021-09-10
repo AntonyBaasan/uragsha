@@ -24,4 +24,8 @@
     <ProjectReference Include="..\Security.Interfaces\Identity.Interfaces.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Migrations\" />
+  </ItemGroup>
+
 </Project>

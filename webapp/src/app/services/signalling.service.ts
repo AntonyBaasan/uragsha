@@ -3,13 +3,7 @@ import * as signalR from '@microsoft/signalr';
 import { parseISO } from 'date-fns';
 import { Subject } from 'rxjs';
 import { environment } from 'src/environments/environment';
-import {
-  SessionDetail,
-  SessionRequest,
-  SignallingReceiveEvents,
-  SignallingSendEvents,
-  User,
-} from '../models';
+import { SessionDetail, SessionRequest, SignallingReceiveEvents, SignallingSendEvents, User } from '../models';
 
 @Injectable({
   providedIn: 'root',

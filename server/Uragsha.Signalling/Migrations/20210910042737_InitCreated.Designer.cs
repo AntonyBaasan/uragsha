@@ -9,7 +9,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Uragsha.Signalling.Migrations
 {
     [DbContext(typeof(MainDbContext))]
-    [Migration("20210910033345_InitCreated")]
+    [Migration("20210910042737_InitCreated")]
     partial class InitCreated
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)

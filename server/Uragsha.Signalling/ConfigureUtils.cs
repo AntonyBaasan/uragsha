@@ -26,10 +26,14 @@ namespace Uragsha.Signalling
                 typeof(SchedulerAutoMapperProfile)
             );
 
+            // Entity services
+            services.AddSingleton<IUserEntityService, IUserEntityService>();
+
+            // Internal services
             services.AddSingleton<ISessionRequestService, SessionRequestService>();
             services.AddSingleton<ISessionService, SessionService>();
             services.AddSingleton<IUserService, UserService>();
-            services.AddSingleton<UserEntityService>();
+            
         }
     }
 }

@@ -1,8 +1,10 @@
-﻿namespace Identity.Interfaces.Models
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace Identity.Interfaces.Models
 {
     public class UserRole
     {
-        public int Id { get; set; }
+        [Key]
         public string Name { get; set; }
     }
 }

@@ -9,6 +9,6 @@ namespace Identity.Interfaces.Services
         public void AddUser(User user);
         public void UpdateUser(User user);
         public void DeleteUser(string userId);
-        public bool UserExist(string userId);
+        public Task<bool> UserExistAsync(string userId);
     }
 }
