@@ -1,10 +1,10 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
-using Uragsha.Models.Scheduling;
-using Uragsha.Scheduler.Interfaces;
+using System.Collections.Generic;
+using Scheduler.Interfaces.Models;
+using Scheduler.Interfaces.Services;
 
-namespace Uragsha.Scheduler.Memory
+namespace Scheduler.Services
 {
     public class SessionRequestService : ISessionRequestService
     {

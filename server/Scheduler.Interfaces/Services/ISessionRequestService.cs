@@ -1,8 +1,8 @@
-﻿using System;
+﻿using Scheduler.Interfaces.Models;
+using System;
 using System.Collections.Generic;
-using Uragsha.Models.Scheduling;
 
-namespace Uragsha.Scheduler.Interfaces
+namespace Scheduler.Interfaces.Services
 {
     public interface ISessionRequestService
     {

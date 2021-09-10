@@ -1,6 +1,7 @@
-﻿using Uragsha.Models.Scheduling;
+﻿
+using Scheduler.Interfaces.Models;
 
-namespace Uragsha.Scheduler.Interfaces
+namespace Scheduler.Interfaces.Services
 {
     public interface ISessionService
     {

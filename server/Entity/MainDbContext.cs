@@ -1,14 +1,14 @@
-﻿using Identity.Interfaces.Identity;
+﻿using Entity.Models;
 using Microsoft.EntityFrameworkCore;
-using Uragsha.Models.Scheduling;
 
 namespace Entity
 {
     public class MainDbContext : DbContext
     {
-        public DbSet<User> Users { get; set; }
-        public DbSet<Session> Sessions { get; set; }
-        public DbSet<SessionRequest> SessionRequests { get; set; }
+        public DbSet<UserEntity> Users { get; set; }
+        public DbSet<UserRoleEntity> UserRoles { get; set; }
+        public DbSet<SessionEntity> Sessions { get; set; }
+        public DbSet<SessionRequestEntity> SessionRequests { get; set; }
 
         public MainDbContext(DbContextOptions<MainDbContext> options)
         : base(options)

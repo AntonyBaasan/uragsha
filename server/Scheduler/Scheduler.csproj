@@ -10,6 +10,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Entity\Entity.csproj" />
+    <ProjectReference Include="..\Scheduler.Interfaces\Scheduler.Interfaces.csproj" />
   </ItemGroup>
 
 </Project>

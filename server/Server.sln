@@ -3,17 +3,11 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.31410.357
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Uragsha.Models", "Uragsha.Models\Uragsha.Models.csproj", "{A6DB0B1D-8F48-4414-B690-1E27B6BBCFFF}"
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Uragsha.Signalling", "Uragsha.Signalling\Uragsha.Signalling.csproj", "{16D629F1-3CA7-4604-A085-F98BCF7289F4}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Uragsha.WebApi", "Uragsha.WebApi\Uragsha.WebApi.csproj", "{7FDB8066-8133-422B-A4EE-98989FF4D514}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Services", "Services", "{2601CC5D-CF77-45FC-A694-FE800C8886C6}"
-EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Uragsha.Scheduler.Interfaces", "Uragsha.Scheduler.Interfaces\Uragsha.Scheduler.Interfaces.csproj", "{CDC8F491-A2E3-4DB3-81FB-1D833AA42290}"
-EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Uragsha.Scheduler.Memory", "Uragsha.Scheduler.Memory\Uragsha.Scheduler.Memory.csproj", "{5C73E7F6-81D2-4CB1-86D5-E43DE7AB9062}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Identity.Interfaces", "Security.Interfaces\Identity.Interfaces.csproj", "{14C6BBDF-BE97-4D61-9188-A1B231AFB4EC}"
 EndProject
@@ -27,16 +21,16 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Identity", "Identity\Identi
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Entity", "Entity\Entity.csproj", "{64010327-4E93-48C1-9C52-7760A58CAF37}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Scheduler", "Scheduler\Scheduler.csproj", "{6D0B6DA0-BC2A-4382-B8A2-C9CDFCD0CFF8}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Scheduler.Interfaces", "Scheduler.Interfaces\Scheduler.Interfaces.csproj", "{5943E3C8-C6CA-4981-A406-82A2DBE85E5E}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{A6DB0B1D-8F48-4414-B690-1E27B6BBCFFF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{A6DB0B1D-8F48-4414-B690-1E27B6BBCFFF}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{A6DB0B1D-8F48-4414-B690-1E27B6BBCFFF}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{A6DB0B1D-8F48-4414-B690-1E27B6BBCFFF}.Release|Any CPU.Build.0 = Release|Any CPU
 		{16D629F1-3CA7-4604-A085-F98BCF7289F4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{16D629F1-3CA7-4604-A085-F98BCF7289F4}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{16D629F1-3CA7-4604-A085-F98BCF7289F4}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -45,14 +39,6 @@ Global
 		{7FDB8066-8133-422B-A4EE-98989FF4D514}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{7FDB8066-8133-422B-A4EE-98989FF4D514}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{7FDB8066-8133-422B-A4EE-98989FF4D514}.Release|Any CPU.Build.0 = Release|Any CPU
-		{CDC8F491-A2E3-4DB3-81FB-1D833AA42290}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{CDC8F491-A2E3-4DB3-81FB-1D833AA42290}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{CDC8F491-A2E3-4DB3-81FB-1D833AA42290}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{CDC8F491-A2E3-4DB3-81FB-1D833AA42290}.Release|Any CPU.Build.0 = Release|Any CPU
-		{5C73E7F6-81D2-4CB1-86D5-E43DE7AB9062}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{5C73E7F6-81D2-4CB1-86D5-E43DE7AB9062}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{5C73E7F6-81D2-4CB1-86D5-E43DE7AB9062}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{5C73E7F6-81D2-4CB1-86D5-E43DE7AB9062}.Release|Any CPU.Build.0 = Release|Any CPU
 		{14C6BBDF-BE97-4D61-9188-A1B231AFB4EC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{14C6BBDF-BE97-4D61-9188-A1B231AFB4EC}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{14C6BBDF-BE97-4D61-9188-A1B231AFB4EC}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -69,18 +55,25 @@ Global
 		{64010327-4E93-48C1-9C52-7760A58CAF37}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{64010327-4E93-48C1-9C52-7760A58CAF37}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{64010327-4E93-48C1-9C52-7760A58CAF37}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6D0B6DA0-BC2A-4382-B8A2-C9CDFCD0CFF8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6D0B6DA0-BC2A-4382-B8A2-C9CDFCD0CFF8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6D0B6DA0-BC2A-4382-B8A2-C9CDFCD0CFF8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6D0B6DA0-BC2A-4382-B8A2-C9CDFCD0CFF8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5943E3C8-C6CA-4981-A406-82A2DBE85E5E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5943E3C8-C6CA-4981-A406-82A2DBE85E5E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5943E3C8-C6CA-4981-A406-82A2DBE85E5E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5943E3C8-C6CA-4981-A406-82A2DBE85E5E}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
-		{A6DB0B1D-8F48-4414-B690-1E27B6BBCFFF} = {2601CC5D-CF77-45FC-A694-FE800C8886C6}
-		{CDC8F491-A2E3-4DB3-81FB-1D833AA42290} = {1F713E00-B5F1-42CC-84D7-584DAA6123E6}
-		{5C73E7F6-81D2-4CB1-86D5-E43DE7AB9062} = {2601CC5D-CF77-45FC-A694-FE800C8886C6}
 		{14C6BBDF-BE97-4D61-9188-A1B231AFB4EC} = {1F713E00-B5F1-42CC-84D7-584DAA6123E6}
 		{27E712AC-3206-4198-9682-6A1F9D72D59B} = {89D02ED6-F91D-4785-A65F-506542600C76}
 		{9E60F978-267A-40C9-B08E-6387F47D9C3A} = {2601CC5D-CF77-45FC-A694-FE800C8886C6}
 		{64010327-4E93-48C1-9C52-7760A58CAF37} = {89D02ED6-F91D-4785-A65F-506542600C76}
+		{6D0B6DA0-BC2A-4382-B8A2-C9CDFCD0CFF8} = {2601CC5D-CF77-45FC-A694-FE800C8886C6}
+		{5943E3C8-C6CA-4981-A406-82A2DBE85E5E} = {1F713E00-B5F1-42CC-84D7-584DAA6123E6}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {FED6B0CB-F438-47FF-8316-81EA7C31F43E}

@@ -1,4 +1,4 @@
-﻿namespace Uragsha.Models.Scheduling
+﻿namespace Scheduler.Interfaces.Models
 {
     public enum SessionRequestStatus
     {

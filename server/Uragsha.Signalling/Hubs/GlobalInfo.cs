@@ -1,5 +1,5 @@
-﻿using System.Collections.Generic;
-using Uragsha.Models.Scheduling;
+﻿using Scheduler.Interfaces.Models;
+using System.Collections.Generic;
 
 namespace Uragsha.Signalling.Hubs
 {

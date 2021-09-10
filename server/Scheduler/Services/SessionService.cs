@@ -1,10 +1,10 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
-using Uragsha.Models.Scheduling;
-using Uragsha.Scheduler.Interfaces;
+using Scheduler.Interfaces.Services;
+using System.Collections.Generic;
+using Scheduler.Interfaces.Models;
 
-namespace Uragsha.Scheduler.Memory
+namespace Scheduler.Services
 {
     public class SessionService : ISessionService
     {
@@ -40,7 +40,7 @@ namespace Uragsha.Scheduler.Memory
                 Id = Guid.NewGuid().ToString(),
                 Start = sessionRequest.Start,
                 End = sessionRequest.End,
-                SessionRequestIds = new List<string> { sessionRequest.Id, nextAvailableRequest.Id }
+                SessionRequests = new List<SessionRequest> { sessionRequest, nextAvailableRequest }
             };
 
             sessionRequest.Status = SessionRequestStatus.Scheduled;
@@ -61,7 +61,7 @@ namespace Uragsha.Scheduler.Memory
 
         public Session GetSessionBySessionRequestId(string sessionRequestId)
         {
-            var result = sessions.FirstOrDefault(session => session.SessionRequestIds.Contains(sessionRequestId));
+            var result = sessions.FirstOrDefault(session => session.SessionRequests.Any(s => s.Id.Equals(sessionRequestId)));
             return result;
         }
     }

@@ -1,6 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using Scheduler.Interfaces.Models;
+using System.Collections.Generic;
 using System.Threading.Tasks;
-using Uragsha.Models.Scheduling;
 
 namespace Uragsha.Signalling.Hubs
 {

@@ -1,9 +1,9 @@
-﻿using Microsoft.AspNetCore.Mvc.RazorPages;
+﻿using System.Linq;
+using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.SignalR;
 using Microsoft.Extensions.Logging;
+using Scheduler.Interfaces.Models;
 using System.Collections.Generic;
-using System.Linq;
-using Uragsha.Models.Scheduling;
 using Uragsha.Signalling.Hubs;
 
 namespace Uragsha.Signalling.Pages

@@ -1,4 +1,4 @@
-﻿namespace Identity.Interfaces.Identity
+﻿namespace Identity.Interfaces.Models
 {
     public enum UserStatus
     {

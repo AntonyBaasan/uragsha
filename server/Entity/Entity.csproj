@@ -10,7 +10,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Security.Interfaces\Identity.Interfaces.csproj" />
-    <ProjectReference Include="..\Uragsha.Models\Uragsha.Models.csproj" />
   </ItemGroup>
 
 </Project>

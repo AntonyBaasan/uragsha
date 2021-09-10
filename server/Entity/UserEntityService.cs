@@ -1,4 +1,4 @@
-﻿using Identity.Interfaces.Identity;
+﻿using Entity.Models;
 using Microsoft.Extensions.DependencyInjection;
 using System.Linq;
 using System.Threading.Tasks;
@@ -14,7 +14,7 @@ namespace Entity
             this.scopeFactory = scopeFactory;
         }
 
-        public void AddUser(User user)
+        public void AddUser(UserEntity user)
         {
             using var scope = scopeFactory.CreateScope();
             var dbContext = scope.ServiceProvider.GetRequiredService<MainDbContext>();
@@ -26,13 +26,13 @@ namespace Entity
         {
             using var scope = scopeFactory.CreateScope();
             var dbContext = scope.ServiceProvider.GetRequiredService<MainDbContext>();
-            var user = new User() { Id = userId };
+            var user = new UserEntity() { Id = userId };
             dbContext.Attach(user);
             dbContext.Remove(user);
             dbContext.SaveChangesAsync();
         }
 
-        public async Task<User> GetUserByIdAsync(string userId)
+        public async Task<UserEntity> GetUserByIdAsync(string userId)
         {
             using var scope = scopeFactory.CreateScope();
             var dbContext = scope.ServiceProvider.GetRequiredService<MainDbContext>();
@@ -40,7 +40,7 @@ namespace Entity
             return user;
         }
 
-        public void UpdateUser(User user)
+        public void UpdateUser(UserEntity user)
         {
             using var scope = scopeFactory.CreateScope();
             var dbContext = scope.ServiceProvider.GetRequiredService<MainDbContext>();
@@ -52,8 +52,8 @@ namespace Entity
         {
             using var scope = scopeFactory.CreateScope();
             var dbContext = scope.ServiceProvider.GetRequiredService<MainDbContext>();
-            var exist = dbContext.Users.Any(user => user.Id.Equals(userId, System.StringComparison.Ordinal));
-            return exist;
+            var exist = dbContext.Users.Where(u=> u.Id.Equals(userId)).FirstOrDefault();
+            return exist != null;
         }
     }
 }

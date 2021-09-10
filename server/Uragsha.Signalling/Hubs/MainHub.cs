@@ -2,14 +2,14 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.SignalR;
-using Uragsha.Models.Scheduling;
-using Uragsha.Scheduler.Interfaces;
 using System.Dynamic;
 using Uragsha.Signalling.Dto;
 using Microsoft.AspNetCore.Authorization;
 using System.Linq;
 using Identity.Interfaces.Services;
-using Identity.Interfaces.Identity;
+using Scheduler.Interfaces.Services;
+using Identity.Interfaces.Models;
+using Scheduler.Interfaces.Models;
 
 namespace Uragsha.Signalling.Hubs
 {
@@ -260,9 +260,8 @@ namespace Uragsha.Signalling.Hubs
                 return;
             }
 
-            foreach (var requestId in session.SessionRequestIds)
+            foreach (var request in session.SessionRequests)
             {
-                var request = SessionRequestService.GetSessionRequestById(requestId);
                 var connections = GetUserConnections(request.UserId);
                 await Clients.Clients(connections).OnSessionRequestUpdated(request);
             }

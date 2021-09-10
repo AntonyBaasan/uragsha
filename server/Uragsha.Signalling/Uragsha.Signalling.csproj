@@ -7,17 +7,21 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="8.1.1" />
     <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="5.0.9" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="5.0.9">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
     <PackageReference Include="Microsoft.EntityFrameworkCore.InMemory" Version="5.0.9" />
     <PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.10.14" />
+    <PackageReference Include="MySql.EntityFrameworkCore" Version="5.0.5" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\Identity\Identity.csproj" />
+    <ProjectReference Include="..\Scheduler\Scheduler.csproj" />
     <ProjectReference Include="..\Security.Interfaces\Identity.Interfaces.csproj" />
-    <ProjectReference Include="..\Uragsha.Models\Uragsha.Models.csproj" />
-    <ProjectReference Include="..\Uragsha.Scheduler.Interfaces\Uragsha.Scheduler.Interfaces.csproj" />
-    <ProjectReference Include="..\Uragsha.Scheduler.Memory\Uragsha.Scheduler.Memory.csproj" />
   </ItemGroup>
 
 </Project>

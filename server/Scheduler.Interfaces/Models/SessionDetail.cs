@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Uragsha.Models.Scheduling
+namespace Scheduler.Interfaces.Models
 {
     public class SessionDetail
     {

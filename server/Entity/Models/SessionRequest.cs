@@ -1,9 +1,11 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
-namespace Uragsha.Models.Scheduling
+namespace Entity.Models
 {
-    public class SessionRequest
+    [Table("SessionRequests")]
+    public class SessionRequestEntity
     {
         [Key]
         public string Id { get; set; }
@@ -11,7 +13,8 @@ namespace Uragsha.Models.Scheduling
         public DateTime End { get; set; }
         public string Title { get; set; }
         public string UserId { get; set; }
-        public SessionRequestStatus Status { get; set; }
-        public string SessionId { get; set; }
+        public int Status { get; set; }
+        public string? SessionId { get; set; }
+        public virtual SessionEntity Session { get; set; }
     }
 }
