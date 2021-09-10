@@ -47,8 +47,7 @@ namespace Uragsha.Signalling.Hubs
             return base.OnDisconnectedAsync(exception);
         }
 
-        // Debug: until bring auth
-        public void Login(UserDto userDto)
+        public void AfterLogin(UserDto userDto)
         {
             string uid = this.GetCurrentUid();
 

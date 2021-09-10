@@ -3,7 +3,7 @@ using Microsoft.Extensions.DependencyInjection;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace Entity
+namespace Entity.Services
 {
     public class UserEntityService
     {
