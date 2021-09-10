@@ -278,6 +278,11 @@ namespace Uragsha.Signalling.Hubs
             var uid = this.Context.User.Claims.FirstOrDefault(c => c.Type == "user_id");
             return uid != null ? uid.Value : "";
         }
+
+        private List<UserRole> GetCurrentUserRoles()
+        {
+            return new List<UserRole>();
+        }
     }
 
 }
