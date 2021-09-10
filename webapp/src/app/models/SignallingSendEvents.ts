@@ -3,7 +3,7 @@ export enum SignallingSendEvents {
   JoinToRoom = 'JoinToRoom',
   RemoveFromRoom = 'RemoveFromRoom',
 
-  Login = 'Login',
+  AfterLogin = 'AfterLogin',
   CreateSessionRequest = 'CreateSessionRequest',
   GetUserSessionRequests = 'GetUserSessionRequests',
   CreateSession = 'CreateSession',

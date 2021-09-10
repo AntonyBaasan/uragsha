@@ -54,7 +54,7 @@ export class SingnallingService implements OnDestroy {
     return this.connection
       .start()
       .then(() => {
-        this.login(user);
+        this.afterLogin(user);
         console.log('SignalR connection started');
       })
       .catch((err) => {
@@ -91,12 +91,12 @@ export class SingnallingService implements OnDestroy {
   }
 
   // called always after connection
-  private login(user: User): Promise<void> {
+  private afterLogin(user: User): Promise<void> {
     if (!this.isConnected()) {
       console.log('Connection is not established!');
       return Promise.resolve();
     }
-    return this.connection.invoke(SignallingSendEvents.Login, user);
+    return this.connection.invoke(SignallingSendEvents.AfterLogin, user);
   }
 
   getUserSessionRequests(): Promise<void> {
