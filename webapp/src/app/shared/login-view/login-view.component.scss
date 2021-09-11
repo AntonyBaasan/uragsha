@@ -1,0 +1,20 @@
+.box {
+  height: 100vh;
+  border: 1px;
+}
+.btn {
+  width: 191px;
+  height: 46px;
+}
+.btn-google {
+  background: url("../../../../src/assets/google/btn_google_signin_light_normal_web.png")
+    no-repeat;
+}
+.btn-google:hover {
+  background: url("../../../../src/assets/google/btn_google_signin_light_focus_web.png")
+    no-repeat;
+}
+.btn-google:active {
+  background: url("../../../../src/assets/google/btn_google_signin_light_pressed_web.png")
+    no-repeat;
+}

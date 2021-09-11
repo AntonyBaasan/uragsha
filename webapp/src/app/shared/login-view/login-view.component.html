@@ -1,24 +1,27 @@
-<div *ngIf="auth.currentUser | async as user; else showLogin">
-  <h1>Hello {{ user.displayName }}!</h1>
-  <button (click)="logout()">Logout</button>
+<div class="d-flex align-items-center justify-content-center box">
+  <div class=" border rounded-3 p-5">
+    <div *ngIf="auth.currentUser | async as user; else showLogin">
+      <h1>Hello {{ user.displayName }}!</h1>
+      <button (click)="logout()">Logout</button>
+    </div>
+    <ng-template #showLogin>
+      <p class="fs-1">Uragsha</p>
+      <p class="fs-3">Account Login</p>
+      <div class="p-2">
+        <button class="btn btn-google rounded" (click)="loginGoogle()">
+        </button>
+      </div>
+      <div class="p-2">
+        <button class="btn btn-primary" (click)="loginFacebook()">
+          Login with Facebook
+        </button>
+      </div>
+      <div class="p-2">
+        <button class="btn btn-secondary" (click)="loginTwitter()">
+          Login with Twitter
+        </button>
+      </div>
+      <div></div>
+    </ng-template>
+  </div>
 </div>
-<ng-template #showLogin>
-  <p class="fs-1">Uragsha</p>
-  <p class="fs-3">Account Login</p>
-  <div class="p-2">
-    <button class="btn btn-success" (click)="loginGoogle()">
-      Login with Google
-    </button>
-  </div>
-  <div class="p-2">
-    <button class="btn btn-primary" (click)="loginFacebook()">
-      Login with Facebook
-    </button>
-  </div>
-  <div class="p-2">
-    <button class="btn btn-secondary" (click)="loginTwitter()">
-      Login with Twitter
-    </button>
-  </div>
-  <div></div>
-</ng-template>
