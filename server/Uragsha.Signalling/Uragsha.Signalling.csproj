@@ -19,6 +19,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\Entity.MySql\Entity.MySql.csproj" />
     <ProjectReference Include="..\Identity\Identity.csproj" />
     <ProjectReference Include="..\Scheduler\Scheduler.csproj" />
     <ProjectReference Include="..\Security.Interfaces\Identity.Interfaces.csproj" />

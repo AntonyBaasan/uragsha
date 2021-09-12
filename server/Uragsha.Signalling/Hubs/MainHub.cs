@@ -281,7 +281,7 @@ namespace Uragsha.Signalling.Hubs
 
         // TODO: need impl
         private List<UserRole> GetCurrentUserRoles()
-        {
+        { 
             return new List<UserRole>();
         }
     }

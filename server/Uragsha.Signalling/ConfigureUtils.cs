@@ -1,4 +1,5 @@
 ﻿using Entity;
+using Entity.MySql.Services;
 using Entity.Services;
 using Identity;
 using Identity.Interfaces.Services;
@@ -27,7 +28,7 @@ namespace Uragsha.Signalling
             );
 
             // Entity services
-            services.AddSingleton<IUserEntityService, IUserEntityService>();
+            services.AddSingleton<IUserEntityService, UserEntityService>();
 
             // Internal services
             services.AddSingleton<ISessionRequestService, SessionRequestService>();
