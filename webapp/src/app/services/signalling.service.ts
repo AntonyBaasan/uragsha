@@ -4,6 +4,7 @@ import { parseISO } from 'date-fns';
 import { Subject } from 'rxjs';
 import { environment } from 'src/environments/environment';
 import { SessionDetail, SessionRequest, SignallingReceiveEvents, SignallingSendEvents, User } from '../models';
+import { ModelHelperService } from './model-helper.service';
 
 @Injectable({
   providedIn: 'root',
@@ -31,6 +32,8 @@ export class SingnallingService implements OnDestroy {
   public OnReceiveIceCandidate = new Subject<any>();
   public OnUserLeaveSesson = new Subject<string>();
   public OnUserJoinSession = new Subject<string>();
+
+  constructor(private modelHelperService: ModelHelperService) { }
 
   ngOnDestroy(): void {
     this.connection?.stop()
@@ -213,20 +216,20 @@ export class SingnallingService implements OnDestroy {
       SignallingReceiveEvents.OnGetUserSessionRequests,
       (sessionRequests: SessionRequest[]) => {
         this.OnGetUserSessionRequests.next(
-          sessionRequests.map((s) => this.mapStringToDate(s))
+          sessionRequests.map((s) => this.modelHelperService.fixSessionRequestDateFormat(s))
         );
       }
     );
     this.connection.on(
       SignallingReceiveEvents.OnSessionRequestUpdated,
       (sessionRequest: SessionRequest) => {
-        this.OnSessionRequestUpdated.next(this.mapStringToDate(sessionRequest));
+        this.OnSessionRequestUpdated.next(this.modelHelperService.fixSessionRequestDateFormat(sessionRequest));
       }
     );
     this.connection.on(
       SignallingReceiveEvents.OnSessionRequestCreated,
       (sessionRequest: SessionRequest) => {
-        this.OnSessionRequestCreated.next(this.mapStringToDate(sessionRequest));
+        this.OnSessionRequestCreated.next(this.modelHelperService.fixSessionRequestDateFormat(sessionRequest));
       }
     );
     this.connection.on(
@@ -281,10 +284,4 @@ export class SingnallingService implements OnDestroy {
     );
   }
 
-  private mapStringToDate(sessionRequest: SessionRequest): SessionRequest {
-    return Object.assign(sessionRequest, {
-      start: parseISO(sessionRequest.start as any),
-      end: parseISO(sessionRequest.end as any),
-    });
-  }
 }

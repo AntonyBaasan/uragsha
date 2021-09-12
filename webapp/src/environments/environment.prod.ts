@@ -1,6 +1,7 @@
 export const environment = {
   production: true,
-  webApiUrl: 'https://uragsha-webapi.azurewebsites.net',
+  // webApiUrl: 'https://uragsha-webapi.azurewebsites.net',
+  webApiUrl: 'https://uragsha-signalling.azurewebsites.net',
   signallingUrl: 'https://uragsha-signalling.azurewebsites.net',
   iceServers: [
     { urls: 'stun:stun.services.mozilla.com' },

@@ -2,16 +2,11 @@
 // `ng build` replaces `environment.ts` with `environment.prod.ts`.
 // The list of file replacements can be found in `angular.json`.
 
-let webApiUrl = 'https://localhost:6001';
-let signallingUrl = 'https://localhost:7001';
-if (location.protocol !== 'https:') {
-  webApiUrl = 'http://localhost:6000';
-  signallingUrl = 'http://localhost:7000';
-}
 export const environment = {
   production: false,
-  webApiUrl,
-  signallingUrl,
+  // webApiUrl: 'https://localhost:6001',
+  webApiUrl: 'https://localhost:7001',
+  signallingUrl: 'https://localhost:7001',
   iceServers: [
     { urls: 'stun:stun.services.mozilla.com' },
     { urls: 'stun:stun.l.google.com:19302' },

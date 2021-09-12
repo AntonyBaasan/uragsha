@@ -8,6 +8,7 @@ import {
 import { Subscription } from 'rxjs';
 import { SessionRequest } from '../models';
 import { AuthService, BackendService, SingnallingService, StoreService } from '../services';
+import { SessionRequestsService } from '../services/webapi/session-requests.service';
 import { CalendarTabService } from './calendar-tab/calendar-tab.service';
 import { CalendarService } from './calendar-tab/calendar/calendar.service';
 import { SessionService } from './session/session.service';
@@ -33,6 +34,7 @@ export class DashboardPageComponent implements OnInit, OnDestroy {
     public authService: AuthService,
     private backendService: BackendService,
     private signallingService: SingnallingService,
+    private sessionRequestsService: SessionRequestsService,
     private store: StoreService,
     private cdr: ChangeDetectorRef
   ) { }
@@ -40,6 +42,11 @@ export class DashboardPageComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.store.userSubject.subscribe(user => {
       this.userName = user && user.uid ? user.uid : '';
+      if (this.userName) {
+        this.loadSessionRequest();
+      } else {
+        this.clearSessionRequest();
+      }
       this.cdr.detectChanges();
     });
 
@@ -63,6 +70,16 @@ export class DashboardPageComponent implements OnInit, OnDestroy {
         (sessionRequestId: string) =>
           this.handleOnSessionRequestDeleted(sessionRequestId)
       );
+  }
+
+  loadSessionRequest() {
+    this.sessionRequestsService.getAll().subscribe(sessionRequests => {
+      this.store.setSessionRequests(sessionRequests);
+    })
+  }
+
+  clearSessionRequest() {
+    this.store.setSessionRequests([]);
   }
 
   ngOnDestroy(): void {
