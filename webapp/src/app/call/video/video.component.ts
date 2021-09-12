@@ -1,4 +1,7 @@
-import { ChangeDetectorRef, Component, ElementRef, EventEmitter, HostListener, Input, OnDestroy, OnInit, Output, ViewChild } from '@angular/core';
+import {
+  ChangeDetectorRef, Component, ElementRef, EventEmitter,
+  Input, OnDestroy, OnInit, Output, ViewChild
+} from '@angular/core';
 import { Subscription } from 'rxjs';
 import { SessionDetail } from 'src/app/models';
 import { SingnallingService, WebrtcService } from 'src/app/services';
@@ -49,7 +52,7 @@ export class VideoComponent implements OnInit, OnDestroy {
         // for the local only video is important!
         this.setLocalStream(new MediaStream(stream.getVideoTracks()));
         // TODO: debug
-        this.setRemoteStream(new MediaStream(stream.getVideoTracks()));
+        // this.setRemoteStream(new MediaStream(stream.getVideoTracks()));
       });
   }
 

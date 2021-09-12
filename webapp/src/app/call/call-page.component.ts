@@ -33,8 +33,6 @@ export class CallPageComponent implements OnInit, OnDestroy {
   private subOnUserLeaveSession: Subscription | undefined;
   private subOnConnectionStateChangedSubject: Subscription | undefined;
 
-
-
   constructor(
     private signallingService: SingnallingService,
     private webRtcService: WebrtcService,

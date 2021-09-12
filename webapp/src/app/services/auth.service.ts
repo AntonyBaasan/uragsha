@@ -9,10 +9,7 @@ import { User } from '../models';
   providedIn: 'root',
 })
 export class AuthService implements OnDestroy {
-  // public firebaseApp: FirebaseApp;
-  // public onLogin = new Subject<User>();
-  // public onLogout = new Subject();
-  // public currentUser: User | null = null;
+
   public currentUser = new BehaviorSubject<User | null>(null);
 
   constructor(public auth: AngularFireAuth) {
