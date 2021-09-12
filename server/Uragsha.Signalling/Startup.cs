@@ -7,6 +7,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.IdentityModel.Tokens;
 using Uragsha.Signalling.Hubs;
+using Microsoft.OpenApi.Models;
 
 namespace Uragsha.Signalling
 {
@@ -73,6 +74,13 @@ namespace Uragsha.Signalling
 
             services.AddRazorPages();
             services.AddSignalR();
+
+            // temp code from webapi
+            services.AddControllers();
+            services.AddSwaggerGen(c =>
+            {
+                c.SwaggerDoc("v1", new OpenApiInfo { Title = "Uragsha.WebApi", Version = "v1" });
+            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -81,6 +89,9 @@ namespace Uragsha.Signalling
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
+                // temp code from webapi
+                app.UseSwagger();
+                app.UseSwaggerUI(c => c.SwaggerEndpoint("", "Uragsha.WebApi v1"));
             }
             else
             {
@@ -104,6 +115,8 @@ namespace Uragsha.Signalling
             {
                 endpoints.MapRazorPages();
                 endpoints.MapHub<MainHub>(HubName);
+                // temp code from webapi
+                endpoints.MapControllers();
             });
         }
     }
