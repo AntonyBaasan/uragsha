@@ -1,4 +1,5 @@
-﻿using Entity;
+﻿using Dashboard.Services;
+using Entity;
 using Entity.MySql.Services;
 using Entity.Services;
 using Identity;
@@ -34,7 +35,7 @@ namespace Uragsha.Signalling
             services.AddSingleton<ISessionRequestService, SessionRequestService>();
             services.AddSingleton<ISessionService, SessionService>();
             services.AddSingleton<IUserService, UserService>();
-            
+            services.AddSingleton<DashboardService>();
         }
     }
 }
