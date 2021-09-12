@@ -104,6 +104,8 @@ export class CallPageComponent implements OnInit, OnDestroy {
       // other user joined this session
       // TODO: start video call
       console.log('joinedUserId:', joinedUserId);
+
+      this.startCall();
     }
   }
 
