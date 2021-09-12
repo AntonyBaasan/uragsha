@@ -89,12 +89,6 @@ export class DashboardPageComponent implements OnInit, OnDestroy {
     this.subOnSessionRequestDeleted?.unsubscribe();
   }
 
-  getLoginButton() {
-    const user = this.store.userSubject.getValue();
-    if (user) { return user.displayName; }
-    return 'Sign In';
-  }
-
   logout() {
     this.authService.logout();
   }

@@ -31,7 +31,8 @@
           data-bs-toggle="dropdown"
           aria-expanded="false"
         >
-          {{ getLoginButton() }}
+          {{ user.displayName }}
+          <img class="rounded-circle user-image" src="{{ user.photoUrl }}" />
         </div>
         <ul
           class="dropdown-menu dropdown-menu-dark dropdown-menu-end"
