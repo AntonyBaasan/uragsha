@@ -8,6 +8,9 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.IdentityModel.Tokens;
 using Uragsha.Signalling.Hubs;
 using Microsoft.OpenApi.Models;
+using System;
+using System.Text;
+using Microsoft.Extensions.Caching.Distributed;
 
 namespace Uragsha.Signalling
 {
@@ -81,10 +84,22 @@ namespace Uragsha.Signalling
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "Uragsha.WebApi", Version = "v1" });
             });
+
+            // TODO: temp memory distributed cache (until Redis is ready)
+            // https://docs.microsoft.com/en-us/aspnet/core/performance/caching/distributed?view=aspnetcore-5.0#distributed-redis-cache
+            services.AddDistributedMemoryCache();
+            //services.AddStackExchangeRedisCache(options =>
+            //{
+            //    options.Configuration = Configuration.GetSection("Redis")["ConnectionString"];;
+            //    options.InstanceName = "uragsha-staging";
+            //});
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+        public void Configure(IApplicationBuilder app,
+            IWebHostEnvironment env,
+            IHostApplicationLifetime lifetime,
+            IDistributedCache cache)
         {
             if (env.IsDevelopment())
             {
