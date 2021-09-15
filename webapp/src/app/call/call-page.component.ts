@@ -68,11 +68,6 @@ export class CallPageComponent implements OnInit, OnDestroy {
     this.detectOrietation();
   }
 
-  private detectOrietation() {
-    this.orientation =
-      window.innerWidth > window.innerHeight ? 'horizontal' : 'vertical';
-  }
-
   private subscribeSignallingServiceEvents() {
     this.subOnSessionDetailUpdated = this.signallingService.OnSessionDetailUpdated.subscribe(
       (sessionDetail: SessionDetail) => this.handleSessionDetailUpdated(sessionDetail)
@@ -110,7 +105,6 @@ export class CallPageComponent implements OnInit, OnDestroy {
         this.cdr.detectChanges();
       });
     this.subOnRemoteStreamAddedSubject = this.webRtcService.OnRemoteStreamAddedSubject.subscribe(stream => {
-      console.log('OnRemoteStreamAddedSubject:', stream);
       this.videoComponent.setRemoteStream(stream);
     });
     this.subOnIceCandidateEventSubject = this.webRtcService.OnIceCandidateEventSubject.subscribe(candidate => {
@@ -124,10 +118,6 @@ export class CallPageComponent implements OnInit, OnDestroy {
     this.subOnConnectionStateChangedSubject?.unsubscribe();
     this.subOnRemoteStreamAddedSubject?.unsubscribe();
     this.subOnIceCandidateEventSubject?.unsubscribe();
-  }
-
-  getConnectionState(): RTCPeerConnectionState {
-    return this.webRtcService.getConnectionState();
   }
 
   showMe() {
@@ -145,9 +135,6 @@ export class CallPageComponent implements OnInit, OnDestroy {
   private startWebRtc() {
     this.webRtcService.init();
     this.subscribeWebRtcServiceEvents();
-    // if (this.localStream) {
-    //   this.webRtcService.addLocalStream(this.localStream);
-    // }
   }
 
   private stopWebRtc() {
@@ -157,9 +144,7 @@ export class CallPageComponent implements OnInit, OnDestroy {
 
   private handleUserJoinSession(joinedUserId: string): void {
     console.log('joinedUserId:', joinedUserId);
-    if (this.userId === joinedUserId) {
-
-    } else {
+    if (this.userId !== joinedUserId) {
       // other user joined this session
       // start video call
       this.startCall();
@@ -168,9 +153,7 @@ export class CallPageComponent implements OnInit, OnDestroy {
 
   private handleUserLeaveSession(leftUserId: string): void {
     console.log('leftUserId:', leftUserId);
-    if (this.userId === leftUserId) {
-      // TODO: more logic
-    } else {
+    if (this.userId !== leftUserId) {
       // other user left this session
       this.stopWebRtc();
       this.videoComponent.stopRemote();
@@ -181,6 +164,16 @@ export class CallPageComponent implements OnInit, OnDestroy {
     this.endCall();
     this.unsubscribeSignallingServiceEvents();
     this.unsubscribeListenWebRtcServiceEvents();
+  }
+
+  endCall() {
+    const user = this.store.getUser();
+    if (this.sessionDetail && user) {
+      this.signallingService.leaveSession(this.sessionDetail.sessionId);
+      this.videoComponent.stopLocal();
+      this.videoComponent.stopRemote();
+      this.stopWebRtc();
+    }
   }
 
   async startCall() {
@@ -201,15 +194,6 @@ export class CallPageComponent implements OnInit, OnDestroy {
     }
   }
 
-  endCall() {
-    const user = this.store.getUser();
-    if (this.sessionDetail && user) {
-      this.signallingService.leaveSession(this.sessionDetail.sessionId);
-      this.videoComponent.stopLocal();
-      this.videoComponent.stopRemote();
-      this.stopWebRtc();
-    }
-  }
 
   // came from a user who started video
   // so this user has to create answer
@@ -234,10 +218,8 @@ export class CallPageComponent implements OnInit, OnDestroy {
     await this.webRtcService.setLocalDescription(answer);
 
     this.signallingService.answerVideoCall(this.sessionRequestId, answer);
-
   }
-  // came from a user who started video
-  // so this user has to create answer
+
   async handleAnswerVideoCall(result: {
     sessionId: string;
     sessionDetail: SessionDetail;
@@ -282,6 +264,11 @@ export class CallPageComponent implements OnInit, OnDestroy {
   @HostListener('window:resize', ['$event'])
   onResize(event: any) {
     this.detectOrietation();
+  }
+
+  private detectOrietation() {
+    this.orientation =
+      window.innerWidth > window.innerHeight ? 'horizontal' : 'vertical';
   }
 
 }

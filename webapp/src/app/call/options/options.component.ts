@@ -11,53 +11,35 @@ export class OptionsComponent {
   @Input() user: User;
   @Input() connectionState: RTCPeerConnectionState;
 
-  @Output() onLeave = new EventEmitter();
-  @Output() onStartCall = new EventEmitter();
-  @Output() onMute = new EventEmitter();
-  @Output() onFullScreen = new EventEmitter();
+  @Output() startCall = new EventEmitter();
+  @Output() endCall = new EventEmitter();
+  @Output() mute = new EventEmitter();
+  @Output() fullScreen = new EventEmitter();
+  @Output() leave = new EventEmitter();
 
   constructor() { }
 
-  showMe() {
-    // this.videoComponent.showMe();
+  onStartCall() {
+    this.startCall.emit();
   }
 
-  stop() {
-    // this.videoComponent.stop();
-  }
-
-  async startCall() {
-    // if (this.sessionDetail?.offer) {
-    //   console.log('Video call is already in progress!')
-    //   return;
-    // }
-    // const user = this.store.getUser();
-    // if (this.sessionRequestId && user) {
-    //   const offer = await this.webRtcService.createOffer();
-    //   this.signallingService.offerVideoCall(this.sessionRequestId, offer);
-    // }
-  }
-
-  endCall() {
-    // const user = this.store.getUser();
-    // if (this.sessionDetail && user) {
-    //   this.signallingService.leaveSession(this.sessionDetail.sessionId);
-    // }
+  onEndCall() {
+    this.endCall.emit();
   }
 
   toggleOptions() {
 
   }
 
-  mute() {
-    this.onMute.emit();
+  onMute() {
+    this.mute.emit();
   }
 
-  fullScreen() {
-    this.onFullScreen.emit();
+  onFullScreen() {
+    this.fullScreen.emit();
   }
 
-  leave() {
-    this.onLeave.emit();
+  onLeave() {
+    this.leave.emit();
   }
 }

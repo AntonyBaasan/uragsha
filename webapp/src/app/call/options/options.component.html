@@ -23,10 +23,8 @@
           Connection status:{{ connectionState }}<br />
           <br />
 
-          <button (click)="startCall()">Start Call</button><br />
-          <button (click)="endCall()">End Call</button><br />
-          <button (click)="showMe()">Show Me</button><br />
-          <button (click)="stop()">Stop</button><br />
+          <button (click)="onStartCall()">Start Call</button><br />
+          <button (click)="onEndCall()">End Call</button><br />
           <br />
         </p>
       </div>
@@ -34,10 +32,10 @@
   </div>
 
   <div class="options-buttons d-flex justify-content-end">
-    <button class="btn btn-primary options-button m-1" (click)="mute()">
+    <button class="btn btn-primary options-button m-1" (click)="onMute()">
       Mute
     </button>
-    <button class="btn btn-primary options-button m-1" (click)="fullScreen()">
+    <button class="btn btn-primary options-button m-1" (click)="onFullScreen()">
       Full Screen
     </button>
     <button
@@ -47,7 +45,7 @@
     >
       More Options
     </button>
-    <button class="btn btn-danger options-button m-1" (click)="leave()">
+    <button class="btn btn-danger options-button m-1" (click)="onLeave()">
       Leave
     </button>
   </div>
