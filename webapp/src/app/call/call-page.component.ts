@@ -174,7 +174,6 @@ export class CallPageComponent implements OnInit, OnDestroy {
 
     const user = this.store.getUser();
     if (this.sessionRequestId && user) {
-      this.webRtcService.init();
       const offer = await this.webRtcService.createOffer();
       this.signallingService.offerVideoCall(this.sessionRequestId, offer);
     }
