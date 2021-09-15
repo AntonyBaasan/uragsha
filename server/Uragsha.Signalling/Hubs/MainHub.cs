@@ -38,6 +38,8 @@ namespace Uragsha.Signalling.Hubs
         [AllowAnonymous]
         public override Task OnDisconnectedAsync(Exception exception)
         {
+            ClearSessionWebRtcInfom();
+
             GlobalInfo.ConnectedIds.Remove(Context.ConnectionId);
             foreach (var userId in GlobalInfo.UserConnections.Keys)
             {
@@ -45,6 +47,25 @@ namespace Uragsha.Signalling.Hubs
             }
 
             return base.OnDisconnectedAsync(exception);
+        }
+
+        private void ClearSessionWebRtcInfom()
+        {
+            foreach (var userId in GlobalInfo.UserConnections.Keys)
+            {
+                if (GlobalInfo.UserConnections[userId].Any(value => value.Equals(Context.ConnectionId)))
+                {
+                    foreach (var sessionId in GlobalInfo.ActiveSession.Keys)
+                    {
+                        var sessionDetail = GlobalInfo.ActiveSession[sessionId];
+                        if ((sessionDetail.Offer != null && sessionDetail.Offer.UserId.Equals(userId))
+                            || (sessionDetail.Answer != null && sessionDetail.Answer.UserId.Equals(userId)))
+                        {
+                            LeaveSession(sessionId);
+                        }
+                    }
+                }
+            }
         }
 
         public async void AfterLogin(UserDto userDto)
@@ -196,6 +217,7 @@ namespace Uragsha.Signalling.Hubs
             await Clients.GroupExcept(sessionId, new List<string> { Context.ConnectionId }).OnUserLeaveSession(userId);
             await Groups.RemoveFromGroupAsync(Context.ConnectionId, sessionId);
 
+            Console.WriteLine("Reset webrtc Answer and Offer!");
             sessionDetail.Answer = null;
             sessionDetail.Offer = null;
             await Clients.GroupExcept(sessionDetail.SessionId, new List<string> { Context.ConnectionId }).OnSessionDetailUpdated(sessionDetail);
@@ -282,7 +304,7 @@ namespace Uragsha.Signalling.Hubs
 
         // TODO: need impl
         private List<UserRole> GetCurrentUserRoles()
-        { 
+        {
             return new List<UserRole>();
         }
     }

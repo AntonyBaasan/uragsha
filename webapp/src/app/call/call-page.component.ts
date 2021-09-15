@@ -54,7 +54,6 @@ export class CallPageComponent implements OnInit, OnDestroy {
 
     this.store.userSubject.subscribe(user => {
       this.userId = user && user.uid ? user.uid : '';
-      // try to join
       if (this.userId) {
         this.showMe().then(() => {
           this.subscribeSignallingServiceEvents();
@@ -115,7 +114,6 @@ export class CallPageComponent implements OnInit, OnDestroy {
       this.videoComponent.setRemoteStream(stream);
     });
     this.subOnIceCandidateEventSubject = this.webRtcService.OnIceCandidateEventSubject.subscribe(candidate => {
-      // console.log('OnIceCandidateEventSubject:', candidate);
       if (this.sessionDetail?.sessionId && candidate) {
         this.signallingService.SendIceCandidate(this.sessionDetail.sessionId, candidate);
       }
@@ -137,9 +135,6 @@ export class CallPageComponent implements OnInit, OnDestroy {
       .getUserMedia({ audio: true, video: true })
       .then((stream) => {
         this.localStream = stream;
-        if (this.webRtcService.isInitialized()) {
-          this.webRtcService.addLocalStream(this.localStream);
-        }
         // for the local only video is important!
         this.videoComponent.setLocalStream(new MediaStream(stream.getVideoTracks()));
         // TODO: debug
