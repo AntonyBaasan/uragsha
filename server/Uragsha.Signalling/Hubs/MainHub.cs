@@ -187,13 +187,14 @@ namespace Uragsha.Signalling.Hubs
                 return;
             }
             var sessionDetail = GlobalInfo.ActiveSession[sessionId];
-            if (sessionDetail.Offer.UserId != userId && sessionDetail.Answer.UserId != userId)
+            if (sessionDetail.Offer?.UserId != userId && sessionDetail.Answer?.UserId != userId)
             {
                 Console.WriteLine("Trying to leave a session that user doesn't belong!");
                 return;
             }
 
             await Clients.GroupExcept(sessionId, new List<string> { Context.ConnectionId }).OnUserLeaveSession(userId);
+            await Groups.RemoveFromGroupAsync(Context.ConnectionId, sessionId);
 
             sessionDetail.Answer = null;
             sessionDetail.Offer = null;

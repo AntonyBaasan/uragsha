@@ -30,6 +30,10 @@ export class WebrtcService implements OnDestroy {
   }
 
   ngOnDestroy(): void {
+    this.close();
+  }
+
+  close() {
     if (this.peerConnection) {
       this.peerConnection.close();
     }

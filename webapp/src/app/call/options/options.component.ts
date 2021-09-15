@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { User } from 'src/app/models';
 
 @Component({
@@ -10,6 +10,11 @@ export class OptionsComponent {
 
   @Input() user: User;
   @Input() connectionState: RTCPeerConnectionState;
+
+  @Output() onLeave = new EventEmitter();
+  @Output() onStartCall = new EventEmitter();
+  @Output() onMute = new EventEmitter();
+  @Output() onFullScreen = new EventEmitter();
 
   constructor() { }
 
@@ -44,7 +49,15 @@ export class OptionsComponent {
 
   }
 
-  leave() {
+  mute() {
+    this.onMute.emit();
+  }
 
+  fullScreen() {
+    this.onFullScreen.emit();
+  }
+
+  leave() {
+    this.onLeave.emit();
   }
 }

@@ -32,6 +32,9 @@ export class CallPageComponent implements OnInit, OnDestroy {
   private subOnUserJoinSession: Subscription | undefined;
   private subOnUserLeaveSession: Subscription | undefined;
   private subOnConnectionStateChangedSubject: Subscription | undefined;
+  private subOnOfferVideoCall: Subscription | undefined;
+  private subOnAnswerVideoCall: Subscription | undefined;
+  private subOnReceiveIceCandidate: Subscription | undefined;
 
   constructor(
     private signallingService: SingnallingService,
@@ -75,14 +78,34 @@ export class CallPageComponent implements OnInit, OnDestroy {
     this.subOnUserLeaveSession = this.signallingService.OnUserLeaveSesson.subscribe(
       (leftUserId: string) => this.handleUserLeaveSession(leftUserId)
     );
+    this.subOnOfferVideoCall = this.signallingService.OnOfferVideoCall.subscribe(
+      (result: { sessionId: string; sessionDetail: SessionDetail; }) => this.handleOfferVideoCall(result)
+    );
+    this.subOnAnswerVideoCall = this.signallingService.OnAnswerVideoCall.subscribe(
+      (result: { sessionId: string; sessionDetail: SessionDetail; }) => this.handleAnswerVideoCall(result)
+    );
+    this.subOnReceiveIceCandidate = this.signallingService.OnReceiveIceCandidate.subscribe(
+      (iceCandidate: RTCIceCandidate) => this.handleReceiveIceCandidate(iceCandidate)
+    );
   }
 
   private listenWebRtcServiceEvents() {
+    this.webRtcService.init();
     this.subOnConnectionStateChangedSubject = this.webRtcService.OnConnectionStateChangedSubject.subscribe(
       (state: RTCPeerConnectionState) => {
         this.connectionState = state;
         this.cdr.detectChanges();
       });
+    this.webRtcService.OnRemoteStreamAddedSubject.subscribe(stream => {
+      console.log('OnRemoteStreamAddedSubject:', stream);
+      this.videoComponent.setRemoteStream(stream);
+    });
+    this.webRtcService.OnIceCandidateEventSubject.subscribe(candidate => {
+      console.log('OnIceCandidateEventSubject:', candidate);
+      if (this.sessionDetail.sessionId) {
+        this.signallingService.SendIceCandidate(this.sessionDetail.sessionId, candidate);
+      }
+    });
   }
 
   getConnectionState(): RTCPeerConnectionState {
@@ -90,40 +113,57 @@ export class CallPageComponent implements OnInit, OnDestroy {
   }
 
   showMe() {
-    this.videoComponent.showMe();
+    navigator.mediaDevices
+      .getUserMedia({ audio: true, video: true })
+      .then((stream) => {
+        this.webRtcService.addStream(stream);
+        // for the local only video is important!
+        this.videoComponent.setLocalStream(new MediaStream(stream.getVideoTracks()));
+        // TODO: debug
+        // this.videoComponent.setRemoteStream(new MediaStream(stream.getVideoTracks()));
+      });
   }
 
-  stop() {
+  stopVideo() {
     this.videoComponent.stop();
   }
 
+  stopWebRtc() {
+    this.webRtcService.close();
+  }
+
   private handleUserJoinSession(joinedUserId: string): void {
+    console.log('joinedUserId:', joinedUserId);
     if (this.userId === joinedUserId) {
 
     } else {
       // other user joined this session
-      // TODO: start video call
-      console.log('joinedUserId:', joinedUserId);
-
+      // start video call
       this.startCall();
     }
   }
 
   private handleUserLeaveSession(leftUserId: string): void {
+    console.log('leftUserId:', leftUserId);
     if (this.userId === leftUserId) {
       // TODO: more logic
-      this.stop();
     } else {
       // other user left this session
-      this.stop();
+      this.stopWebRtc();
+      this.stopVideo();
     }
   }
 
   ngOnDestroy() {
+    this.webRtcService.ngOnDestroy();
+    this.endCall();
     this.subOnSessionDetailUpdated?.unsubscribe();
     this.subOnUserJoinSession?.unsubscribe();
     this.subOnUserLeaveSession?.unsubscribe();
     this.subOnConnectionStateChangedSubject?.unsubscribe();
+    this.subOnOfferVideoCall?.unsubscribe();
+    this.subOnAnswerVideoCall?.unsubscribe();
+    this.subOnReceiveIceCandidate?.unsubscribe();
   }
 
   async startCall() {
@@ -131,8 +171,10 @@ export class CallPageComponent implements OnInit, OnDestroy {
       console.log('Video call is already in progress!')
       return;
     }
+
     const user = this.store.getUser();
     if (this.sessionRequestId && user) {
+      this.webRtcService.init();
       const offer = await this.webRtcService.createOffer();
       this.signallingService.offerVideoCall(this.sessionRequestId, offer);
     }
@@ -142,6 +184,47 @@ export class CallPageComponent implements OnInit, OnDestroy {
     const user = this.store.getUser();
     if (this.sessionDetail && user) {
       this.signallingService.leaveSession(this.sessionDetail.sessionId);
+      this.stopVideo();
+      this.stopWebRtc();
+    }
+  }
+
+  // came from a user who started video
+  // so this user has to create answer
+  async handleOfferVideoCall(result: {
+    sessionId: string;
+    sessionDetail: SessionDetail;
+  }) {
+
+    if (!result.sessionDetail.offer) {
+      console.error('Weird! Why offer object is empty?');
+      return;
+    }
+
+    this.sessionDetail = result.sessionDetail;
+    this.webRtcService.setRemoteDescription(result.sessionDetail.offer.content);
+    const answer = await this.webRtcService.createAnswer();
+
+    this.signallingService.answerVideoCall(this.sessionRequestId, answer);
+
+  }
+  // came from a user who started video
+  // so this user has to create answer
+  async handleAnswerVideoCall(result: {
+    sessionId: string;
+    sessionDetail: SessionDetail;
+  }) {
+    this.sessionDetail = result.sessionDetail;
+    if (result.sessionDetail.answer) {
+      this.webRtcService.setRemoteDescription(result.sessionDetail.answer.content);
+    }
+  }
+
+  private async handleReceiveIceCandidate(iceCandidate: RTCIceCandidate) {
+    try {
+      await this.webRtcService.addIceCandidate(iceCandidate)
+    } catch (e) {
+      console.error('Error adding received ice candidate', e);
     }
   }
 
@@ -153,7 +236,13 @@ export class CallPageComponent implements OnInit, OnDestroy {
     this.router.navigate(['/']);
   }
 
-  timeDone(){
+  mute() {
+  }
+
+  fullScreen() {
+  }
+
+  timeDone() {
     console.log('timeDone!');
   }
 
@@ -162,9 +251,9 @@ export class CallPageComponent implements OnInit, OnDestroy {
    * if bigger screen show CalendarView.Week
    * @param event
    */
-   @HostListener('window:resize', ['$event'])
-   onResize(event: any) {
+  @HostListener('window:resize', ['$event'])
+  onResize(event: any) {
     this.detectOrietation();
-   }
+  }
 
 }

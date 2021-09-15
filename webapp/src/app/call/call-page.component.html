@@ -1,10 +1,10 @@
-<app-video
-  [orientation]="orientation"
-  [sessionRequestId]="sessionRequestId"
-  [sessionId]="sessionDetail?.sessionId"
-  (sessionDetailUpdated)="handleSessionDetailUpdated($event)"
-></app-video>
-<app-options [connectionState]="connectionState"></app-options>
+<app-video [orientation]="orientation"></app-video>
+<app-options
+  [connectionState]="connectionState"
+  (onLeave)="leave()"
+  (onMute)="mute()"
+  (onFullScreen)="fullScreen()"
+></app-options>
 <app-timer [initSeconds]="secondsLeft" (timeDone)="timeDone()"></app-timer>
 
 <!-- <app-messages></app-messages> -->
