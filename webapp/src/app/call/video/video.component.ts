@@ -14,8 +14,12 @@ export class VideoComponent {
 
   constructor(private cdr: ChangeDetectorRef) { }
 
-  stop() {
+  stopLocal() {
     this.setLocalStream(null);
+    this.cdr.detectChanges();
+  }
+
+  stopRemote() {
     this.setRemoteStream(null);
     this.cdr.detectChanges();
   }

@@ -16,16 +16,18 @@ export class WebrtcService implements OnDestroy {
 
   init() {
     this.peerConnection = new RTCPeerConnection(this.webRtcConfiguration);
-    this.peerConnection.addEventListener('icecandidate', (event) => {
+    this.peerConnection.onicecandidate = (event) => {
       if (event.candidate) {
         this.OnIceCandidateEventSubject.next(event.candidate);
       }
-    });
+    };
     this.peerConnection.ontrack = (event) => {
       this.OnRemoteStreamAddedSubject.next(event?.streams[0])
     };
     this.peerConnection.onconnectionstatechange = (event) => {
-      this.OnConnectionStateChangedSubject.next(this.peerConnection.connectionState);
+      if (this.peerConnection) {
+        this.OnConnectionStateChangedSubject.next(this.peerConnection.connectionState);
+      }
     };
   }
 
@@ -36,7 +38,12 @@ export class WebrtcService implements OnDestroy {
   close() {
     if (this.peerConnection) {
       this.peerConnection.close();
+      (this.peerConnection as any) = null;
     }
+  }
+
+  isInitialized(): boolean {
+    return this.peerConnection != null;
   }
 
   async addIceCandidate(iceCandidate: RTCIceCandidate) {
@@ -45,21 +52,23 @@ export class WebrtcService implements OnDestroy {
 
   async createOffer(): Promise<RTCSessionDescriptionInit> {
     const offer = await this.peerConnection.createOffer();
-    await this.peerConnection.setLocalDescription(offer);
     return offer;
   }
 
   async createAnswer(): Promise<RTCSessionDescriptionInit> {
     const answer = await this.peerConnection.createAnswer();
-    await this.peerConnection.setLocalDescription(answer);
     return answer
+  }
+
+  async setLocalDescription(desc: RTCSessionDescriptionInit) {
+    await this.peerConnection.setLocalDescription(desc);
   }
 
   async setRemoteDescription(answer: RTCSessionDescriptionInit) {
     await this.peerConnection.setRemoteDescription(new RTCSessionDescription(answer));
   }
 
-  addStream(stream: MediaStream) {
+  addLocalStream(stream: MediaStream) {
     // in this case tracks var passes as placeholder, on the other side we only use stream
     var tracks = stream.getTracks();
     for (const track of tracks) {

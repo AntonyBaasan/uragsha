@@ -18,6 +18,7 @@ const SERVICES = [WebrtcService];
 export class CallPageComponent implements OnInit, OnDestroy {
   @ViewChild(VideoComponent) videoComponent: VideoComponent;
 
+  localStream: MediaStream | undefined;
   orientation: 'horizontal' | 'vertical' = 'horizontal';
   connectedToSessionRoom = false;
   sessionRequestId = '';
@@ -32,6 +33,9 @@ export class CallPageComponent implements OnInit, OnDestroy {
   private subOnUserJoinSession: Subscription | undefined;
   private subOnUserLeaveSession: Subscription | undefined;
   private subOnConnectionStateChangedSubject: Subscription | undefined;
+  private subOnRemoteStreamAddedSubject: Subscription | undefined;
+  private subOnIceCandidateEventSubject: Subscription | undefined;
+
   private subOnOfferVideoCall: Subscription | undefined;
   private subOnAnswerVideoCall: Subscription | undefined;
   private subOnReceiveIceCandidate: Subscription | undefined;
@@ -51,16 +55,18 @@ export class CallPageComponent implements OnInit, OnDestroy {
     this.store.userSubject.subscribe(user => {
       this.userId = user && user.uid ? user.uid : '';
       // try to join
-      this.signallingService.joinSession(this.sessionRequestId);
+      if (this.userId) {
+        this.showMe().then(() => {
+          this.subscribeSignallingServiceEvents();
+          this.signallingService.joinSession(this.sessionRequestId);
+        });
+      } else {
+        this.unsubscribeSignallingServiceEvents();
+      }
       this.cdr.detectChanges();
     });
 
-    this.listenSignallingServiceEvents();
-    this.listenWebRtcServiceEvents();
-
     this.detectOrietation();
-
-    this.showMe();
   }
 
   private detectOrietation() {
@@ -68,7 +74,7 @@ export class CallPageComponent implements OnInit, OnDestroy {
       window.innerWidth > window.innerHeight ? 'horizontal' : 'vertical';
   }
 
-  private listenSignallingServiceEvents() {
+  private subscribeSignallingServiceEvents() {
     this.subOnSessionDetailUpdated = this.signallingService.OnSessionDetailUpdated.subscribe(
       (sessionDetail: SessionDetail) => this.handleSessionDetailUpdated(sessionDetail)
     );
@@ -89,23 +95,37 @@ export class CallPageComponent implements OnInit, OnDestroy {
     );
   }
 
-  private listenWebRtcServiceEvents() {
-    this.webRtcService.init();
+  private unsubscribeSignallingServiceEvents() {
+    this.subOnSessionDetailUpdated?.unsubscribe();
+    this.subOnUserJoinSession?.unsubscribe();
+    this.subOnUserLeaveSession?.unsubscribe();
+    this.subOnOfferVideoCall?.unsubscribe();
+    this.subOnAnswerVideoCall?.unsubscribe();
+    this.subOnReceiveIceCandidate?.unsubscribe();
+  }
+
+  private subscribeWebRtcServiceEvents() {
     this.subOnConnectionStateChangedSubject = this.webRtcService.OnConnectionStateChangedSubject.subscribe(
       (state: RTCPeerConnectionState) => {
         this.connectionState = state;
         this.cdr.detectChanges();
       });
-    this.webRtcService.OnRemoteStreamAddedSubject.subscribe(stream => {
+    this.subOnRemoteStreamAddedSubject = this.webRtcService.OnRemoteStreamAddedSubject.subscribe(stream => {
       console.log('OnRemoteStreamAddedSubject:', stream);
       this.videoComponent.setRemoteStream(stream);
     });
-    this.webRtcService.OnIceCandidateEventSubject.subscribe(candidate => {
-      console.log('OnIceCandidateEventSubject:', candidate);
-      if (this.sessionDetail.sessionId) {
+    this.subOnIceCandidateEventSubject = this.webRtcService.OnIceCandidateEventSubject.subscribe(candidate => {
+      // console.log('OnIceCandidateEventSubject:', candidate);
+      if (this.sessionDetail?.sessionId && candidate) {
         this.signallingService.SendIceCandidate(this.sessionDetail.sessionId, candidate);
       }
     });
+  }
+
+  private unsubscribeListenWebRtcServiceEvents() {
+    this.subOnConnectionStateChangedSubject?.unsubscribe();
+    this.subOnRemoteStreamAddedSubject?.unsubscribe();
+    this.subOnIceCandidateEventSubject?.unsubscribe();
   }
 
   getConnectionState(): RTCPeerConnectionState {
@@ -113,10 +133,13 @@ export class CallPageComponent implements OnInit, OnDestroy {
   }
 
   showMe() {
-    navigator.mediaDevices
+    return navigator.mediaDevices
       .getUserMedia({ audio: true, video: true })
       .then((stream) => {
-        this.webRtcService.addStream(stream);
+        this.localStream = stream;
+        if (this.webRtcService.isInitialized()) {
+          this.webRtcService.addLocalStream(this.localStream);
+        }
         // for the local only video is important!
         this.videoComponent.setLocalStream(new MediaStream(stream.getVideoTracks()));
         // TODO: debug
@@ -124,11 +147,16 @@ export class CallPageComponent implements OnInit, OnDestroy {
       });
   }
 
-  stopVideo() {
-    this.videoComponent.stop();
+  private startWebRtc() {
+    this.webRtcService.init();
+    this.subscribeWebRtcServiceEvents();
+    // if (this.localStream) {
+    //   this.webRtcService.addLocalStream(this.localStream);
+    // }
   }
 
-  stopWebRtc() {
+  private stopWebRtc() {
+    this.unsubscribeListenWebRtcServiceEvents();
     this.webRtcService.close();
   }
 
@@ -150,20 +178,14 @@ export class CallPageComponent implements OnInit, OnDestroy {
     } else {
       // other user left this session
       this.stopWebRtc();
-      this.stopVideo();
+      this.videoComponent.stopRemote();
     }
   }
 
   ngOnDestroy() {
-    this.webRtcService.ngOnDestroy();
     this.endCall();
-    this.subOnSessionDetailUpdated?.unsubscribe();
-    this.subOnUserJoinSession?.unsubscribe();
-    this.subOnUserLeaveSession?.unsubscribe();
-    this.subOnConnectionStateChangedSubject?.unsubscribe();
-    this.subOnOfferVideoCall?.unsubscribe();
-    this.subOnAnswerVideoCall?.unsubscribe();
-    this.subOnReceiveIceCandidate?.unsubscribe();
+    this.unsubscribeSignallingServiceEvents();
+    this.unsubscribeListenWebRtcServiceEvents();
   }
 
   async startCall() {
@@ -174,7 +196,12 @@ export class CallPageComponent implements OnInit, OnDestroy {
 
     const user = this.store.getUser();
     if (this.sessionRequestId && user) {
+      this.startWebRtc();
+      if (this.localStream) {
+        this.webRtcService.addLocalStream(this.localStream);
+      }
       const offer = await this.webRtcService.createOffer();
+      await this.webRtcService.setLocalDescription(offer);
       this.signallingService.offerVideoCall(this.sessionRequestId, offer);
     }
   }
@@ -183,7 +210,8 @@ export class CallPageComponent implements OnInit, OnDestroy {
     const user = this.store.getUser();
     if (this.sessionDetail && user) {
       this.signallingService.leaveSession(this.sessionDetail.sessionId);
-      this.stopVideo();
+      this.videoComponent.stopLocal();
+      this.videoComponent.stopRemote();
       this.stopWebRtc();
     }
   }
@@ -200,9 +228,15 @@ export class CallPageComponent implements OnInit, OnDestroy {
       return;
     }
 
+    this.startWebRtc();
+
     this.sessionDetail = result.sessionDetail;
-    this.webRtcService.setRemoteDescription(result.sessionDetail.offer.content);
+    await this.webRtcService.setRemoteDescription(result.sessionDetail.offer.content);
+    if (this.localStream) {
+      this.webRtcService.addLocalStream(this.localStream);
+    }
     const answer = await this.webRtcService.createAnswer();
+    await this.webRtcService.setLocalDescription(answer);
 
     this.signallingService.answerVideoCall(this.sessionRequestId, answer);
 
@@ -215,7 +249,7 @@ export class CallPageComponent implements OnInit, OnDestroy {
   }) {
     this.sessionDetail = result.sessionDetail;
     if (result.sessionDetail.answer) {
-      this.webRtcService.setRemoteDescription(result.sessionDetail.answer.content);
+      await this.webRtcService.setRemoteDescription(result.sessionDetail.answer.content);
     }
   }
 
