@@ -28,13 +28,6 @@ export class StoreService {
     this.SessionRequestsSubject.next(this.sessionRequests);
   }
 
-  // removeSessionRequest(startDate: Date) {
-  //   this.sessionRequests = this.sessionRequests.filter(
-  //     (s) => !isEqual(s.start, startDate)
-  //   );
-  //   this.SessionRequestsSubject.next(this.sessionRequests);
-  // }
-
   insertSessionRequest(sessionRequest: SessionRequest) {
     this.sessionRequests = [...this.sessionRequests, sessionRequest];
     this.SessionRequestsSubject.next(this.sessionRequests);

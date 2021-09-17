@@ -247,21 +247,21 @@ namespace Uragsha.Signalling.Hubs
             await Clients.Clients(connections).OnGetUserSessionRequests(found);
         }
 
-        public async Task CreateSessionRequest(SessionRequest sessionRequest)
-        {
-            if (string.IsNullOrEmpty(sessionRequest.UserId))
-            {
-                Console.WriteLine("Uid can't be empty!");
-                return;
-            }
-            var request = SessionRequestService.CreateSessionRequest(sessionRequest);
+        //public async Task CreateSessionRequest(SessionRequest sessionRequest)
+        //{
+        //    if (string.IsNullOrEmpty(sessionRequest.UserId))
+        //    {
+        //        Console.WriteLine("Uid can't be empty!");
+        //        return;
+        //    }
+        //    var request = SessionRequestService.CreateSessionRequest(sessionRequest);
 
-            var connections = GetUserConnections(sessionRequest.UserId);
-            await Clients.Clients(connections).OnSessionRequestCreated(request);
+        //    var connections = GetUserConnections(sessionRequest.UserId);
+        //    await Clients.Clients(connections).OnSessionRequestCreated(request);
 
-            // TODO: this has to be done in the hosted service
-            await CreateSession(request);
-        }
+        //    // TODO: this has to be done in the hosted service
+        //    await CreateSession(request);
+        //}
 
         public async Task DeleteSessionRequest(string sessionRequestId)
         {

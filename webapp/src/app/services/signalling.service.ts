@@ -105,17 +105,6 @@ export class SingnallingService implements OnDestroy {
     );
   }
 
-  createSessionRequest(sessionRequest: SessionRequest): Promise<void> {
-    if (!this.isConnected()) {
-      console.log('Connection is not established!');
-      return Promise.resolve();
-    }
-    return this.connection.invoke(
-      SignallingSendEvents.CreateSessionRequest,
-      sessionRequest
-    );
-  }
-
   deleteSessionRequest(sessionRequestId: string): Promise<void> {
     if (!this.isConnected()) {
       console.log('Connection is not established!');

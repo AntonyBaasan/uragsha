@@ -95,14 +95,14 @@ export class DashboardPageComponent implements OnInit, OnDestroy {
 
   saveDemoData() {
     // reads demo data from backend service and save into DB using signalling
-    const user = this.store.getUser();
-    if (user) {
-      this.backendService
-        .createDemoSessionRequests(user.uid)
-        .subscribe((sessions) => {
-          sessions.forEach((s) => this.signallingService.createSessionRequest(s));
-        });
-    }
+    // const user = this.store.getUser();
+    // if (user) {
+    //   this.backendService
+    //     .createDemoSessionRequests(user.uid)
+    //     .subscribe((sessions) => {
+    //       sessions.forEach((s) => this.signallingService.createSessionRequest(s));
+    //     });
+    // }
   }
 
   fetchAllSessionRequests() {

@@ -3,6 +3,7 @@ import { Subscription } from 'rxjs';
 import { SessionRequest } from '../../models';
 import { CalendarTabService } from './calendar-tab.service';
 import { SingnallingService, StoreService } from '../../services';
+import { SessionRequestsService } from 'src/app/services/webapi/session-requests.service';
 
 @Component({
   selector: 'app-calendar-tab',
@@ -19,6 +20,7 @@ export class CalendarTabComponent implements OnInit, OnDestroy {
     private store: StoreService,
     private calendarTabService: CalendarTabService,
     private signallingService: SingnallingService,
+    private sessionRequestService: SessionRequestsService,
     private cdr: ChangeDetectorRef) { }
 
   ngOnInit(): void {
@@ -40,7 +42,12 @@ export class CalendarTabComponent implements OnInit, OnDestroy {
     const user = this.store.getUser();
     if (user) {
       const request = this.calendarTabService.createSessionRequestByStartDate(date, user.uid);
-      this.signallingService.createSessionRequest(request);
+
+      this.store.insertSessionRequest(request);
+      this.sessionRequestService.create(request).subscribe(sessionRequest => {
+        //returned value has ID with it.
+        this.store.updateSessionRequest(sessionRequest);
+      });
     }
   }
 
