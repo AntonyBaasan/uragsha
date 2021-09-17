@@ -239,13 +239,13 @@ namespace Uragsha.Signalling.Hubs
             await Clients.All.OnTextMessage(message);
         }
 
-        //public async Task GetUserSessionRequests()
-        //{
-        //    string userId = GetCurrentUid();
-        //    var found = SessionRequestService.FindSessionRequest(userId);
-        //    var connections = GetUserConnections(userId);
-        //    await Clients.Clients(connections).OnGetUserSessionRequests(found);
-        //}
+        public async Task GetUserSessionRequests()
+        {
+            string userId = GetCurrentUid();
+            var found = SessionRequestService.FindSessionRequest(userId);
+            var connections = GetUserConnections(userId);
+            await Clients.Clients(connections).OnGetUserSessionRequests(found);
+        }
 
         //public async Task CreateSessionRequest(SessionRequest sessionRequest)
         //{
@@ -261,17 +261,6 @@ namespace Uragsha.Signalling.Hubs
 
         //    // TODO: this has to be done in the hosted service
         //    await CreateSession(request);
-        //}
-
-        //public async Task DeleteSessionRequest(string sessionRequestId)
-        //{
-        //    // TODO: check if this session is for this user
-
-        //    var found = SessionRequestService.GetSessionRequestById(sessionRequestId);
-        //    SessionRequestService.RemoveSessionRequest(found.Id);
-
-        //    var connections = GetUserConnections(found.UserId);
-        //    await Clients.Clients(connections).OnSessionRequestDeleted(found.Id);
         //}
 
         public async Task CreateSession(SessionRequest sessionRequest)
