@@ -1,6 +1,5 @@
 import { Injectable, OnDestroy } from '@angular/core';
 import * as signalR from '@microsoft/signalr';
-import { parseISO } from 'date-fns';
 import { Subject } from 'rxjs';
 import { environment } from 'src/environments/environment';
 import { SessionDetail, SessionRequest, SignallingReceiveEvents, SignallingSendEvents, User } from '../models';

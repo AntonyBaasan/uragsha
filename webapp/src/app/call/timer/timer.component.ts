@@ -1,5 +1,6 @@
 import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
-import { addSeconds, format, intervalToDuration } from 'date-fns'
+import { addSeconds, format } from 'date-fns'
+import { TimerService } from 'src/app/services/timer.service';
 
 @Component({
   selector: 'app-timer',
@@ -13,11 +14,10 @@ export class TimerComponent implements OnInit, OnDestroy {
   }
   @Output() timeDone = new EventEmitter();
 
-
   private timeLeft: number = 0;
   private interval: any;
 
-  constructor() { }
+  constructor(private timerService: TimerService) { }
 
   ngOnInit(): void {
     this.startTimer();
@@ -38,18 +38,19 @@ export class TimerComponent implements OnInit, OnDestroy {
   }
 
   startTimer() {
-    this.interval = setInterval(() => {
+    this.timerService.setTimer('secondCounter', () => {
       if (this.timeLeft > 0) {
         this.timeLeft--;
       } else {
         this.timeDone.emit();
-        this.startTimer();
+        this.stopTimer();
       }
-    }, 1000)
+    }, 1000, true);
+
   }
 
   stopTimer() {
-    clearInterval(this.interval);
+    this.timerService.stopTimer('secondCounter');
   }
 
 }

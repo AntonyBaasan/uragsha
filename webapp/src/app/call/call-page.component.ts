@@ -4,10 +4,11 @@ import { Subscription } from 'rxjs';
 import { SessionDetail } from '../models';
 import { StoreService } from '../services';
 import { SingnallingService } from '../services/signalling.service';
+import { TimerService } from '../services/timer.service';
 import { WebrtcService } from '../services/webrtc.service';
 import { VideoComponent } from './video/video.component';
 
-const SERVICES = [WebrtcService];
+const SERVICES = [WebrtcService, TimerService];
 
 @Component({
   selector: 'app-call-page',
@@ -27,7 +28,7 @@ export class CallPageComponent implements OnInit, OnDestroy {
 
   otherUserInfo: any = {};
   userId: string = '';
-  secondsLeft: number = 1800; // 30min
+  secondsLeft: number = 5;// 1800; // 30min
 
   private subOnSessionDetailUpdated: Subscription | undefined;
   private subOnUserJoinSession: Subscription | undefined;
