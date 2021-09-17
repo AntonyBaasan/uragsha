@@ -24,34 +24,36 @@ namespace Scheduler.Services
 
         public Session CreateSession(string sessionRequestId)
         {
-            var sessionRequest = SessionRequestService.GetSessionRequestById(sessionRequestId);
-            // requested session was deleted
-            if (sessionRequest == null) { return null; }
+            return null;
 
-            var allRequests = SessionRequestService.GetSessionRequestsByDate(sessionRequest.Start, SessionRequestStatus.Waiting);
+            //var sessionRequest = SessionRequestService.GetSessionRequestById(sessionRequestId);
+            //// requested session was deleted
+            //if (sessionRequest == null) { return null; }
 
-            var nextAvailableRequest = allRequests.FirstOrDefault(r => !r.Id.Equals(sessionRequestId));
+            //var allRequests = SessionRequestService.GetSessionRequestsByDate(sessionRequest.Start, SessionRequestStatus.Waiting);
 
-            // no available request
-            if (nextAvailableRequest == null) { return null; }
+            //var nextAvailableRequest = allRequests.FirstOrDefault(r => !r.Id.Equals(sessionRequestId));
 
-            var newSession = new Session
-            {
-                Id = Guid.NewGuid().ToString(),
-                Start = sessionRequest.Start,
-                End = sessionRequest.End,
-                SessionRequests = new List<SessionRequest> { sessionRequest, nextAvailableRequest }
-            };
+            //// no available request
+            //if (nextAvailableRequest == null) { return null; }
 
-            sessionRequest.Status = SessionRequestStatus.Scheduled;
-            sessionRequest.SessionId = newSession.Id;
-            SessionRequestService.UpdateSessionRequest(sessionRequest.Id, sessionRequest);
-            nextAvailableRequest.Status = SessionRequestStatus.Scheduled;
-            nextAvailableRequest.SessionId = newSession.Id;
-            SessionRequestService.UpdateSessionRequest(nextAvailableRequest.Id, nextAvailableRequest);
+            //var newSession = new Session
+            //{
+            //    Id = Guid.NewGuid().ToString(),
+            //    Start = sessionRequest.Start,
+            //    End = sessionRequest.End,
+            //    SessionRequests = new List<SessionRequest> { sessionRequest, nextAvailableRequest }
+            //};
 
-            sessions.Add(newSession);
-            return newSession;
+            //sessionRequest.Status = SessionRequestStatus.Scheduled;
+            //sessionRequest.SessionId = newSession.Id;
+            //SessionRequestService.UpdateSessionRequest(sessionRequest.Id, sessionRequest);
+            //nextAvailableRequest.Status = SessionRequestStatus.Scheduled;
+            //nextAvailableRequest.SessionId = newSession.Id;
+            //SessionRequestService.UpdateSessionRequest(nextAvailableRequest.Id, nextAvailableRequest);
+
+            //sessions.Add(newSession);
+            //return newSession;
         }
 
         public void RemoveSession(string sessionId)

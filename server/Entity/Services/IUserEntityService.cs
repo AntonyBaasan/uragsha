@@ -5,13 +5,13 @@ namespace Entity.Services
 {
     public interface IUserEntityService
     {
-        public void AddUser(UserEntity user);
+        public Task<UserEntity> AddAsync(UserEntity user);
 
-        public void DeleteUser(string userId);
+        public Task DeleteAsync(string userId);
 
-        public Task<UserEntity> GetUserByIdAsync(string userId);
+        public Task<UserEntity> GetByIdAsync(string userId);
 
-        public void UpdateUser(UserEntity user);
+        public Task UpdateAsync(UserEntity user);
 
         public Task<bool> ExistAsync(string userId);
     }

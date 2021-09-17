@@ -23,8 +23,12 @@ export class SessionRequestsService {
 
   create(sessionRequest: SessionRequest): Observable<SessionRequest> {
     return this.http.post<SessionRequest>(this.endpoint, sessionRequest).pipe(
-      map(response =>  this.modelHelperService.fixSessionRequestDateFormat(response))
+      map(response => this.modelHelperService.fixSessionRequestDateFormat(response))
     );
+  }
+
+  delete(id: string): Observable<void> {
+    return this.http.delete<void>(this.endpoint + '/' + id);
   }
 
 }

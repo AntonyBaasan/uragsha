@@ -5,40 +5,40 @@ using System.Threading.Tasks;
 
 namespace Entity.MySql.Services
 {
-    public class UserEntityService: IUserEntityService
+    public class UserEntityService : IUserEntityService
     {
-        private readonly CrudEntityService<UserEntity> userCrudEntityService;
+        private readonly CrudEntityService<UserEntity> _crudEntityService;
 
         public UserEntityService(IServiceScopeFactory scopeFactory)
         {
-            this.userCrudEntityService = new CrudEntityService<UserEntity>(scopeFactory);
+            _crudEntityService = new CrudEntityService<UserEntity>(scopeFactory);
         }
 
-        public void AddUser(UserEntity user)
+        public async Task<UserEntity> AddAsync(UserEntity user)
         {
-            userCrudEntityService.Add(user);
+            return await _crudEntityService.AddAsync(user);
         }
 
-        public void DeleteUser(string userId)
+        public async Task DeleteAsync(string userId)
         {
             var user = new UserEntity() { Id = userId };
-
-            userCrudEntityService.Delete(user);
+            await _crudEntityService.DeleteAsync(user);
         }
 
-        public async Task<UserEntity> GetUserByIdAsync(string userId)
+        public async Task<UserEntity> GetByIdAsync(string userId)
         {
-            return await userCrudEntityService.GetUserByIdAsync(typeof(UserEntity), userId);
+            return await _crudEntityService.GetByIdAsync(typeof(UserEntity), userId);
         }
 
-        public void UpdateUser(UserEntity user)
+        public async Task UpdateAsync(UserEntity user)
         {
-            this.userCrudEntityService.Update(user);
+            await _crudEntityService.UpdateAsync(user);
         }
 
         public Task<bool> ExistAsync(string userId)
         {
-            return userCrudEntityService.ExistAsync(typeof(UserEntity), userId);
+            return _crudEntityService.ExistAsync(typeof(UserEntity), userId);
         }
+
     }
 }

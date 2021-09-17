@@ -30,7 +30,7 @@ namespace Entity.Services
         }
 
         // TODO: how can I not pass 'type' as param, where T is already exist.
-        public async Task<T> GetUserByIdAsync(System.Type type, string id)
+        public async Task<T> GetByIdAsync(System.Type type, string id)
         {
             using var scope = scopeFactory.CreateScope();
             var dbContext = scope.ServiceProvider.GetRequiredService<MainDbContext>();

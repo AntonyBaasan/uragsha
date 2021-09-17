@@ -32,7 +32,7 @@ namespace Uragsha.WebApi
                     {
                         builder.WithOrigins(Configuration.GetSection("AllowedCors").Get<string[]>())
                             .AllowAnyHeader()
-                            .WithMethods("GET", "POST")
+                            .AllowAnyMethod()
                             .AllowCredentials();
                     });
             });

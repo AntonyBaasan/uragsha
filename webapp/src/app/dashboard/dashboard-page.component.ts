@@ -32,7 +32,6 @@ export class DashboardPageComponent implements OnInit, OnDestroy {
 
   constructor(
     public authService: AuthService,
-    private backendService: BackendService,
     private signallingService: SingnallingService,
     private sessionRequestsService: SessionRequestsService,
     private store: StoreService,
@@ -103,10 +102,6 @@ export class DashboardPageComponent implements OnInit, OnDestroy {
     //       sessions.forEach((s) => this.signallingService.createSessionRequest(s));
     //     });
     // }
-  }
-
-  fetchAllSessionRequests() {
-    this.signallingService.getUserSessionRequests();
   }
 
   private handleOnSessionRequestUpdate(sessionRequest: SessionRequest): void {

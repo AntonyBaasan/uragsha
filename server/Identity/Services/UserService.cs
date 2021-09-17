@@ -21,17 +21,17 @@ namespace Identity.Services
         public void AddUser(User user)
         {
             var userEntity = mapper.Map<User, UserEntity>(user);
-            userEntityService.AddUser(userEntity);
+            userEntityService.AddAsync(userEntity);
         }
 
         public void DeleteUser(string userId)
         {
-            userEntityService.DeleteUser(userId);
+            userEntityService.DeleteAsync(userId);
         }
 
         public async Task<User> GetUserByIdAsync(string userId)
         {
-            var userEntity = await this.userEntityService.GetUserByIdAsync(userId);
+            var userEntity = await userEntityService.GetByIdAsync(userId);
             if (userEntity == null) { return null; }
             var user = mapper.Map<UserEntity, User>(userEntity);
             return user;
@@ -40,7 +40,7 @@ namespace Identity.Services
         public void UpdateUser(User user)
         {
             var userEntity = mapper.Map<User, UserEntity>(user);
-            userEntityService.UpdateUser(userEntity);
+            userEntityService.UpdateAsync(userEntity);
         }
 
         public Task<bool> UserExistAsync(string userId)

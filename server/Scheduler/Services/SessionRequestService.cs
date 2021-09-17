@@ -4,58 +4,86 @@ using System.Collections.Generic;
 using Scheduler.Interfaces.Models;
 using Scheduler.Interfaces.Services;
 using System.Threading.Tasks;
+using Entity.Services;
+using AutoMapper;
+using Entity.Models;
+using HttpUtilities.Services;
 
 namespace Scheduler.Services
 {
     public class SessionRequestService : ISessionRequestService
     {
-        private readonly List<SessionRequest> requests = new();
+        private readonly IMapper _mapper;
+        private readonly IContextService _contextService;
+        private readonly ISessionRequestEntityService _sessionRequestEntityService;
 
-        public Task<SessionRequest> CreateSessionRequestAsync(SessionRequest sessionRequest)
+        public SessionRequestService(
+            ISessionRequestEntityService sessionRequestEntityService,
+            IMapper mapper,
+            IContextService contextService
+        )
         {
-            sessionRequest.Id = Guid.NewGuid().ToString();
-            requests.Add(sessionRequest);
-            return Task.FromResult(sessionRequest);
+            _sessionRequestEntityService = sessionRequestEntityService;
+            _mapper = mapper;
+            _contextService = contextService;
         }
 
-        public void UpdateSessionRequest(string sessionRequestId, SessionRequest sessionRequest)
+        public async Task<SessionRequest> CreateSessionRequestAsync(SessionRequest sessionRequest)
         {
-            requests.RemoveAll(r => r.Id.Equals(sessionRequestId));
-            requests.Add(sessionRequest);
+            var entity = _mapper.Map<SessionRequest, SessionRequestEntity>(sessionRequest);
+            entity.UserId = _contextService.GetUserId();
+            var result = await _sessionRequestEntityService.AddAsync(entity);
+            sessionRequest.Id = result.Id;
+            return sessionRequest;
         }
 
-        public List<SessionRequest> FindSessionRequest(string userId, DateTime? start = null, DateTime? end = null, SessionRequestStatus? status = null)
+        public async Task UpdateSessionRequest(SessionRequest sessionRequest)
         {
-            var found = requests.Where(r => r.UserId.Equals(userId));
-            if (start != null)
-            {
-                found = found.Where(r => r.Start >= start);
-            }
-            if (end != null)
-            {
-                found = found.Where(r => r.End <= end);
-            }
-            if (status.HasValue)
-            {
-                found = found.Where(r => r.Status.Equals(status));
-            }
-            return found.ToList();
+            var entity = _mapper.Map<SessionRequest, SessionRequestEntity>(sessionRequest);
+            await _sessionRequestEntityService.UpdateAsync(entity);
         }
 
-        public SessionRequest GetSessionRequestById(string sessionRequestId)
+        public async Task<SessionRequest> GetSessionRequestById(string sessionRequestId)
         {
-            return requests.FirstOrDefault(r => r.Id.Equals(sessionRequestId));
+            var userId = _contextService.GetUserId();
+            var entity = await _sessionRequestEntityService.GetByIdAsync(sessionRequestId, userId);
+            var sessionRequest = _mapper.Map<SessionRequestEntity, SessionRequest>(entity);
+            return sessionRequest;
         }
 
-        public List<SessionRequest> GetSessionRequestsByDate(DateTime start, SessionRequestStatus status)
+        public async Task RemoveSessionRequest(string id)
         {
-            var found = requests.Where(r => r.Start.Equals(start) && r.Status.Equals(status));
-            return found.ToList();
+            await _sessionRequestEntityService.DeleteAsync(id, _contextService.GetUserId());
         }
 
-        public void RemoveSessionRequest(string sessionRequestId)
+        public Task<List<SessionRequest>> GetSessionRequestsByDate(DateTime start, SessionRequestStatus status)
         {
-            requests.RemoveAll(r => r.Id.Equals(sessionRequestId));
+            //var found = requests.Where(r => r.Start.Equals(start) && r.Status.Equals(status));
+            //return found.ToList();
+            return Task.FromResult(new List<SessionRequest>());
         }
+
+        public async Task<List<SessionRequest>> FindSessionRequest(string userId, DateTime? start = null, DateTime? end = null, SessionRequestStatus? status = null)
+        {
+            var result = await _sessionRequestEntityService.FindByUserIdAsync(userId);
+
+            return result.Select(r => _mapper.Map<SessionRequestEntity, SessionRequest>(r)).ToList();
+
+            //var found = requests.Where(r => r.UserId.Equals(userId));
+            //if (start != null)
+            //{
+            //    found = found.Where(r => r.Start >= start);
+            //}
+            //if (end != null)
+            //{
+            //    found = found.Where(r => r.End <= end);
+            //}
+            //if (status.HasValue)
+            //{
+            //    found = found.Where(r => r.Status.Equals(status));
+            //}
+            //return found.ToList();
+        }
+
     }
 }

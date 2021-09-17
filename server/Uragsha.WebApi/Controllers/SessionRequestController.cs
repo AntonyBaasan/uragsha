@@ -19,14 +19,14 @@ namespace Uragsha.WebApi.Controllers
         private readonly ISessionRequestService sessionRequestService;
         private readonly ISessionService sessionService;
         private readonly IUserService userService;
-        private readonly IHttpContextUtils contextUtility;
+        private readonly IContextService contextUtility;
 
         public SessionRequestController(
             ILogger<SessionRequestController> logger,
             ISessionRequestService sessionRequestService,
             ISessionService sessionService,
             IUserService userService,
-            IHttpContextUtils contextUtility
+            IContextService contextUtility
             )
         {
             _logger = logger;
@@ -37,19 +37,18 @@ namespace Uragsha.WebApi.Controllers
         }
 
         [HttpGet]
-        public IEnumerable<SessionRequest> Get()
+        public async Task<IEnumerable<SessionRequest>> Get()
         {
-            string uid = this.contextUtility.GetUserId(HttpContext);
-            var found = sessionRequestService.FindSessionRequest(uid);
+            string uid = this.contextUtility.GetUserId();
+            var found = await sessionRequestService.FindSessionRequest(uid);
             return found;
         }
 
-        [HttpGet]
-        public IActionResult Get(string id)
+        [HttpGet("{id}")]
+        public async Task<IActionResult> Get(string id)
         {
-            string uid = this.contextUtility.GetUserId(HttpContext);
-            var found = sessionRequestService.GetSessionRequestById(id);
-            if (found == null || found.UserId != uid)
+            var found = await sessionRequestService.GetSessionRequestById(id);
+            if (found == null)
             {
                 return NotFound();
             }
@@ -59,12 +58,24 @@ namespace Uragsha.WebApi.Controllers
         [HttpPost]
         public async Task<SessionRequest> Post([FromBody] SessionRequest sessionRequest)
         {
-            var userId = this.contextUtility.GetUserId(this.HttpContext);
-
-            sessionRequest.UserId = userId;
             var created = await sessionRequestService.CreateSessionRequestAsync(sessionRequest);
 
             return created;
+        }
+
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> Delete(string id)
+        {
+            try
+            {
+                await sessionRequestService.RemoveSessionRequest(id);
+            }
+            catch (KeyNotFoundException)
+            {
+                return NotFound();
+            }
+
+            return Ok();
         }
 
     }

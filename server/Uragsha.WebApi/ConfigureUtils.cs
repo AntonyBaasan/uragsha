@@ -19,6 +19,8 @@ namespace Uragsha.WebApi
     {
         public static void AddUragshaServices(this IServiceCollection services, IConfiguration configuration)
         {
+            services.AddHttpContextAccessor();
+
             // setup database
             //services.AddDbContext<MainDbContext>(option => option.UseInMemoryDatabase("Debug"));
             services.AddDbContext<MainDbContext>(option => option.UseMySQL(configuration.GetConnectionString("DefaultConnection"), b => b.MigrationsAssembly("Uragsha.Signalling")));
@@ -31,6 +33,7 @@ namespace Uragsha.WebApi
 
             // Entity services
             services.AddSingleton<IUserEntityService, UserEntityService>();
+            services.AddSingleton<ISessionRequestEntityService, SessionRequestEntityService>();
 
             // Internal services
             services.AddSingleton<ISessionRequestService, SessionRequestService>();
@@ -38,7 +41,7 @@ namespace Uragsha.WebApi
             services.AddSingleton<IUserService, UserService>();
             services.AddSingleton<DashboardService>();
 
-            services.AddSingleton<IHttpContextUtils, HttpContextUtils>();
+            services.AddSingleton<IContextService, WebApiHttpContextService>();
 
         }
     }

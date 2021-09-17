@@ -95,26 +95,6 @@ export class SingnallingService implements OnDestroy {
     return this.connection.invoke(SignallingSendEvents.AfterLogin, user);
   }
 
-  getUserSessionRequests(): Promise<void> {
-    if (!this.isConnected()) {
-      console.log('Connection is not established!');
-      return Promise.resolve();
-    }
-    return this.connection.invoke(
-      SignallingSendEvents.GetUserSessionRequests
-    );
-  }
-
-  deleteSessionRequest(sessionRequestId: string): Promise<void> {
-    if (!this.isConnected()) {
-      console.log('Connection is not established!');
-      return Promise.resolve();
-    }
-    return this.connection.invoke(
-      SignallingSendEvents.DeleteSessionRequest,
-      sessionRequestId
-    );
-  }
 
   offerVideoCall(sessionRequestId: string, offer: RTCSessionDescriptionInit): Promise<void> {
     if (!this.isConnected()) {

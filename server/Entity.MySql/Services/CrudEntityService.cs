@@ -12,25 +12,26 @@ namespace Entity.MySql.Services
             this.scopeFactory = scopeFactory;
         }
 
-        public void Add(T entity)
+        public async Task<T> AddAsync(T entity)
         {
             using var scope = scopeFactory.CreateScope();
             var dbContext = scope.ServiceProvider.GetRequiredService<MainDbContext>();
             dbContext.Add(entity);
-            dbContext.SaveChangesAsync();
+            var result = await dbContext.SaveChangesAsync();
+            return entity;
         }
 
-        public void Delete(T entity)
+        public async Task DeleteAsync(T entity)
         {
             using var scope = scopeFactory.CreateScope();
             var dbContext = scope.ServiceProvider.GetRequiredService<MainDbContext>();
             dbContext.Attach(entity);
             dbContext.Remove(entity);
-            dbContext.SaveChangesAsync();
+            await dbContext.SaveChangesAsync();
         }
 
         // TODO: how can I not pass 'type' as param, where T is already exist.
-        public async Task<T> GetUserByIdAsync(System.Type type, string id)
+        public async Task<T> GetByIdAsync(System.Type type, string id)
         {
             using var scope = scopeFactory.CreateScope();
             var dbContext = scope.ServiceProvider.GetRequiredService<MainDbContext>();
@@ -38,12 +39,12 @@ namespace Entity.MySql.Services
             return (T)user;
         }
 
-        public void Update(T entity)
+        public async Task UpdateAsync(T entity)
         {
             using var scope = scopeFactory.CreateScope();
             var dbContext = scope.ServiceProvider.GetRequiredService<MainDbContext>();
             dbContext.Update(entity);
-            dbContext.SaveChangesAsync();
+            await dbContext.SaveChangesAsync();
         }
 
         public async Task<bool> ExistAsync(System.Type type, object id)

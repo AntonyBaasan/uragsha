@@ -52,6 +52,8 @@ export class CalendarTabComponent implements OnInit, OnDestroy {
   }
 
   removeSession(id: string) {
-    this.signallingService.deleteSessionRequest(id);
+    this.sessionRequestService.delete(id).subscribe(() => {
+      this.store.deleteSessionRequest(id);
+    });
   }
 }
