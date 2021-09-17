@@ -25,7 +25,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Scheduler.Interfaces", "Sch
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Entity.MySql", "Entity.MySql\Entity.MySql.csproj", "{9992EC5B-4A68-489B-82F7-240C77F465C6}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Dashboard", "Dashboard\Dashboard.csproj", "{BC83344F-0EEE-4FA5-BC89-68916D6A12A1}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Dashboard", "Dashboard\Dashboard.csproj", "{BC83344F-0EEE-4FA5-BC89-68916D6A12A1}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HttpUtilities", "HttpUtilities\HttpUtilities.csproj", "{32A90054-74FF-4F44-8C2D-1411E56BE6EE}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -69,6 +71,10 @@ Global
 		{BC83344F-0EEE-4FA5-BC89-68916D6A12A1}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{BC83344F-0EEE-4FA5-BC89-68916D6A12A1}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{BC83344F-0EEE-4FA5-BC89-68916D6A12A1}.Release|Any CPU.Build.0 = Release|Any CPU
+		{32A90054-74FF-4F44-8C2D-1411E56BE6EE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{32A90054-74FF-4F44-8C2D-1411E56BE6EE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{32A90054-74FF-4F44-8C2D-1411E56BE6EE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{32A90054-74FF-4F44-8C2D-1411E56BE6EE}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -81,6 +87,7 @@ Global
 		{5943E3C8-C6CA-4981-A406-82A2DBE85E5E} = {1F713E00-B5F1-42CC-84D7-584DAA6123E6}
 		{9992EC5B-4A68-489B-82F7-240C77F465C6} = {89D02ED6-F91D-4785-A65F-506542600C76}
 		{BC83344F-0EEE-4FA5-BC89-68916D6A12A1} = {2601CC5D-CF77-45FC-A694-FE800C8886C6}
+		{32A90054-74FF-4F44-8C2D-1411E56BE6EE} = {2601CC5D-CF77-45FC-A694-FE800C8886C6}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {FED6B0CB-F438-47FF-8316-81EA7C31F43E}

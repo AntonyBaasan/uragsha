@@ -3,6 +3,7 @@ using System.Linq;
 using System.Collections.Generic;
 using Scheduler.Interfaces.Models;
 using Scheduler.Interfaces.Services;
+using System.Threading.Tasks;
 
 namespace Scheduler.Services
 {
@@ -10,10 +11,11 @@ namespace Scheduler.Services
     {
         private readonly List<SessionRequest> requests = new();
 
-        public SessionRequest CreateSessionRequest(SessionRequest sessionRequest)
+        public Task<SessionRequest> CreateSessionRequestAsync(SessionRequest sessionRequest)
         {
+            sessionRequest.Id = Guid.NewGuid().ToString();
             requests.Add(sessionRequest);
-            return sessionRequest;
+            return Task.FromResult(sessionRequest);
         }
 
         public void UpdateSessionRequest(string sessionRequestId, SessionRequest sessionRequest)

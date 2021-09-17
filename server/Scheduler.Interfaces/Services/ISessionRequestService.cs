@@ -1,6 +1,7 @@
 ﻿using Scheduler.Interfaces.Models;
 using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace Scheduler.Interfaces.Services
 {
@@ -10,7 +11,7 @@ namespace Scheduler.Interfaces.Services
 
         List<SessionRequest> GetSessionRequestsByDate(DateTime start, SessionRequestStatus status);
         SessionRequest GetSessionRequestById(string sessionRequestId);
-        SessionRequest CreateSessionRequest(SessionRequest sessionRequest);
+        Task<SessionRequest> CreateSessionRequestAsync(SessionRequest sessionRequest);
         void UpdateSessionRequest(string sessionRequestId, SessionRequest sessionRequest);
         void RemoveSessionRequest(string sessionRequestId);
     }

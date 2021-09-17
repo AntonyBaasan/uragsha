@@ -8,14 +8,14 @@
 
   <ItemGroup>
     <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="8.1.1" />
-    <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="5.0.9" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="5.0.9">
+    <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="5.0.10" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="5.0.10">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
-    <PackageReference Include="Microsoft.EntityFrameworkCore.InMemory" Version="5.0.9" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.InMemory" Version="5.0.10" />
     <PackageReference Include="Microsoft.Extensions.Caching.StackExchangeRedis" Version="5.0.1" />
-    <PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.10.14" />
+    <PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.11.1" />
     <PackageReference Include="MySql.EntityFrameworkCore" Version="5.0.5" />
     <PackageReference Include="Swashbuckle.AspNetCore" Version="6.2.1" />
   </ItemGroup>
@@ -23,6 +23,7 @@
   <ItemGroup>
     <ProjectReference Include="..\Dashboard\Dashboard.csproj" />
     <ProjectReference Include="..\Entity.MySql\Entity.MySql.csproj" />
+    <ProjectReference Include="..\HttpUtilities\HttpUtilities.csproj" />
     <ProjectReference Include="..\Identity\Identity.csproj" />
     <ProjectReference Include="..\Scheduler\Scheduler.csproj" />
     <ProjectReference Include="..\Security.Interfaces\Identity.Interfaces.csproj" />

@@ -1,12 +1,12 @@
-﻿using Identity.Interfaces.Services;
+﻿using HttpUtilities.Services;
+using Identity.Interfaces.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Scheduler.Interfaces.Models;
 using Scheduler.Interfaces.Services;
-using System;
 using System.Collections.Generic;
-using System.Linq;
+using System.Threading.Tasks;
 
 namespace Uragsha.WebApi.Controllers
 {
@@ -19,32 +19,53 @@ namespace Uragsha.WebApi.Controllers
         private readonly ISessionRequestService sessionRequestService;
         private readonly ISessionService sessionService;
         private readonly IUserService userService;
+        private readonly IHttpContextUtils contextUtility;
 
         public SessionRequestController(
             ILogger<SessionRequestController> logger,
             ISessionRequestService sessionRequestService,
             ISessionService sessionService,
-            IUserService userService
+            IUserService userService,
+            IHttpContextUtils contextUtility
             )
         {
             _logger = logger;
             this.sessionRequestService = sessionRequestService;
             this.sessionService = sessionService;
             this.userService = userService;
+            this.contextUtility = contextUtility;
         }
 
         [HttpGet]
         public IEnumerable<SessionRequest> Get()
         {
-            string uid = GetCurrentUid();
+            string uid = this.contextUtility.GetUserId(HttpContext);
             var found = sessionRequestService.FindSessionRequest(uid);
             return found;
         }
 
-        private string GetCurrentUid()
+        [HttpGet]
+        public IActionResult Get(string id)
         {
-            var uid = this.HttpContext.User.Claims.FirstOrDefault(c => c.Type == "user_id");
-            return uid != null ? uid.Value : "";
+            string uid = this.contextUtility.GetUserId(HttpContext);
+            var found = sessionRequestService.GetSessionRequestById(id);
+            if (found == null || found.UserId != uid)
+            {
+                return NotFound();
+            }
+            return Ok(found);
         }
+
+        [HttpPost]
+        public async Task<SessionRequest> Post([FromBody] SessionRequest sessionRequest)
+        {
+            var userId = this.contextUtility.GetUserId(this.HttpContext);
+
+            sessionRequest.UserId = userId;
+            var created = await sessionRequestService.CreateSessionRequestAsync(sessionRequest);
+
+            return created;
+        }
+
     }
 }

@@ -13,7 +13,7 @@ using Scheduler;
 using Scheduler.Interfaces.Services;
 using Scheduler.Services;
 
-namespace Uragsha.Signalling
+namespace Uragsha.WebApi
 {
     public static class ConfigureUtils
     {

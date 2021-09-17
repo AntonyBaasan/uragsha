@@ -4,8 +4,7 @@
 
 export const environment = {
   production: false,
-  // webApiUrl: 'https://localhost:6001',
-  webApiUrl: 'https://localhost:7001',
+  webApiUrl: 'https://localhost:6001',
   signallingUrl: 'https://localhost:7001',
   iceServers: [
     { urls: 'stun:stun.services.mozilla.com' },
