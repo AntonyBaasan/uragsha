@@ -9,6 +9,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\Email.Interfaces\Email.Interfaces.csproj" />
     <ProjectReference Include="..\Entity\Entity.csproj" />
     <ProjectReference Include="..\HttpUtilities\HttpUtilities.csproj" />
     <ProjectReference Include="..\Scheduler.Interfaces\Scheduler.Interfaces.csproj" />

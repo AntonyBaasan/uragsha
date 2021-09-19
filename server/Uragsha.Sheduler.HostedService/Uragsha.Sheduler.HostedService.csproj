@@ -12,6 +12,8 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\Email.Interfaces\Email.Interfaces.csproj" />
+    <ProjectReference Include="..\Email.SendGrid\Email.SendGrid.csproj" />
     <ProjectReference Include="..\Entity.MySql\Entity.MySql.csproj" />
     <ProjectReference Include="..\Entity\Entity.csproj" />
     <ProjectReference Include="..\Identity\Identity.csproj" />

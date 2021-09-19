@@ -4,6 +4,8 @@ using Scheduler.Interfaces.Models;
 using System.Linq;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using Email.Interfaces.Services;
+using Email.Interfaces.Models;
 
 namespace Scheduler.Services
 {
@@ -11,11 +13,16 @@ namespace Scheduler.Services
     {
         private readonly ISessionRequestService sessionRequestService;
         private readonly ISessionService sessionService;
+        private readonly IEmailService emailService;
 
-        public SchedulerService(ISessionRequestService sessionRequestService, ISessionService sessionService)
+        public SchedulerService(
+            ISessionRequestService sessionRequestService,
+            ISessionService sessionService,
+            IEmailService emailService)
         {
             this.sessionRequestService = sessionRequestService;
             this.sessionService = sessionService;
+            this.emailService = emailService;
         }
 
         /// <summary>
@@ -42,15 +49,16 @@ namespace Scheduler.Services
                     }
                     else
                     {
-                        var session = Match(previousSessionRequest, sessionRequest);
+                        var session = await Match(previousSessionRequest, sessionRequest);
                         //Task.WaitAll(session);
                         Console.WriteLine($"Session {session.Id} was created!");
-
                         previousSessionRequest = null;
+                        await SendEmail(session);
                     }
                 }
             }
         }
+
 
         private async Task<Session> Match(SessionRequest sessionRequest1, SessionRequest sessionRequest2)
         {
@@ -117,6 +125,22 @@ namespace Scheduler.Services
                 await sessionService.RemoveAsync(session.Id);
             }
         }
+
+        private async Task SendEmail(Session session)
+        {
+            var result = await emailService.SendEmailAsync(new EmailInfo
+            (
+                new Contact("Uragsha Support", "antony.baasan@gmail.com"),
+                new Contact("Baasandorj", "ankhbayar.baasandorj@gmail.com"),
+                $"Uragsha session scheduled!",
+                $"Session {session.Id} was created!",
+                $"<b>Session {session.Id}</b> was created!"
+            ));
+
+            Console.WriteLine($"Email Send: {result}");
+
+        }
+
 
     }
 }

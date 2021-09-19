@@ -1,4 +1,6 @@
 ﻿using Dashboard.Services;
+using Email.Interfaces.Services;
+using Email.SendGrid.Services;
 using Entity;
 using Entity.MySql.Services;
 using Entity.Services;
@@ -40,7 +42,6 @@ namespace Uragsha.Signalling
             services.AddSingleton<ISessionRequestService, SessionRequestService>();
             services.AddSingleton<ISessionService, SessionService>();
             services.AddSingleton<IUserService, UserService>();
-            services.AddSingleton<DashboardService>();
 
             services.AddSingleton<IContextService, WebApiHttpContextService>();
 

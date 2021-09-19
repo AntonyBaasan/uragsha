@@ -1,4 +1,6 @@
 ﻿using Dashboard.Services;
+using Email.Interfaces.Services;
+using Email.SendGrid.Services;
 using Entity;
 using Entity.MySql.Services;
 using Entity.Services;
@@ -42,6 +44,7 @@ namespace Uragsha.WebApi
             services.AddSingleton<ISchedulerService, SchedulerService>();
             services.AddSingleton<IUserService, UserService>();
             services.AddSingleton<DashboardService>();
+            services.AddSingleton<IEmailService>(new SendGridEmailService(configuration.GetSection("ApiKey:SendGridKey").Value));
 
             services.AddSingleton<IContextService, WebApiHttpContextService>();
 
