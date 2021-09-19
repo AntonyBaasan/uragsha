@@ -43,6 +43,7 @@ namespace Entity.MySql.Services
         {
             using var scope = scopeFactory.CreateScope();
             var dbContext = scope.ServiceProvider.GetRequiredService<MainDbContext>();
+            dbContext.Attach(entity);
             dbContext.Update(entity);
             await dbContext.SaveChangesAsync();
         }

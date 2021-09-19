@@ -34,10 +34,12 @@ namespace Uragsha.WebApi
             // Entity services
             services.AddSingleton<IUserEntityService, UserEntityService>();
             services.AddSingleton<ISessionRequestEntityService, SessionRequestEntityService>();
+            services.AddSingleton<ISessionEntityService, SessionEntityService>();
 
             // Internal services
             services.AddSingleton<ISessionRequestService, SessionRequestService>();
             services.AddSingleton<ISessionService, SessionService>();
+            services.AddSingleton<ISchedulerService, SchedulerService>();
             services.AddSingleton<IUserService, UserService>();
             services.AddSingleton<DashboardService>();
 

@@ -3,68 +3,50 @@ using System.Linq;
 using Scheduler.Interfaces.Services;
 using System.Collections.Generic;
 using Scheduler.Interfaces.Models;
+using Entity.Services;
+using AutoMapper;
+using Entity.Models;
+using System.Threading.Tasks;
 
 namespace Scheduler.Services
 {
     public class SessionService : ISessionService
     {
-        private readonly List<Session> sessions = new();
+        private readonly ISessionEntityService sessionEntityService;
+        private readonly IMapper mapper;
 
-        public ISessionRequestService SessionRequestService { get; }
-
-        public SessionService(ISessionRequestService sessionRequestService)
+        public SessionService(
+            ISessionEntityService sessionEntityService,
+            IMapper mapper
+        )
         {
-            SessionRequestService = sessionRequestService;
+            this.sessionEntityService = sessionEntityService;
+            this.mapper = mapper;
         }
 
-        public Session GetSession(string sessionId)
+        public async Task<Session> GetByIdAsync(string sessionId)
         {
-            return sessions.FirstOrDefault(s => s.Id.Equals(sessionId));
+            var entity = await sessionEntityService.GetByIdAsync(sessionId);
+            return mapper.Map<SessionEntity, Session>(entity);
         }
 
-        public Session CreateSession(string sessionRequestId)
+        public async Task<Session> CreateAsync(Session session)
         {
-            return null;
-
-            //var sessionRequest = SessionRequestService.GetSessionRequestById(sessionRequestId);
-            //// requested session was deleted
-            //if (sessionRequest == null) { return null; }
-
-            //var allRequests = SessionRequestService.GetSessionRequestsByDate(sessionRequest.Start, SessionRequestStatus.Waiting);
-
-            //var nextAvailableRequest = allRequests.FirstOrDefault(r => !r.Id.Equals(sessionRequestId));
-
-            //// no available request
-            //if (nextAvailableRequest == null) { return null; }
-
-            //var newSession = new Session
-            //{
-            //    Id = Guid.NewGuid().ToString(),
-            //    Start = sessionRequest.Start,
-            //    End = sessionRequest.End,
-            //    SessionRequests = new List<SessionRequest> { sessionRequest, nextAvailableRequest }
-            //};
-
-            //sessionRequest.Status = SessionRequestStatus.Scheduled;
-            //sessionRequest.SessionId = newSession.Id;
-            //SessionRequestService.UpdateSessionRequest(sessionRequest.Id, sessionRequest);
-            //nextAvailableRequest.Status = SessionRequestStatus.Scheduled;
-            //nextAvailableRequest.SessionId = newSession.Id;
-            //SessionRequestService.UpdateSessionRequest(nextAvailableRequest.Id, nextAvailableRequest);
-
-            //sessions.Add(newSession);
-            //return newSession;
+            var entity = mapper.Map<Session, SessionEntity>(session);
+            entity = await sessionEntityService.AddAsync(entity);
+            session.Id = entity.Id;
+            return session;
         }
 
-        public void RemoveSession(string sessionId)
+        public async Task RemoveAsync(string sessionId)
         {
-            sessions.RemoveAll(s => s.Id.Equals(sessionId));
+             await sessionEntityService.DeleteAsync(sessionId);
         }
 
-        public Session GetSessionBySessionRequestId(string sessionRequestId)
+        public async Task<Session> GetBySessionRequestIdAsync(string sessionRequestId)
         {
-            var result = sessions.FirstOrDefault(session => session.SessionRequests.Any(s => s.Id.Equals(sessionRequestId)));
-            return result;
+            var entity = await sessionEntityService.GetBySessionRequestIdAsync(sessionRequestId);
+            return mapper.Map<SessionEntity, Session>(entity);
         }
     }
 }

@@ -10,5 +10,6 @@ namespace Scheduler.Interfaces.Models
         public DateTime End;
         public ICollection<SessionRequest> SessionRequests { get; set; }
         public Dictionary<string, object> LiveUsers { get; set; }
+        public SessionStatus Status { get; set; }
     }
 }

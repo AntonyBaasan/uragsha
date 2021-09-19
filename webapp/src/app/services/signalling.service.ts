@@ -184,20 +184,20 @@ export class SingnallingService implements OnDestroy {
       SignallingReceiveEvents.OnGetUserSessionRequests,
       (sessionRequests: SessionRequest[]) => {
         this.OnGetUserSessionRequests.next(
-          sessionRequests.map((s) => this.modelHelperService.fixSessionRequestDateFormat(s))
+          sessionRequests.map((s) => this.modelHelperService.fixSessionRequestDateUtcToLocal(s))
         );
       }
     );
     this.connection.on(
       SignallingReceiveEvents.OnSessionRequestUpdated,
       (sessionRequest: SessionRequest) => {
-        this.OnSessionRequestUpdated.next(this.modelHelperService.fixSessionRequestDateFormat(sessionRequest));
+        this.OnSessionRequestUpdated.next(this.modelHelperService.fixSessionRequestDateUtcToLocal(sessionRequest));
       }
     );
     this.connection.on(
       SignallingReceiveEvents.OnSessionRequestCreated,
       (sessionRequest: SessionRequest) => {
-        this.OnSessionRequestCreated.next(this.modelHelperService.fixSessionRequestDateFormat(sessionRequest));
+        this.OnSessionRequestCreated.next(this.modelHelperService.fixSessionRequestDateUtcToLocal(sessionRequest));
       }
     );
     this.connection.on(

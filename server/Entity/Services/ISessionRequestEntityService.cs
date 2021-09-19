@@ -21,5 +21,7 @@ namespace Entity.Services
         public Task<bool> ExistAsync(string id);
 
         public Task<List<SessionRequestEntity>> FindByUserIdAsync(string userId);
+
+        public Task<List<SessionRequestEntity>> FindAsync(SessionRequestQueryParam userId);
     }
 }

@@ -48,7 +48,7 @@ namespace Entity.MySql.Services
 
         public async Task<SessionRequestEntity> GetByIdAsync(string id, string userId)
         {
-           using var scope = this._scopeFactory.CreateScope();
+            using var scope = this._scopeFactory.CreateScope();
             var dbContext = scope.ServiceProvider.GetRequiredService<MainDbContext>();
             var entity = await GetAsQueryable(dbContext).Where(s => s.Id.Equals(id) && s.UserId.Equals(userId)).FirstOrDefaultAsync();
             if (entity == null) { throw new KeyNotFoundException(); }
@@ -73,9 +73,34 @@ namespace Entity.MySql.Services
             return result.ToListAsync();
         }
 
+        public Task<List<SessionRequestEntity>> FindAsync(SessionRequestQueryParam queryParam)
+        {
+            using var scope = _scopeFactory.CreateScope();
+            var dbContext = scope.ServiceProvider.GetRequiredService<MainDbContext>();
+            var query = GetAsQueryable(dbContext);
+            if (queryParam.UserId != null)
+            {
+                query = query.Where(s => s.UserId.Equals(queryParam.UserId));
+            }
+            if (queryParam.StartDate != null)
+            {
+                query = query.Where(s => s.Start >= queryParam.StartDate);
+            }
+            if (queryParam.EndDate != null)
+            {
+                query = query.Where(s => s.End <= queryParam.EndDate);
+            }
+            if (queryParam.Status != null)
+            {
+                query = query.Where(s => s.Status == queryParam.Status);
+            }
+            return query.ToListAsync();
+        }
+
         private IQueryable<SessionRequestEntity> GetAsQueryable(MainDbContext context)
         {
             return context.SessionRequests.AsQueryable();
         }
+
     }
 }

@@ -16,14 +16,16 @@ export class SessionRequestsService {
   constructor(private http: HttpClient, private modelHelperService: ModelHelperService) { }
 
   getAll(): Observable<Array<SessionRequest>> {
-    return this.http.get<Array<SessionRequest>>(this.endpoint).pipe(
-      map(sessionRequests => sessionRequests.map(s => this.modelHelperService.fixSessionRequestDateFormat(s)))
+    return this.http.get<Array<SessionRequest>>(this.endpoint)
+    .pipe(
+      map(sessionRequests => sessionRequests.map(s => this.modelHelperService.fixSessionRequestDateUtcToLocal(s)))
     );
   }
 
   create(sessionRequest: SessionRequest): Observable<SessionRequest> {
-    return this.http.post<SessionRequest>(this.endpoint, sessionRequest).pipe(
-      map(response => this.modelHelperService.fixSessionRequestDateFormat(response))
+    return this.http.post<SessionRequest>(this.endpoint, sessionRequest)
+    .pipe(
+      map(sessionRequest => this.modelHelperService.fixSessionRequestDateUtcToLocal(sessionRequest))
     );
   }
 

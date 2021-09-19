@@ -43,7 +43,7 @@ namespace Scheduler.Services
             await _sessionRequestEntityService.UpdateAsync(entity);
         }
 
-        public async Task<SessionRequest> GetSessionRequestById(string sessionRequestId)
+        public async Task<SessionRequest> GetByIdAsync(string sessionRequestId)
         {
             var userId = _contextService.GetUserId();
             var entity = await _sessionRequestEntityService.GetByIdAsync(sessionRequestId, userId);
@@ -65,25 +65,14 @@ namespace Scheduler.Services
 
         public async Task<List<SessionRequest>> FindSessionRequest(string userId, DateTime? start = null, DateTime? end = null, SessionRequestStatus? status = null)
         {
-            var result = await _sessionRequestEntityService.FindByUserIdAsync(userId);
-
+            var query = new SessionRequestQueryParam { UserId = userId, StartDate = start, EndDate = end, Status = status != null ? (int)status : null };
+            var result = await _sessionRequestEntityService.FindAsync(query);
             return result.Select(r => _mapper.Map<SessionRequestEntity, SessionRequest>(r)).ToList();
-
-            //var found = requests.Where(r => r.UserId.Equals(userId));
-            //if (start != null)
-            //{
-            //    found = found.Where(r => r.Start >= start);
-            //}
-            //if (end != null)
-            //{
-            //    found = found.Where(r => r.End <= end);
-            //}
-            //if (status.HasValue)
-            //{
-            //    found = found.Where(r => r.Status.Equals(status));
-            //}
-            //return found.ToList();
         }
 
+        public async Task<List<SessionRequest>> FindWaitingSessionRequest(DateTime? start = null, DateTime? end = null)
+        {
+            return await FindSessionRequest(null, start, end, SessionRequestStatus.Waiting);
+        }
     }
 }

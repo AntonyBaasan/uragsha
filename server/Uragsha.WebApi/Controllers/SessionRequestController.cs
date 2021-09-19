@@ -17,21 +17,21 @@ namespace Uragsha.WebApi.Controllers
     {
         private readonly ILogger<SessionRequestController> _logger;
         private readonly ISessionRequestService sessionRequestService;
-        private readonly ISessionService sessionService;
+        private readonly ISchedulerService schedulerService;
         private readonly IUserService userService;
         private readonly IContextService contextUtility;
 
         public SessionRequestController(
             ILogger<SessionRequestController> logger,
             ISessionRequestService sessionRequestService,
-            ISessionService sessionService,
+            ISchedulerService schedulerService,
             IUserService userService,
             IContextService contextUtility
             )
         {
             _logger = logger;
             this.sessionRequestService = sessionRequestService;
-            this.sessionService = sessionService;
+            this.schedulerService = schedulerService;
             this.userService = userService;
             this.contextUtility = contextUtility;
         }
@@ -47,7 +47,7 @@ namespace Uragsha.WebApi.Controllers
         [HttpGet("{id}")]
         public async Task<IActionResult> Get(string id)
         {
-            var found = await sessionRequestService.GetSessionRequestById(id);
+            var found = await sessionRequestService.GetByIdAsync(id);
             if (found == null)
             {
                 return NotFound();
@@ -68,7 +68,7 @@ namespace Uragsha.WebApi.Controllers
         {
             try
             {
-                await sessionRequestService.RemoveSessionRequest(id);
+                await schedulerService.RemoveSessionRequest(id);
             }
             catch (KeyNotFoundException)
             {

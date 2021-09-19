@@ -103,7 +103,7 @@ namespace Uragsha.Signalling.Hubs
 
         public async Task OfferVideoCall(string sessionRequestId, object offer)
         {
-            var session = SessionService.GetSessionBySessionRequestId(sessionRequestId);
+            var session = await SessionService.GetBySessionRequestIdAsync(sessionRequestId);
 
             if (session == null)
             {
@@ -136,7 +136,7 @@ namespace Uragsha.Signalling.Hubs
 
         public async Task AnswerVideoCall(string sessionRequestId, object answer)
         {
-            var session = SessionService.GetSessionBySessionRequestId(sessionRequestId);
+            var session = await SessionService.GetBySessionRequestIdAsync(sessionRequestId);
 
             if (session == null)
             {
@@ -170,7 +170,7 @@ namespace Uragsha.Signalling.Hubs
         public async Task JoinSession(string sessionRequestId)
         {
             var userId = GetCurrentUid();
-            var sessionRequest = await SessionRequestService.GetSessionRequestById(sessionRequestId);
+            var sessionRequest = await SessionRequestService.GetByIdAsync(sessionRequestId);
             if (sessionRequest == null)
             {
                 Console.WriteLine("Can't find session request by sessionRequestId: " + sessionRequestId);
@@ -181,7 +181,7 @@ namespace Uragsha.Signalling.Hubs
                 Console.WriteLine("User doesn't belong to session request" + sessionRequestId);
                 return;
             }
-            var session = SessionService.GetSessionBySessionRequestId(sessionRequestId);
+            var session = await SessionService.GetBySessionRequestIdAsync(sessionRequestId);
             if (session == null)
             {
                 Console.WriteLine("Can't find any session for sessionRequestId: " + sessionRequestId);
@@ -239,13 +239,13 @@ namespace Uragsha.Signalling.Hubs
             await Clients.All.OnTextMessage(message);
         }
 
-        public async Task GetUserSessionRequests()
-        {
-            string userId = GetCurrentUid();
-            var found = SessionRequestService.FindSessionRequest(userId);
-            var connections = GetUserConnections(userId);
-            await Clients.Clients(connections).OnGetUserSessionRequests(found);
-        }
+        //public async Task GetUserSessionRequests()
+        //{
+        //    string userId = GetCurrentUid();
+        //    var found = SessionRequestService.FindSessionRequest(userId);
+        //    var connections = GetUserConnections(userId);
+        //    await Clients.Clients(connections).OnGetUserSessionRequests(found);
+        //}
 
         //public async Task CreateSessionRequest(SessionRequest sessionRequest)
         //{
@@ -263,21 +263,21 @@ namespace Uragsha.Signalling.Hubs
         //    await CreateSession(request);
         //}
 
-        public async Task CreateSession(SessionRequest sessionRequest)
-        {
-            Session session = SessionService.CreateSession(sessionRequest.Id);
-            if (session == null)
-            {
-                Console.WriteLine("Can't find matching partner!");
-                return;
-            }
+        //public async Task CreateSession(SessionRequest sessionRequest)
+        //{
+        //    Session session = SessionService.CreateSession(sessionRequest.Id);
+        //    if (session == null)
+        //    {
+        //        Console.WriteLine("Can't find matching partner!");
+        //        return;
+        //    }
 
-            foreach (var request in session.SessionRequests)
-            {
-                var connections = GetUserConnections(request.UserId);
-                await Clients.Clients(connections).OnSessionRequestUpdated(request);
-            }
-        }
+        //    foreach (var request in session.SessionRequests)
+        //    {
+        //        var connections = GetUserConnections(request.UserId);
+        //        await Clients.Clients(connections).OnSessionRequestUpdated(request);
+        //    }
+        //}
 
         private List<string> GetUserConnections(string userId)
         {

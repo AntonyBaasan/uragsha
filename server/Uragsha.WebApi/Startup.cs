@@ -25,6 +25,12 @@ namespace Uragsha.WebApi
         {
             services.AddUragshaServices(Configuration);
 
+            services.AddControllers().AddNewtonsoftJson(options =>
+            {
+                options.SerializerSettings.DateTimeZoneHandling = Newtonsoft.Json.DateTimeZoneHandling.Utc;
+                options.SerializerSettings.DateFormatString = "yyyy'-'MM'-'dd'T'HH':'mm':'ssZ";
+            });
+
             services.AddCors(options =>
             {
                 options.AddPolicy(name: AllowUragshaWebOrigins,

@@ -1,5 +1,4 @@
-﻿using Dashboard.Services;
-using Entity;
+﻿using Entity;
 using Entity.MySql.Services;
 using Entity.Services;
 using HttpUtilities.Services;
@@ -32,10 +31,12 @@ namespace Uragsha.Sheduler.HostedService
             // Entity services
             services.AddSingleton<IUserEntityService, UserEntityService>();
             services.AddSingleton<ISessionRequestEntityService, SessionRequestEntityService>();
+            services.AddSingleton<ISessionEntityService, SessionEntityService>();
 
             // Internal services
             services.AddSingleton<ISessionRequestService, SessionRequestService>();
             services.AddSingleton<ISessionService, SessionService>();
+            services.AddSingleton<ISchedulerService, SchedulerService>();
             services.AddSingleton<IUserService, UserService>();
 
             services.AddSingleton<IContextService, WebApiHttpContextService>();

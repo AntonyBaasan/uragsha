@@ -9,10 +9,12 @@ namespace Entity.Models
     public class SessionEntity
     {
         [Key]
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public string Id { get; set; }
         public string Name { get; set; }
         public DateTime Start { get; set; }
         public DateTime? End { get; set; }
         public virtual ICollection<SessionRequestEntity> SessionRequests { get; set; }
+        public int Status { get; set; }
     }
 }
