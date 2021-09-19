@@ -1,4 +1,6 @@
+using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
@@ -6,6 +8,8 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
+using System.Security.Claims;
+using Uragsha.WebApi.Handler;
 
 namespace Uragsha.WebApi
 {
@@ -25,6 +29,8 @@ namespace Uragsha.WebApi
         {
             services.AddUragshaServices(Configuration);
 
+            services.AddSingleton<IServiceAccountAuthenticator>(new ServiceAccountAuthenticator("123"));
+
             services.AddControllers().AddNewtonsoftJson(options =>
             {
                 options.SerializerSettings.DateTimeZoneHandling = Newtonsoft.Json.DateTimeZoneHandling.Utc;
@@ -42,8 +48,10 @@ namespace Uragsha.WebApi
                             .AllowCredentials();
                     });
             });
+
             services
             .AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+            .AddScheme<AuthenticationSchemeOptions, ServiceAuthenticationHandler>("ServiceAuthentication", options => { })
             .AddJwtBearer(options =>
                {
                    options.Authority = "https://securetoken.google.com/uragsha-webapp";
@@ -56,6 +64,16 @@ namespace Uragsha.WebApi
                        ValidateLifetime = true
                    };
                });
+
+            services.AddAuthorization(options =>
+            {
+                // Do not change Default policy. This is additional
+                // use it later as [Authorize(Policy = "ServicePolicy")]
+                options.AddPolicy("ServicePolicy", new AuthorizationPolicyBuilder()
+                    .RequireAuthenticatedUser()
+                    .AddAuthenticationSchemes("ServiceAuthentication")
+                    .Build());
+            });
 
             services.AddControllers();
             services.AddSwaggerGen(c =>
