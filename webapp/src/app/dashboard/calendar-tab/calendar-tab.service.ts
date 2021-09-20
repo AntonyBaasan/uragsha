@@ -43,6 +43,7 @@ export class CalendarTabService {
       status: SessionRequestStatus.Waiting,
       userId: userId,
       color: COLORS.red,
+      canJoin: false,
     };
     return newSessionRequest;
   }

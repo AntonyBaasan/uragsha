@@ -6,6 +6,7 @@
     <ng-container *ngFor="let session of sessionRequests; let i = index">
       <app-session-tile
         [sessionRequest]="session"
+        [canJoin]="session.canJoin"
         (sessionEdit)="edit(session)"
         (sessionRemove)="delete(session)"
         (sessionJoin)="join(session)"

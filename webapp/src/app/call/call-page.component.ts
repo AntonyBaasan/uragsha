@@ -4,11 +4,10 @@ import { Subscription } from 'rxjs';
 import { SessionDetail } from '../models';
 import { StoreService } from '../services';
 import { SingnallingService } from '../services/signalling.service';
-import { TimerService } from '../services/timer.service';
 import { WebrtcService } from '../services/webrtc.service';
 import { VideoComponent } from './video/video.component';
 
-const SERVICES = [WebrtcService, TimerService];
+const SERVICES = [WebrtcService];
 
 @Component({
   selector: 'app-call-page',

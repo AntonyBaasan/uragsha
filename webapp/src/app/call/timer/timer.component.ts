@@ -38,14 +38,14 @@ export class TimerComponent implements OnInit, OnDestroy {
   }
 
   startTimer() {
-    this.timerService.setTimer('secondCounter', () => {
+    this.timerService.setTimer('secondCounter', 1000, true, () => {
       if (this.timeLeft > 0) {
         this.timeLeft--;
       } else {
         this.timeDone.emit();
         this.stopTimer();
       }
-    }, 1000, true);
+    });
 
   }
 

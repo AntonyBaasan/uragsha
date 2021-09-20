@@ -8,6 +8,7 @@ export interface SessionRequest {
   sessionId?: string;
 
   color: { primary: string; secondary: string };
+  canJoin: boolean;
 }
 
 export enum SessionRequestStatus {

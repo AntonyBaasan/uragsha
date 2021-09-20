@@ -17,12 +17,13 @@ import { SessionRequest, SessionRequestStatus } from '../../../models';
 })
 export class SessionTileComponent {
   @Input() sessionRequest: SessionRequest;
+  @Input() canJoin: boolean;
 
   @Output() sessionEdit = new EventEmitter<Date>();
   @Output() sessionRemove = new EventEmitter<string>();
   @Output() sessionJoin = new EventEmitter<string>();
 
-  constructor(private router: Router, private activatedRoute: ActivatedRoute) {}
+  constructor(private router: Router, private activatedRoute: ActivatedRoute) { }
 
   formatDayAndTime() {
     // return format(session.start, 'HH:mm') +'-'+ format(session.end, 'HH:mm');
@@ -47,7 +48,8 @@ export class SessionTileComponent {
     return 'Unknown';
   }
 
-  canJoin(){
-    return this.sessionRequest.status === SessionRequestStatus.Scheduled;
+  isJoinDisabled() {
+    // return this.sessionRequest.status === SessionRequestStatus.Scheduled && this.sessionRequest.canJoin;
+    return !this.sessionRequest.canJoin;
   }
 }

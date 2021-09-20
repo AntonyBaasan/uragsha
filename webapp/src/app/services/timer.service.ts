@@ -1,6 +1,6 @@
 import { Injectable, OnDestroy } from '@angular/core';
 
-@Injectable()
+@Injectable({ providedIn: 'root' })
 export class TimerService implements OnDestroy {
 
   private handles: { [name: string]: { type: 'interval' | 'timeout', ref: NodeJS.Timeout } } = {};
@@ -11,7 +11,7 @@ export class TimerService implements OnDestroy {
     this.stopAll();
   }
 
-  setTimer(name: string, callback: () => void, time: number, repeat: boolean) {
+  setTimer(name: string, time: number, repeat: boolean, callback: () => void) {
     if (this.handles[name]) {
       throw Error('Name already in use!');
     }
