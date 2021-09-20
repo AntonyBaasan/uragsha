@@ -6,9 +6,7 @@ import { SessionRequest } from 'src/app/models';
 import { map } from 'rxjs/operators';
 import { ModelHelperService } from '../model-helper.service';
 
-@Injectable({
-  providedIn: 'root',
-})
+@Injectable({ providedIn: 'root' })
 export class SessionRequestsService {
 
   private endpoint: string = environment.webApiUrl + '/api/SessionRequest';
@@ -17,16 +15,16 @@ export class SessionRequestsService {
 
   getAll(): Observable<Array<SessionRequest>> {
     return this.http.get<Array<SessionRequest>>(this.endpoint)
-    .pipe(
-      map(sessionRequests => sessionRequests.map(s => this.modelHelperService.fixSessionRequestDateUtcToLocal(s)))
-    );
+      .pipe(
+        map(sessionRequests => sessionRequests.map(s => this.modelHelperService.fixSessionRequestDateUtcToLocal(s)))
+      );
   }
 
   create(sessionRequest: SessionRequest): Observable<SessionRequest> {
     return this.http.post<SessionRequest>(this.endpoint, sessionRequest)
-    .pipe(
-      map(sessionRequest => this.modelHelperService.fixSessionRequestDateUtcToLocal(sessionRequest))
-    );
+      .pipe(
+        map(sessionRequest => this.modelHelperService.fixSessionRequestDateUtcToLocal(sessionRequest))
+      );
   }
 
   delete(id: string): Observable<void> {
