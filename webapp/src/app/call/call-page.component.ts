@@ -2,7 +2,7 @@ import { ChangeDetectorRef, Component, HostListener, OnDestroy, OnInit, ViewChil
 import { ActivatedRoute, Router } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { SessionDetail } from '../models';
-import { StoreService } from '../services';
+import { AuthService, StoreService } from '../services';
 import { SingnallingService } from '../services/signalling.service';
 import { WebrtcService } from '../services/webrtc.service';
 import { VideoComponent } from './video/video.component';
@@ -43,7 +43,7 @@ export class CallPageComponent implements OnInit, OnDestroy {
   constructor(
     private signallingService: SingnallingService,
     private webRtcService: WebrtcService,
-    private store: StoreService,
+    private authService: AuthService,
     private route: ActivatedRoute,
     private router: Router,
     private cdr: ChangeDetectorRef
@@ -52,7 +52,7 @@ export class CallPageComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.sessionRequestId = this.route.snapshot.params['sessionRequestId'];
 
-    this.store.userSubject.subscribe(user => {
+    this.authService.currentUser.subscribe(user => {
       this.userId = user && user.uid ? user.uid : '';
       if (this.userId) {
         this.showMe().then(() => {
@@ -167,7 +167,7 @@ export class CallPageComponent implements OnInit, OnDestroy {
   }
 
   endCall() {
-    const user = this.store.getUser();
+    const user = this.authService.currentUser.getValue();
     if (this.sessionDetail && user) {
       this.signallingService.leaveSession(this.sessionDetail.sessionId);
       this.videoComponent.stopLocal();
@@ -182,7 +182,7 @@ export class CallPageComponent implements OnInit, OnDestroy {
       return;
     }
 
-    const user = this.store.getUser();
+    const user = this.authService.currentUser.getValue();
     if (this.sessionRequestId && user) {
       this.startWebRtc();
       if (this.localStream) {

@@ -58,7 +58,7 @@ export class SingnallingService implements OnDestroy {
       });
   }
 
-  disconnect(user: User) {
+  disconnect() {
     return this.connection.stop();
   }
 

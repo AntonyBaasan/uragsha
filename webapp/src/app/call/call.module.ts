@@ -8,6 +8,7 @@ import { MessagesComponent } from './messages/messages.component';
 import { VideoComponent } from './video/video.component';
 import { OptionsComponent } from './options/options.component';
 import { TimerComponent } from './timer/timer.component';
+import { StoreService, TimerService } from '../services';
 
 
 @NgModule({
@@ -22,6 +23,7 @@ import { TimerComponent } from './timer/timer.component';
     FormsModule,
     CommonModule,
     CallRoutingModule
-  ]
+  ],
+  providers: [StoreService, TimerService]
 })
 export class CallModule { }

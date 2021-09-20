@@ -2,7 +2,7 @@ import { ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
 import { Subscription } from 'rxjs';
 import { SessionRequest } from '../../models';
 import { CalendarTabService } from './calendar-tab.service';
-import { SingnallingService, StoreService } from '../../services';
+import { AuthService, SingnallingService, StoreService } from '../../services';
 import { SessionRequestsService } from 'src/app/services/webapi/session-requests.service';
 
 @Component({
@@ -17,6 +17,7 @@ export class CalendarTabComponent implements OnInit, OnDestroy {
   subSessionRequestsSubject: Subscription | undefined;
 
   constructor(
+    private authService: AuthService,
     private store: StoreService,
     private calendarTabService: CalendarTabService,
     private signallingService: SingnallingService,
@@ -39,7 +40,7 @@ export class CalendarTabComponent implements OnInit, OnDestroy {
   }
 
   insertSession(date: any) {
-    const user = this.store.getUser();
+    const user = this.authService.currentUser.getValue();
     if (user) {
       const request = this.calendarTabService.createSessionRequestByStartDate(date, user.uid);
 

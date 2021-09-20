@@ -39,7 +39,7 @@ export class DashboardPageComponent implements OnInit, OnDestroy {
   ) { }
 
   ngOnInit(): void {
-    this.store.userSubject.subscribe(user => {
+    this.authService.currentUser.subscribe(user => {
       this.userName = user && user.uid ? user.uid : '';
       if (this.userName) {
         this.loadSessionRequest();

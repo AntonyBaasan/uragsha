@@ -15,23 +15,17 @@ export class AppComponent implements OnInit, OnDestroy {
   constructor(
     public signallingService: SingnallingService,
     public authService: AuthService,
-    private store: StoreService,
     private cdr: ChangeDetectorRef
   ) {
     this.subCurrentUserChange = this.authService.currentUser.subscribe(user => {
       if (user) {
         this.signallingService.connect(user).then(() => {
-          this.store.setUser(user);
           this.cdr.detectChanges();
         });
       } else {
-        const user = this.store.getUser();
-        if (user) {
-          this.signallingService.disconnect(user).then(() => {
-            this.store.setUser(null);
-            this.cdr.detectChanges();
-          });
-        }
+        this.signallingService.disconnect().then(() => {
+          this.cdr.detectChanges();
+        });
       }
     });
   }

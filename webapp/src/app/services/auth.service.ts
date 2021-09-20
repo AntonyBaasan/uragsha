@@ -20,6 +20,10 @@ export class AuthService implements OnDestroy {
     throw new Error('Method not implemented.');
   }
 
+  isLoggedIn(): boolean {
+    return this.currentUser.getValue() != null;
+  }
+
   loginGoogle() {
     var provider = new GoogleAuthProvider();
     // force to select an account, otherwise will login automatically

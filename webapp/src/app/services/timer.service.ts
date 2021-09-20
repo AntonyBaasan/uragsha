@@ -1,6 +1,6 @@
 import { Injectable, OnDestroy } from '@angular/core';
 
-@Injectable({ providedIn: 'root' })
+@Injectable()
 export class TimerService implements OnDestroy {
 
   private handles: { [name: string]: { type: 'interval' | 'timeout', ref: NodeJS.Timeout } } = {};

@@ -1,32 +1,19 @@
 import { Injectable } from '@angular/core';
-import { differenceInMinutes, differenceInSeconds } from 'date-fns';
+import { differenceInSeconds } from 'date-fns';
 import { BehaviorSubject } from 'rxjs';
 import { SessionRequest, User } from '../models';
 import { TimerService } from './timer.service';
 
-@Injectable({
-  providedIn: 'root',
-})
+@Injectable()
 export class StoreService {
   private sessionRequests: SessionRequest[] = [];
 
   public SessionRequestsSubject = new BehaviorSubject<SessionRequest[]>([]);
-  public userSubject = new BehaviorSubject<User | null>(null);
 
   constructor(private timerService: TimerService) {
   }
 
-  setUser(user: User | null) {
-    this.userSubject.next(user);
-  }
 
-  getUser() {
-    return this.userSubject.getValue();
-  }
-
-  isLoggedIn(): boolean {
-    return this.getUser() != null;
-  }
 
   setSessionRequests(SessionRequests: SessionRequest[]) {
     this.clearTimers(this.sessionRequests);
