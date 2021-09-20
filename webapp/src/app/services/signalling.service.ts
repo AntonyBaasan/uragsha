@@ -70,22 +70,6 @@ export class SingnallingService implements OnDestroy {
     this.connection.invoke(SignallingSendEvents.SendMessage, text);
   }
 
-  joinToRoom(room: string) {
-    if (!this.isConnected()) {
-      console.log('Connection is not established!');
-      return;
-    }
-    this.connection.invoke(SignallingSendEvents.JoinToRoom, room);
-  }
-
-  removeFromRoom(room: string) {
-    if (!this.isConnected()) {
-      console.log('Connection is not established!');
-      return;
-    }
-    this.connection.invoke(SignallingSendEvents.RemoveFromRoom, room);
-  }
-
   // called always after connection
   private afterLogin(user: User): Promise<void> {
     if (!this.isConnected()) {
