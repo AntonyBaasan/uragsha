@@ -6,6 +6,8 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using Email.Interfaces.Services;
 using Email.Interfaces.Models;
+using Messaging.Interfaces.Services;
+using Messaging.Interfaces.Models;
 
 namespace Scheduler.Services
 {
@@ -14,15 +16,18 @@ namespace Scheduler.Services
         private readonly ISessionRequestService sessionRequestService;
         private readonly ISessionService sessionService;
         private readonly IEmailService emailService;
+        private readonly IMessageSender messageSender;
 
         public SchedulerService(
             ISessionRequestService sessionRequestService,
             ISessionService sessionService,
-            IEmailService emailService)
+            IEmailService emailService,
+            IMessageSender messageSender)
         {
             this.sessionRequestService = sessionRequestService;
             this.sessionService = sessionService;
             this.emailService = emailService;
+            this.messageSender = messageSender;
         }
 
         /// <summary>
@@ -54,11 +59,27 @@ namespace Scheduler.Services
                         Console.WriteLine($"Session {session.Id} was created!");
                         previousSessionRequest = null;
                         await SendEmail(session);
+                        await SendMessageAfterSessionCreate(session);
                     }
                 }
             }
         }
 
+        private async Task SendMessageAfterSessionCreate(Session session)
+        {
+            foreach (var sessionRequest in session.SessionRequests)
+            {
+                await messageSender.SendMessageAsync(new HubMessage
+                {
+                    Content = new HubMessageContent
+                    {
+                        ToUserId = sessionRequest.UserId,
+                        Method = "OnSessionRequestUpdated",
+                        Params = sessionRequest
+                    }
+                });
+            }
+        }
 
         private async Task<Session> Match(SessionRequest sessionRequest1, SessionRequest sessionRequest2)
         {

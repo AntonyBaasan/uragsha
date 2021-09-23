@@ -7,7 +7,7 @@ using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Microsoft.Extensions.Primitives;
 
-namespace Uragsha.WebApi.Handler
+namespace HttpUtilities.Auth
 {
     public class ServiceAuthenticationHandler : AuthenticationHandler<AuthenticationSchemeOptions>
     {

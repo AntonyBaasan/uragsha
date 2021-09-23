@@ -7,6 +7,8 @@ using HttpUtilities.Services;
 using Identity;
 using Identity.Interfaces.Services;
 using Identity.Services;
+using Messagin.Http.Services;
+using Messaging.Interfaces.Services;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -43,6 +45,9 @@ namespace Uragsha.Sheduler.HostedService
             services.AddSingleton<IEmailService>(new SendGridEmailService(configuration.GetSection("ApiKey:SendGridKey").Value));
 
             services.AddSingleton<IContextService, WebApiHttpContextService>();
+
+            services.AddHttpClient();
+            services.AddSingleton<IMessageSender, HttpMessageSender>();
 
         }
     }

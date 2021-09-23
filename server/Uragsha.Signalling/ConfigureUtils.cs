@@ -1,13 +1,12 @@
-﻿using Dashboard.Services;
-using Email.Interfaces.Services;
-using Email.SendGrid.Services;
-using Entity;
+﻿using Entity;
 using Entity.MySql.Services;
 using Entity.Services;
 using HttpUtilities.Services;
 using Identity;
 using Identity.Interfaces.Services;
 using Identity.Services;
+using Messagin.Http.Services;
+using Messaging.Interfaces.Services;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -44,6 +43,9 @@ namespace Uragsha.Signalling
             services.AddSingleton<IUserService, UserService>();
 
             services.AddSingleton<IContextService, WebApiHttpContextService>();
+
+            services.AddHttpClient();
+            services.AddSingleton<IMessageSender, HttpMessageSender>();
 
         }
     }

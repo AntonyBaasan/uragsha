@@ -1,6 +1,6 @@
 ﻿using System.Threading.Tasks;
 
-namespace Uragsha.WebApi.Handler
+namespace HttpUtilities.Auth
 {
     public interface IServiceAccountAuthenticator
     {
@@ -13,7 +13,7 @@ namespace Uragsha.WebApi.Handler
 
         public ServiceAccountAuthenticator(string token)
         {
-            this.token = token;
+            this.token = "Basic " + token;
         }
 
         public Task<bool> Authenticate(string token)

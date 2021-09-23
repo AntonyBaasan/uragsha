@@ -13,7 +13,7 @@ export class TimerService implements OnDestroy {
 
   setTimer(name: string, time: number, repeat: boolean, callback: () => void) {
     if (this.handles[name]) {
-      throw Error('Name already in use!');
+      this.stopTimer(name);
     }
     if (repeat) {
       this.interval(name, callback, time);

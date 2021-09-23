@@ -9,6 +9,9 @@ using Microsoft.IdentityModel.Tokens;
 using Uragsha.Signalling.Hubs;
 using Microsoft.OpenApi.Models;
 using Microsoft.Extensions.Caching.Distributed;
+using Microsoft.AspNetCore.Authentication;
+using HttpUtilities.Auth;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Uragsha.Signalling
 {
@@ -29,6 +32,8 @@ namespace Uragsha.Signalling
         {
             services.AddUragshaServices(Configuration);
 
+            services.AddSingleton<IServiceAccountAuthenticator>(new ServiceAccountAuthenticator(Configuration.GetSection("ApiKey:ServiceAccountKey").Value));
+
             services.AddCors(options =>
             {
                 options.AddPolicy(name: AllowUragshaWebOrigins,
@@ -43,6 +48,7 @@ namespace Uragsha.Signalling
 
             services
             .AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+            .AddScheme<AuthenticationSchemeOptions, ServiceAuthenticationHandler>("ServiceAuthentication", options => { })
             .AddJwtBearer(options =>
                {
                    options.Authority = "https://securetoken.google.com/uragsha-webapp";
@@ -73,8 +79,23 @@ namespace Uragsha.Signalling
                    };
                });
 
+            services.AddControllers().AddNewtonsoftJson(options =>
+            {
+                options.SerializerSettings.DateTimeZoneHandling = Newtonsoft.Json.DateTimeZoneHandling.Utc;
+                options.SerializerSettings.DateFormatString = "yyyy'-'MM'-'dd'T'HH':'mm':'ssZ";
+            });
             services.AddRazorPages();
             services.AddSignalR();
+
+            services.AddAuthorization(options =>
+           {
+               // Do not change Default policy. This is additional policy!
+               // use it in the controller as [Authorize(Policy = "ServicePolicy")]
+               options.AddPolicy("ServicePolicy", new AuthorizationPolicyBuilder()
+                  .RequireAuthenticatedUser()
+                  .AddAuthenticationSchemes("ServiceAuthentication")
+                  .Build());
+           });
 
             // temp code from webapi
             services.AddControllers();
@@ -83,7 +104,7 @@ namespace Uragsha.Signalling
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "Uragsha.WebApi", Version = "v1" });
             });
 
-            
+
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -119,6 +140,7 @@ namespace Uragsha.Signalling
 
             app.UseEndpoints(endpoints =>
             {
+                endpoints.MapControllers();
                 endpoints.MapRazorPages();
                 endpoints.MapHub<MainHub>(HubName);
             });

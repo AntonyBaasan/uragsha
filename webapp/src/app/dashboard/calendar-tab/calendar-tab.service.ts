@@ -20,7 +20,10 @@ export class CalendarTabService {
     sessions = sessions.filter(s => s.start >= new Date());
     sessions = sessions.sort((s1, s2) => (s1.start as any) - (s2.start as any));
 
-    return this.getSessionsOfDay(sessions[0].start, sessions);
+    if (sessions.length > 0){
+      return this.getSessionsOfDay(sessions[0].start, sessions);
+    }
+    return [];
   }
 
   // Filter sessions by start date

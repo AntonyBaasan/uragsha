@@ -13,8 +13,6 @@ export class StoreService {
   constructor(private timerService: TimerService) {
   }
 
-
-
   setSessionRequests(SessionRequests: SessionRequest[]) {
     this.clearTimers(this.sessionRequests);
     this.sessionRequests = SessionRequests;

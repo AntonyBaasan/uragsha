@@ -31,9 +31,13 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HttpUtilities", "HttpUtilit
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Uragsha.Sheduler.HostedService", "Uragsha.Sheduler.HostedService\Uragsha.Sheduler.HostedService.csproj", "{34AE23CA-D478-4C19-B0C5-CD8A11BBB3F4}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Email.SendGrid", "Email.SendGrid\Email.SendGrid.csproj", "{91C30351-8ACB-4F93-B28C-FF8362386210}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Email.SendGrid", "Email.SendGrid\Email.SendGrid.csproj", "{91C30351-8ACB-4F93-B28C-FF8362386210}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Email.Interfaces", "Email.Interfaces\Email.Interfaces.csproj", "{27BD12FB-954E-4083-874E-1D7716F733C1}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Email.Interfaces", "Email.Interfaces\Email.Interfaces.csproj", "{27BD12FB-954E-4083-874E-1D7716F733C1}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Messaging.Interfaces", "Messaging.Interfaces\Messaging.Interfaces.csproj", "{55776F07-A82A-48F5-9211-7921EEFA2325}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Messagin.Http", "Messagin.Http\Messagin.Http.csproj", "{67155262-DA8B-4E55-AE97-5A29D650D63D}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -93,6 +97,14 @@ Global
 		{27BD12FB-954E-4083-874E-1D7716F733C1}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{27BD12FB-954E-4083-874E-1D7716F733C1}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{27BD12FB-954E-4083-874E-1D7716F733C1}.Release|Any CPU.Build.0 = Release|Any CPU
+		{55776F07-A82A-48F5-9211-7921EEFA2325}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{55776F07-A82A-48F5-9211-7921EEFA2325}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{55776F07-A82A-48F5-9211-7921EEFA2325}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{55776F07-A82A-48F5-9211-7921EEFA2325}.Release|Any CPU.Build.0 = Release|Any CPU
+		{67155262-DA8B-4E55-AE97-5A29D650D63D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{67155262-DA8B-4E55-AE97-5A29D650D63D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{67155262-DA8B-4E55-AE97-5A29D650D63D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{67155262-DA8B-4E55-AE97-5A29D650D63D}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -108,6 +120,8 @@ Global
 		{32A90054-74FF-4F44-8C2D-1411E56BE6EE} = {2601CC5D-CF77-45FC-A694-FE800C8886C6}
 		{91C30351-8ACB-4F93-B28C-FF8362386210} = {2601CC5D-CF77-45FC-A694-FE800C8886C6}
 		{27BD12FB-954E-4083-874E-1D7716F733C1} = {1F713E00-B5F1-42CC-84D7-584DAA6123E6}
+		{55776F07-A82A-48F5-9211-7921EEFA2325} = {1F713E00-B5F1-42CC-84D7-584DAA6123E6}
+		{67155262-DA8B-4E55-AE97-5A29D650D63D} = {2601CC5D-CF77-45FC-A694-FE800C8886C6}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {FED6B0CB-F438-47FF-8316-81EA7C31F43E}

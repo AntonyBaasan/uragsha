@@ -13,7 +13,8 @@ import { SessionRequest, SessionRequestStatus } from '../../../models';
   selector: 'app-session-tile',
   templateUrl: './session-tile.component.html',
   styleUrls: ['./session-tile.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush,
+  changeDetection: ChangeDetectionStrategy.Default
+  ,
 })
 export class SessionTileComponent {
   @Input() sessionRequest: SessionRequest;

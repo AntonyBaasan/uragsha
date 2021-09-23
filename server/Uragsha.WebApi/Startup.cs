@@ -1,4 +1,3 @@
-using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
@@ -8,8 +7,6 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
-using System.Security.Claims;
-using Uragsha.WebApi.Handler;
 
 namespace Uragsha.WebApi
 {
@@ -28,8 +25,6 @@ namespace Uragsha.WebApi
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddUragshaServices(Configuration);
-
-            services.AddSingleton<IServiceAccountAuthenticator>(new ServiceAccountAuthenticator("123"));
 
             services.AddControllers().AddNewtonsoftJson(options =>
             {
@@ -51,7 +46,6 @@ namespace Uragsha.WebApi
 
             services
             .AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
-            .AddScheme<AuthenticationSchemeOptions, ServiceAuthenticationHandler>("ServiceAuthentication", options => { })
             .AddJwtBearer(options =>
                {
                    options.Authority = "https://securetoken.google.com/uragsha-webapp";

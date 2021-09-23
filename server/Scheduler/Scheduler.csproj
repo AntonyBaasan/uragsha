@@ -12,6 +12,7 @@
     <ProjectReference Include="..\Email.Interfaces\Email.Interfaces.csproj" />
     <ProjectReference Include="..\Entity\Entity.csproj" />
     <ProjectReference Include="..\HttpUtilities\HttpUtilities.csproj" />
+    <ProjectReference Include="..\Messaging.Interfaces\Messaging.Interfaces.csproj" />
     <ProjectReference Include="..\Scheduler.Interfaces\Scheduler.Interfaces.csproj" />
   </ItemGroup>
 
