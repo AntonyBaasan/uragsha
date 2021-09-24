@@ -12,11 +12,11 @@ services:
       MYSQL_PASSWORD: devpass
     ports:
       - "3306:3306"
-  rabbitmq:
-    image: rabbitmq:3-management
-    ports:
-      - "5672:5672"
-      - "15672:15672"
+  # rabbitmq:
+  #   image: rabbitmq:3-management
+  #   ports:
+  #     - "5672:5672"
+  #     - "15672:15672"
     
   # web:
   #   image: php:7.2.2-apache
