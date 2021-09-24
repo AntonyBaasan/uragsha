@@ -12,28 +12,27 @@ docker-compose up
 
 ### Run WebApp (client web application written on Angular)
 ```
-# run client app on https://localhost:4200 (with --ssl)
+# runs client app on https://localhost:4200 (with --ssl)
 cd webapp
 npm start
 ```
 
 ### Run Signalling (SignalR) application
 ```
-# run client app on https://localhost:4200 (with --ssl)
+# runs signalling app on https://localhost:7001
 cd server
 dotnet run --project .\Uragsha.Signalling
 ```
 
 ### Run WebApi application
 ```
-# run client app on https://localhost:4200 (with --ssl)
+# runs webapi app on https://localhost:6001
 cd server
 dotnet run --project .\Uragsha.WebApi
 ```
 
 ### Run Scheduler hosted service application
 ```
-# run client app on https://localhost:4200 (with --ssl)
 cd server
 dotnet run --project .\Uragsha.Sheduler.HostedService\
 ```
