@@ -1,6 +1,8 @@
 
 # Commands to run as Development mode
 
+The project consists of executable [components](Components.md) (applications). These are the command to run all the components one by one. Each command executed from root directory.
+
 ### Run database as docker container
 ```
 # this command will run a MySql database on port 3306 (localhost)
