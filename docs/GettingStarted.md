@@ -3,6 +3,11 @@
 
 The project consists of executable [components](Components.md) (applications). These are the command to run all the components one by one. Each command executed from root directory.
 
+### prerequisite
+- [Docker](https://www.docker.com/products/docker-desktop)
+- [Dotnet](https://dotnet.microsoft.com/download)
+- [Node.js](https://nodejs.org/en/download/)
+
 ### Run database as docker container
 ```
 # this command will run a MySql database on port 3306 (localhost)
