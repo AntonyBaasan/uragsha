@@ -11,7 +11,7 @@ The project consists of executable [components](Components.md) (applications). T
 ### Run database as docker container
 ```
 # this command will run a MySql database on port 3306 (localhost)
-cd docker
+cd devops/docker
 docker-compose up
 ```
 
