@@ -31,6 +31,7 @@ const routes: Routes = [
       preloadingStrategy: PreloadAllModules,
       relativeLinkResolution: 'corrected',
       // enableTracing: true
+      useHash: true
     }),
   ],
   exports: [RouterModule],

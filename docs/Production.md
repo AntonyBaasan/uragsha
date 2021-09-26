@@ -1,13 +1,11 @@
-### Build and push docker images
+
+
+### Update k8s
 
 ```
-cd server
+doctl kubernetes cluster kubeconfig save <cluster id>
 
-docker build -f .\Uragsha.Signalling\Dockerfile --force-rm -t uragsha.signalling .
+kubectl apply -f .\devops\k8s\deployment.yml
 
-# create tag with same name as remote repository and includes version
-docker tag uragsha.signalling:latest antonybaasan/uragsha.signalling:v0.1
-
-# create tag with same name as remote repository and includes version
-docker push antonybaasan/uragsha.signalling:v0.1
+kubectl apply -f .\devops\k8s\services.yml
 ```
