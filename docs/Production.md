@@ -33,12 +33,24 @@ kubectl apply -f .\devops\k8s\ingress.yml
 kubectl apply -f https://github.com/jetstack/cert-manager/releases/download/v1.5.3/cert-manager.yaml
 
 kubectl apply -f .\devops\k8s\prod_issuer.yml
+
+# this will enable Pod to Pod communication, which is required for ACME http01 challenge
+kubectl apply -f .\devops\k8s\ingress_nginx_svc.yaml
 ```
 
-### For updating applcation version:
+### For updating application version:
 ```PS
 # Before this, udpate the components versions (docker image versions) accordingly
 kubectl apply -f .\devops\k8s\deployment.yml
 
 kubectl apply -f .\devops\k8s\services.yml
+
+...
 ```
+
+
+**Troubleshoot:**
+
+Internal pod to pod communication has to be enabled in order to ACME challenge succeed:
+
+https://www.digitalocean.com/community/questions/issue-with-waiting-for-http-01-challenge-propagation-failed-to-perform-self-check-get-request-from-acme-challenges
