@@ -1,8 +1,8 @@
 # Staging
 
-Staging deployment holds latest changes from main branch.
+Staging deployments hold latest changes from main branch.
 
-**WebApp** - Hosted in the Firebase https://uragsha-webapp.firebaseapp.com/#/
+**WebApp** - Hosted in the Firebase (https://uragsha-webapp.firebaseapp.com)
 
 **Signalling** - Hosted in the Azure app service (https://uragsha-signalling.azurewebsites.net)
 
