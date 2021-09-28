@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <TargetFramework>net5.0</TargetFramework>
-    <UserSecretsId>dotnet-Uragsha.Sheduler.HostedService-CDD0A9F3-5A9C-4EA4-B9D0-38B601C04E78</UserSecretsId>
+    <UserSecretsId>dotnet-Uragsha.Scheduler.HostedService-CDD0A9F3-5A9C-4EA4-B9D0-38B601C04E78</UserSecretsId>
   </PropertyGroup>
 
   <ItemGroup>

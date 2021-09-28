@@ -16,7 +16,7 @@ using Scheduler;
 using Scheduler.Interfaces.Services;
 using Scheduler.Services;
 
-namespace Uragsha.Sheduler.HostedService
+namespace Uragsha.Scheduler.HostedService
 {
     public static class ConfigureUtils
     {

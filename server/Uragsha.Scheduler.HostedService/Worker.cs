@@ -6,7 +6,7 @@ using System;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace Uragsha.Sheduler.HostedService
+namespace Uragsha.Scheduler.HostedService
 {
     public class Worker : BackgroundService
     {

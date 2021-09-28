@@ -2,7 +2,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 
-namespace Uragsha.Sheduler.HostedService
+namespace Uragsha.Scheduler.HostedService
 {
     public class Program
     {

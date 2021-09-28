@@ -1,6 +1,6 @@
 ﻿{
   "profiles": {
-    "Uragsha.Sheduler.HostedService": {
+    "Uragsha.Scheduler.HostedService": {
       "commandName": "Project",
       "dotnetRunMessages": "true",
       "environmentVariables": {
