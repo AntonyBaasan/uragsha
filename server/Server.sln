@@ -29,8 +29,6 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Dashboard", "Dashboard\Dash
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HttpUtilities", "HttpUtilities\HttpUtilities.csproj", "{32A90054-74FF-4F44-8C2D-1411E56BE6EE}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Uragsha.Scheduler.HostedService", "Uragsha.Sheduler.HostedService\Uragsha.Scheduler.HostedService.csproj", "{34AE23CA-D478-4C19-B0C5-CD8A11BBB3F4}"
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Email.SendGrid", "Email.SendGrid\Email.SendGrid.csproj", "{91C30351-8ACB-4F93-B28C-FF8362386210}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Email.Interfaces", "Email.Interfaces\Email.Interfaces.csproj", "{27BD12FB-954E-4083-874E-1D7716F733C1}"
@@ -38,6 +36,8 @@ EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Messaging.Interfaces", "Messaging.Interfaces\Messaging.Interfaces.csproj", "{55776F07-A82A-48F5-9211-7921EEFA2325}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Messagin.Http", "Messagin.Http\Messagin.Http.csproj", "{67155262-DA8B-4E55-AE97-5A29D650D63D}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Uragsha.Scheduler.HostedService", "Uragsha.Scheduler.HostedService\Uragsha.Scheduler.HostedService.csproj", "{FE5A01B1-0EAD-43AA-85D7-198F0FB19500}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -85,10 +85,6 @@ Global
 		{32A90054-74FF-4F44-8C2D-1411E56BE6EE}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{32A90054-74FF-4F44-8C2D-1411E56BE6EE}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{32A90054-74FF-4F44-8C2D-1411E56BE6EE}.Release|Any CPU.Build.0 = Release|Any CPU
-		{34AE23CA-D478-4C19-B0C5-CD8A11BBB3F4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{34AE23CA-D478-4C19-B0C5-CD8A11BBB3F4}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{34AE23CA-D478-4C19-B0C5-CD8A11BBB3F4}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{34AE23CA-D478-4C19-B0C5-CD8A11BBB3F4}.Release|Any CPU.Build.0 = Release|Any CPU
 		{91C30351-8ACB-4F93-B28C-FF8362386210}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{91C30351-8ACB-4F93-B28C-FF8362386210}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{91C30351-8ACB-4F93-B28C-FF8362386210}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -105,6 +101,10 @@ Global
 		{67155262-DA8B-4E55-AE97-5A29D650D63D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{67155262-DA8B-4E55-AE97-5A29D650D63D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{67155262-DA8B-4E55-AE97-5A29D650D63D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FE5A01B1-0EAD-43AA-85D7-198F0FB19500}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FE5A01B1-0EAD-43AA-85D7-198F0FB19500}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FE5A01B1-0EAD-43AA-85D7-198F0FB19500}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FE5A01B1-0EAD-43AA-85D7-198F0FB19500}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

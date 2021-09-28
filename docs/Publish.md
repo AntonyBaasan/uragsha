@@ -5,7 +5,19 @@ All the components of the Uragsha application need to be converted to Docker ima
 Docker registry addresses:
 - https://hub.docker.com/repository/docker/antonybaasan/uragsha.webapp
 - https://hub.docker.com/repository/docker/antonybaasan/uragsha.signalling
+- https://hub.docker.com/repository/docker/antonybaasan/uragsha.webapi
+- https://hub.docker.com/repository/docker/antonybaasan/uragsha.scheduler
 
+
+## Build and push all projects to docker registry
+
+```Bash
+# publish with latest tag
+./publish-docker.sh
+
+# publish specific version
+./publish-docker.sh v0.1
+```
 
 ## Example of building and pushing docker image of .net projects
 
