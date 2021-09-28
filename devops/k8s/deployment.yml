@@ -41,3 +41,25 @@ spec:
         image: antonybaasan/uragsha.webapp:v0.1
         ports:
         - containerPort: 80
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: signalling-deployment
+  labels:
+    app: signalling
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: signalling
+  template:
+    metadata:
+      labels:
+        app: signalling
+    spec:
+      containers:
+      - name: signalling
+        image: antonybaasan/uragsha.signalling:v0.1
+        ports:
+        - containerPort: 80

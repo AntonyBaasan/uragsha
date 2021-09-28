@@ -16,18 +16,9 @@ spec:
   tls:
   - hosts:
     - app.uragsha.com
+    - signalling.uragsha.com
     secretName: uragsha-tls
   rules:
-  - host: demo.uragsha.com
-    http:
-      paths:
-      - path: /
-        pathType: Prefix
-        backend:
-          service: 
-            name: my-service
-            port:
-              number: 80
   - host: app.uragsha.com
     http:
       paths:
@@ -36,5 +27,25 @@ spec:
         backend:
           service: 
             name: webapp-service
+            port:
+              number: 80
+  - host: signalling.uragsha.com
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service: 
+            name: signalling-service
+            port:
+              number: 80
+  - host: demo.uragsha.com
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service: 
+            name: my-service
             port:
               number: 80

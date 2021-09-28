@@ -49,7 +49,7 @@ kubectl apply -f .\devops\k8s\services.yml
 ```
 
 
-**Troubleshoot:**
+### **Troubleshoot:**
 
 Internal pod to pod communication has to be enabled in order to ACME challenge succeed:
 
