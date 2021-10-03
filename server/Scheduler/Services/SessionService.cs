@@ -40,13 +40,20 @@ namespace Scheduler.Services
 
         public async Task RemoveAsync(string sessionId)
         {
-             await sessionEntityService.DeleteAsync(sessionId);
+            await sessionEntityService.DeleteAsync(sessionId);
         }
 
         public async Task<Session> GetBySessionRequestIdAsync(string sessionRequestId)
         {
             var entity = await sessionEntityService.GetBySessionRequestIdAsync(sessionRequestId);
             return mapper.Map<SessionEntity, Session>(entity);
+        }
+
+        public async Task<Session> UpdateAsync(Session session)
+        {
+            var entity = mapper.Map<Session, SessionEntity>(session);
+            await sessionEntityService.UpdateAsync(entity);
+            return session;
         }
     }
 }

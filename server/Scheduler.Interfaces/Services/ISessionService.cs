@@ -9,5 +9,6 @@ namespace Scheduler.Interfaces.Services
         Task<Session> CreateAsync(Session session);
         Task<Session> GetBySessionRequestIdAsync(string sessionRequestId);
         Task RemoveAsync(string sessionId);
+        Task<Session> UpdateAsync(Session session);
     }
 }

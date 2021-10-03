@@ -65,21 +65,6 @@ namespace Scheduler.Services
             }
         }
 
-        private async Task SendMessageAfterSessionCreate(Session session)
-        {
-            foreach (var sessionRequest in session.SessionRequests)
-            {
-                await messageSender.SendMessageAsync(new HubMessage
-                {
-                    Content = new HubMessageContent
-                    {
-                        ToUserId = new List<string> { sessionRequest.UserId },
-                        Method = "OnSessionRequestUpdated",
-                        Params = sessionRequest
-                    }
-                });
-            }
-        }
 
         private async Task<Session> Match(SessionRequest sessionRequest1, SessionRequest sessionRequest2)
         {
@@ -141,6 +126,7 @@ namespace Scheduler.Services
                     sessionRequest.Session = null;
                     sessionRequest.Status = SessionRequestStatus.Waiting;
                     await sessionRequestService.UpdateSessionRequest(sessionRequest);
+                    await NotifySessionRequestUpdate(sessionRequest);
                 }
 
                 await sessionService.RemoveAsync(session.Id);
@@ -162,6 +148,25 @@ namespace Scheduler.Services
 
         }
 
+        private async Task SendMessageAfterSessionCreate(Session session)
+        {
+            foreach (var sessionRequest in session.SessionRequests)
+            {
+                await NotifySessionRequestUpdate(sessionRequest);
+            }
+        }
 
+        private async Task NotifySessionRequestUpdate(SessionRequest sessionRequest)
+        {
+            await messageSender.SendMessageAsync(new HubMessage
+            {
+                Content = new HubMessageContent
+                {
+                    ToUserId = new List<string> { sessionRequest.UserId },
+                    Method = "OnSessionRequestUpdated",
+                    Params = sessionRequest
+                }
+            });
+        }
     }
 }
