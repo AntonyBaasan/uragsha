@@ -17,7 +17,7 @@
     <ProjectReference Include="..\Entity.MySql\Entity.MySql.csproj" />
     <ProjectReference Include="..\Entity\Entity.csproj" />
     <ProjectReference Include="..\Identity\Identity.csproj" />
-    <ProjectReference Include="..\Messagin.Http\Messagin.Http.csproj" />
+    <ProjectReference Include="..\Messaging.Http\Messaging.Http.csproj" />
     <ProjectReference Include="..\Messaging.Interfaces\Messaging.Interfaces.csproj" />
     <ProjectReference Include="..\Scheduler\Scheduler.csproj" />
   </ItemGroup>

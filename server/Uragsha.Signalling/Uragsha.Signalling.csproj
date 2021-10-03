@@ -16,6 +16,7 @@
     </PackageReference>
     <PackageReference Include="Microsoft.EntityFrameworkCore.InMemory" Version="5.0.10" />
     <PackageReference Include="Microsoft.Extensions.Caching.StackExchangeRedis" Version="5.0.1" />
+    <PackageReference Include="Microsoft.Extensions.Logging.Console" Version="5.0.0" />
     <PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.11.1" />
     <PackageReference Include="MySql.EntityFrameworkCore" Version="5.0.5" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
@@ -28,7 +29,7 @@
     <ProjectReference Include="..\Entity.MySql\Entity.MySql.csproj" />
     <ProjectReference Include="..\HttpUtilities\HttpUtilities.csproj" />
     <ProjectReference Include="..\Identity\Identity.csproj" />
-    <ProjectReference Include="..\Messagin.Http\Messagin.Http.csproj" />
+    <ProjectReference Include="..\Messaging.Http\Messaging.Http.csproj" />
     <ProjectReference Include="..\Messaging.Interfaces\Messaging.Interfaces.csproj" />
     <ProjectReference Include="..\Scheduler\Scheduler.csproj" />
     <ProjectReference Include="..\Security.Interfaces\Identity.Interfaces.csproj" />

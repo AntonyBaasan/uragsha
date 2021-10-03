@@ -48,7 +48,7 @@ namespace Uragsha.Signalling
 
             services
             .AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
-            .AddScheme<AuthenticationSchemeOptions, ServiceAuthenticationHandler>("ServiceAuthentication", options => { })
+            .AddScheme<AuthenticationSchemeOptions, ServiceAuthenticationHandler>("ServiceAuth", options => { })
             .AddJwtBearer(options =>
                {
                    options.Authority = "https://securetoken.google.com/uragsha-webapp";
@@ -88,14 +88,13 @@ namespace Uragsha.Signalling
             services.AddSignalR();
 
             services.AddAuthorization(options =>
-           {
-               // Do not change Default policy. This is additional policy!
-               // use it in the controller as [Authorize(Policy = "ServicePolicy")]
-               options.AddPolicy("ServicePolicy", new AuthorizationPolicyBuilder()
-                  .RequireAuthenticatedUser()
-                  .AddAuthenticationSchemes("ServiceAuthentication")
-                  .Build());
-           });
+            {
+                // use it in the controller as [Authorize(Policy = "ServicePolicy")]
+                options.AddPolicy("ServicePolicy", new AuthorizationPolicyBuilder()
+                   .RequireAuthenticatedUser()
+                   .AddAuthenticationSchemes("ServiceAuth")
+                   .Build());
+            });
 
             // temp code from webapi
             services.AddControllers();

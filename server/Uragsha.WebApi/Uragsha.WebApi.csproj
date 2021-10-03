@@ -27,7 +27,7 @@
     <ProjectReference Include="..\Entity\Entity.csproj" />
     <ProjectReference Include="..\HttpUtilities\HttpUtilities.csproj" />
     <ProjectReference Include="..\Identity\Identity.csproj" />
-    <ProjectReference Include="..\Messagin.Http\Messagin.Http.csproj" />
+    <ProjectReference Include="..\Messaging.Http\Messaging.Http.csproj" />
     <ProjectReference Include="..\Scheduler.Interfaces\Scheduler.Interfaces.csproj" />
     <ProjectReference Include="..\Scheduler\Scheduler.csproj" />
     <ProjectReference Include="..\Security.Interfaces\Identity.Interfaces.csproj" />

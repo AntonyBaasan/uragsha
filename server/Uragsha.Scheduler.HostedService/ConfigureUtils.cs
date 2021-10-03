@@ -7,7 +7,7 @@ using HttpUtilities.Services;
 using Identity;
 using Identity.Interfaces.Services;
 using Identity.Services;
-using Messagin.Http.Services;
+using Messaging.Http.Services;
 using Messaging.Interfaces.Services;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;

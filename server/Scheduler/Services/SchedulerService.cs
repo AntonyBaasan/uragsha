@@ -73,7 +73,7 @@ namespace Scheduler.Services
                 {
                     Content = new HubMessageContent
                     {
-                        ToUserId = sessionRequest.UserId,
+                        ToUserId = new List<string> { sessionRequest.UserId },
                         Method = "OnSessionRequestUpdated",
                         Params = sessionRequest
                     }

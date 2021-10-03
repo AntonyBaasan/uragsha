@@ -5,8 +5,11 @@ using Messaging.Interfaces.Models;
 using Messaging.Interfaces.Services;
 using Microsoft.Extensions.Configuration;
 using System.Net.Http.Headers;
+using System.Collections.Generic;
+using System.Linq;
+using System;
 
-namespace Messagin.Http.Services
+namespace Messaging.Http.Services
 {
     public class HttpMessageSender : IMessageSender
     {
@@ -23,9 +26,29 @@ namespace Messagin.Http.Services
 
         public async Task<bool> SendMessageAsync(IMessage message)
         {
+            var result = await SendMessageAsync(new List<IMessage> { message });
+            return result.First();
+        }
+
+        public async Task<List<bool>> SendMessageAsync(List<IMessage> messages)
+        {
+            var groupedByMessageType = messages.GroupBy((msg) => msg.GetMessageType());
+
+            List<bool> result = new List<bool>();
+            foreach (var messageType in groupedByMessageType)
+            {
+                var url = GetUrl(messageType.Key);
+                var messageSentResult = await SendMessagesHttpAsync(url, messages);
+                result.Add(messageSentResult);
+            }
+
+            return result;
+        }
+
+        private async Task<bool> SendMessagesHttpAsync(string url, List<IMessage> message)
+        {
             using (var content = new StringContent(JsonConvert.SerializeObject(message), System.Text.Encoding.UTF8, "application/json"))
             {
-                var url = GetUrl(message);
                 var request = new HttpRequestMessage(HttpMethod.Post, url);
                 request.Content = content;
                 content.Headers.ContentType = new MediaTypeHeaderValue("application/json");
@@ -39,7 +62,12 @@ namespace Messagin.Http.Services
 
         private string GetUrl(IMessage message)
         {
-            if (message.GetMessageType() == MessageType.HubMessage)
+            return GetUrl(message.GetMessageType());
+        }
+
+        private string GetUrl(MessageType messageType)
+        {
+            if (messageType == MessageType.HubMessage)
             {
                 return this.signallingUrl + "/api/messagelistener";
             }

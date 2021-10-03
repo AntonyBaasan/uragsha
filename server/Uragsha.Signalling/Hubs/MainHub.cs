@@ -49,7 +49,7 @@ namespace Uragsha.Signalling.Hubs
             return base.OnDisconnectedAsync(exception);
         }
 
-        private void ClearSessionWebRtcInfom()
+        private async void ClearSessionWebRtcInfom()
         {
             foreach (var userId in GlobalInfo.UserConnections.Keys)
             {
@@ -61,7 +61,7 @@ namespace Uragsha.Signalling.Hubs
                         if ((sessionDetail.Offer != null && sessionDetail.Offer.UserId.Equals(userId))
                             || (sessionDetail.Answer != null && sessionDetail.Answer.UserId.Equals(userId)))
                         {
-                            LeaveSession(sessionId);
+                            await LeaveSession(sessionId);
                         }
                     }
                 }

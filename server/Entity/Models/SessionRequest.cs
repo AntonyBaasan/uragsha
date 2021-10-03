@@ -14,7 +14,9 @@ namespace Entity.Models
         public string Title { get; set; }
         public string UserId { get; set; }
         public int Status { get; set; }
+#pragma warning disable CS8632 // The annotation for nullable reference types should only be used in code within a '#nullable' annotations context.
         public string? SessionId { get; set; }
+#pragma warning restore CS8632 // The annotation for nullable reference types should only be used in code within a '#nullable' annotations context.
         public virtual SessionEntity Session { get; set; }
     }
 }

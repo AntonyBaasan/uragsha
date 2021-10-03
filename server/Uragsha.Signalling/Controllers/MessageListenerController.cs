@@ -4,8 +4,9 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.SignalR;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
 using Scheduler.Interfaces.Models;
+using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Uragsha.Signalling.Hubs;
 
@@ -26,20 +27,37 @@ namespace Uragsha.WebApi.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult> Post([FromBody] HubMessage message)
+        public async Task<ActionResult> Post([FromBody] List<HubMessage> messages)
         {
-            _logger.LogDebug("Request Accepted:");
-            _logger.LogDebug(message.ToString());
+            _logger.LogDebug("Post request accepted: " + messages.Count);
 
-            if (message.GetMessageType() == MessageType.HubMessage)
-            {
-                var hubMessage = (HubMessage)message;
-                var sessionRequest = JsonConvert.DeserializeObject<SessionRequest>(hubMessage.Content.Params.ToString());
-                var userConnections = GlobalInfo.UserConnections[hubMessage.Content.ToUserId];
-                await hubcontext.Clients.Clients(userConnections).SendAsync(hubMessage.Content.Method, sessionRequest);
-            }
+            await HandleMessages(messages);
 
             return Ok();
+        }
+
+        private async Task HandleMessages(List<HubMessage> messages)
+        {
+            foreach (var message in messages)
+            {
+                if (message.GetMessageType() == MessageType.HubMessage)
+                {
+                    var hubMessage = (HubMessage)message;
+                    var sessionRequest = JsonConvert.DeserializeObject<SessionRequest>(hubMessage.Content.Params.ToString());
+                    List<string> userConnections = new();
+                    foreach (var userId in hubMessage.Content.ToUserId)
+                    {
+                        if (GlobalInfo.UserConnections.TryGetValue(userId, out List<string> connections))
+                        {
+                            userConnections.AddRange(connections);
+                        }
+                    }
+                    if (userConnections.Any())
+                    {
+                        await hubcontext.Clients.Clients(userConnections).SendAsync(hubMessage.Content.Method, sessionRequest);
+                    }
+                }
+            }
         }
     }
 }
