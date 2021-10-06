@@ -1,3 +1,4 @@
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Scheduler.Interfaces.Models;
@@ -11,12 +12,15 @@ namespace Uragsha.Scheduler.HostedService
     public class Worker : BackgroundService
     {
         private readonly ILogger<Worker> _logger;
-        private readonly ISchedulerService schedulerService;
-
-        public Worker(ILogger<Worker> logger, ISchedulerService schedulerService)
+        private readonly ISchedulerService _schedulerService;
+        private int _interval = 5000;
+        public Worker(ILogger<Worker> logger,
+            ISchedulerService schedulerService,
+            IConfiguration configuration)
         {
             _logger = logger;
-            this.schedulerService = schedulerService;
+            _schedulerService = schedulerService;
+            _interval = int.Parse(configuration.GetSection("Scheduler:Interval").Value);
         }
 
         protected override async Task ExecuteAsync(CancellationToken stoppingToken)
@@ -26,14 +30,14 @@ namespace Uragsha.Scheduler.HostedService
                 _logger.LogInformation("Worker running at: {time}", DateTimeOffset.Now);
                 try
                 {
-                    schedulerService.Schedule(new ScheduleAlgorithm { Method = ScheduleAlgorithmType.FCFS });
+                    _schedulerService.Schedule(new ScheduleAlgorithm { Method = ScheduleAlgorithmType.FCFS });
                 }
                 catch (Exception ex)
                 {
                     _logger.LogInformation("Something when wrong! {exception}", ex.Message);
                 }
 
-                await Task.Delay(5000, stoppingToken);
+                await Task.Delay(_interval, stoppingToken);
             }
         }
     }
