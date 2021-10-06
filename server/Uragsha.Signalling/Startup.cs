@@ -12,6 +12,8 @@ using Microsoft.Extensions.Caching.Distributed;
 using Microsoft.AspNetCore.Authentication;
 using HttpUtilities.Auth;
 using Microsoft.AspNetCore.Authorization;
+using Entity;
+using Microsoft.EntityFrameworkCore;
 
 namespace Uragsha.Signalling
 {
@@ -127,6 +129,8 @@ namespace Uragsha.Signalling
                 app.UseHttpsRedirection();
             }
 
+            UpdateDatabase(app);
+
             app.UseStaticFiles();
 
             app.UseCors(AllowUragshaWebOrigins);
@@ -143,6 +147,19 @@ namespace Uragsha.Signalling
                 endpoints.MapRazorPages();
                 endpoints.MapHub<MainHub>(HubName);
             });
+        }
+
+        private static void UpdateDatabase(IApplicationBuilder app)
+        {
+            using (var serviceScope = app.ApplicationServices
+                .GetRequiredService<IServiceScopeFactory>()
+                .CreateScope())
+            {
+                using (var context = serviceScope.ServiceProvider.GetService<MainDbContext>())
+                {
+                    context.Database.Migrate();
+                }
+            }
         }
     }
 }
