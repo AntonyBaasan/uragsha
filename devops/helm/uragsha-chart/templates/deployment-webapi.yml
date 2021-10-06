@@ -22,3 +22,5 @@ spec:
         envFrom:
           - configMapRef:
               name: backend-env-config
+          - secretRef:
+              name: backend-env-config-secret

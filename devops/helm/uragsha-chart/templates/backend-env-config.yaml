@@ -4,9 +4,6 @@ metadata:
   name: backend-env-config
 data:
   Uragsha_TestEnvValue: This value is from K8s!
-  Uragsha_ConnectionStrings__DefaultConnection: Server=mysql;Database=uragsha_local;Uid=root;Pwd=password;
-  Uragsha_ApiKey__SendGridKey: ""
-  Uragsha_ApiKey__ServiceAccountKey: "123456789"
   Uragsha_Url__Signalling: https://signalling.uragsha.com
   Uragsha_Url__WebApi: https://webapi.uragsha.com
 

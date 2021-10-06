@@ -2,3 +2,6 @@
 .vscode
 
 /devops/k8s/secrets
+
+# this config has to be secret
+/devops/helm/uragsha-chart/templates/backend-env-config-secret.yaml
