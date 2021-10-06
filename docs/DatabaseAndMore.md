@@ -12,3 +12,6 @@ dotnet ef database update --project .\Uragsha.Signalling\Uragsha.Signalling.cspr
 ```powershell
 dotnet ef database update InitialCreate --project .\Uragsha.Signalling\Uragsha.Signalling.csproj
 ```
+
+Note: For the production we do call migration from the Signalling.Startup class.
+Eventually when application needs more scaling, use Kubernetes jobs.
