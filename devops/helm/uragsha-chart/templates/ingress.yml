@@ -15,12 +15,12 @@ metadata:
 spec:
   tls:
   - hosts:
-    - app.uragsha.com
-    - signalling.uragsha.com
-    - webapi.uragsha.com
+    - {{ .Values.uragsha.apps.webapp.domain }}
+    - {{ .Values.uragsha.apps.signalling.domain }}
+    - {{ .Values.uragsha.apps.webapi.domain }}
     secretName: uragsha-tls
   rules:
-  - host: app.uragsha.com
+  - host: {{ .Values.uragsha.apps.webapp.domain }}
     http:
       paths:
       - path: /
@@ -30,7 +30,7 @@ spec:
             name: webapp-service
             port:
               number: 80
-  - host: signalling.uragsha.com
+  - host: {{ .Values.uragsha.apps.signalling.domain }}
     http:
       paths:
       - path: /
@@ -40,7 +40,7 @@ spec:
             name: signalling-service
             port:
               number: 80
-  - host: webapi.uragsha.com
+  - host: {{ .Values.uragsha.apps.webapi.domain }}
     http:
       paths:
       - path: /
