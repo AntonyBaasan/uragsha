@@ -5,10 +5,10 @@ WORKDIR /app
 
 FROM mcr.microsoft.com/dotnet/sdk:5.0 AS build
 WORKDIR /src
-COPY ["Uragsha.Scheduler.HostedService.csproj", "."]
-RUN dotnet restore "./Uragsha.Scheduler.HostedService.csproj"
+COPY ["Uragsha.Scheduler.HostedService/Uragsha.Scheduler.HostedService.csproj", "Uragsha.Scheduler.HostedService/"]
+RUN dotnet restore "Uragsha.Scheduler.HostedService/Uragsha.Scheduler.HostedService.csproj"
 COPY . .
-WORKDIR "/src/."
+WORKDIR "/src/Uragsha.Scheduler.HostedService/"
 RUN dotnet build "Uragsha.Scheduler.HostedService.csproj" -c Release -o /app/build
 
 FROM build AS publish

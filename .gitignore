@@ -1,2 +1,4 @@
 .firebase
 .vscode
+
+/devops/k8s/secrets

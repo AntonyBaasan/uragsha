@@ -1,0 +1,24 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: signalling-deployment
+  labels:
+    app: signalling
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: signalling
+  template:
+    metadata:
+      labels:
+        app: signalling
+    spec:
+      containers:
+      - name: signalling
+        image: antonybaasan/uragsha.signalling:{{ .Values.uragsha.version }}
+        ports:
+        - containerPort: 80
+        envFrom:
+          - configMapRef:
+              name: backend-env-config        

@@ -1,0 +1,24 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: webapi-deployment
+  labels:
+    app: webapi
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: webapi
+  template:
+    metadata:
+      labels:
+        app: webapi
+    spec:
+      containers:
+      - name: webapi
+        image: antonybaasan/uragsha.webapi:{{ .Values.uragsha.version }}
+        ports:
+        - containerPort: 80        
+        envFrom:
+          - configMapRef:
+              name: backend-env-config

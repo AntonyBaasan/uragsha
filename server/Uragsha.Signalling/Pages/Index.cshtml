@@ -5,6 +5,9 @@
 }
 
 <div class="text-center">
+    <h3>TestEnvValue: @Model.TestEnvValue</h3>
+    <h3>ConnectionString: @Model.ConnectionString</h3>
+
     <h1 class="display-4">Rooms count: @Model.rooms.Keys.Count</h1>
     @foreach (var roomName in Model.rooms.Keys)
     {
