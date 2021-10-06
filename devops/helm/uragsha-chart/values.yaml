@@ -8,19 +8,19 @@ uragsha:
   apps:
     signalling:
       name: signalling
-      image: antonybaasan/uragsha.signalling:v0.7
+      image: antonybaasan/uragsha.signalling:v0.8
       replicas: 1
     webapi:
       name: webapi
-      image: antonybaasan/uragsha.webapi:v0.7
+      image: antonybaasan/uragsha.webapi:v0.8
       replicas: 1
     scheduler:
       name: scheduler
-      image: antonybaasan/uragsha.scheduler:v0.7
+      image: antonybaasan/uragsha.scheduler:v0.8
       replicas: 1
     webapp:
       name: webapp
-      image: antonybaasan/uragsha.webapp:v0.7
+      image: antonybaasan/uragsha.webapp:v0.8
       replicas: 1
 
 

@@ -15,5 +15,8 @@ docker push antonybaasan/uragsha.scheduler:$VERSION
 
 # publish angular web application
 cd ../webapp
+npm run build
 docker build -t antonybaasan/uragsha.webapp:$VERSION  .
 docker push antonybaasan/uragsha.webapp:$VERSION
+
+read -p "Press enter to continue"
