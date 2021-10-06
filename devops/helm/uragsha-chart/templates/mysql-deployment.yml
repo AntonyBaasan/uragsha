@@ -43,4 +43,4 @@ spec:
       volumes:
       - name: mysql-persistent-storage
         persistentVolumeClaim:
-          claimName: mysql-pv-claim-block-storage
+          claimName: mysql-pv-claim-do-block-storage

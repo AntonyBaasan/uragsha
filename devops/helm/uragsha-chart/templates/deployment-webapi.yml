@@ -3,24 +3,24 @@ kind: Deployment
 metadata:
   name: webapi-deployment
   labels:
-    app: webapi
+    app: {{ .Values.uragsha.apps.webapi.name }}
 spec:
-  replicas: 1
+  replicas: {{ .Values.uragsha.apps.webapi.replicas }}
   selector:
     matchLabels:
-      app: webapi
+      app: {{ .Values.uragsha.apps.webapi.name }}
   template:
     metadata:
       labels:
-        app: webapi
+        app: {{ .Values.uragsha.apps.webapi.name }}
     spec:
       containers:
-      - name: webapi
-        image: antonybaasan/uragsha.webapi:{{ .Values.uragsha.version }}
-        ports:
-        - containerPort: 80        
-        envFrom:
-          - configMapRef:
-              name: backend-env-config
-          - secretRef:
-              name: backend-env-config-secret
+        - name: {{ .Values.uragsha.apps.webapi.name }}
+          image: {{ .Values.uragsha.apps.webapi.image }}
+          ports:
+            - containerPort: 80
+          envFrom:
+            - configMapRef:
+                name: backend-env-config
+            - secretRef:
+                name: backend-env-config-secret

@@ -3,24 +3,24 @@ kind: Deployment
 metadata:
   name: signalling-deployment
   labels:
-    app: signalling
+    app: {{ .Values.uragsha.apps.signalling.name }}
 spec:
-  replicas: 1
+  replicas: {{ .Values.uragsha.apps.signalling.replicas }}
   selector:
     matchLabels:
-      app: signalling
+      app: {{ .Values.uragsha.apps.signalling.name }}
   template:
     metadata:
       labels:
-        app: signalling
+        app: {{ .Values.uragsha.apps.signalling.name }}
     spec:
       containers:
-      - name: signalling
-        image: antonybaasan/uragsha.signalling:{{ .Values.uragsha.version }}
-        ports:
-        - containerPort: 80
-        envFrom:
-          - configMapRef:
-              name: backend-env-config        
-          - secretRef:
-              name: backend-env-config-secret
+        - name: {{ .Values.uragsha.apps.signalling.name }}
+          image: {{ .Values.uragsha.apps.signalling.image }}
+          ports:
+            - containerPort: 80
+          envFrom:
+            - configMapRef:
+                name: backend-env-config
+            - secretRef:
+                name: backend-env-config-secret

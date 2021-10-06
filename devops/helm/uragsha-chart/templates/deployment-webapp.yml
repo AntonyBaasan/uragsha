@@ -3,19 +3,19 @@ kind: Deployment
 metadata:
   name: webapp-deployment
   labels:
-    app: webapp
+    app: {{ .Values.uragsha.apps.webapp.name }}
 spec:
-  replicas: 1
+  replicas: {{ .Values.uragsha.apps.webapp.replicas }}
   selector:
     matchLabels:
-      app: webapp
+      app: {{ .Values.uragsha.apps.webapp.name }}
   template:
     metadata:
       labels:
-        app: webapp
+        app: {{ .Values.uragsha.apps.webapp.name }}
     spec:
       containers:
-      - name: webapp
-        image: antonybaasan/uragsha.webapp:{{ .Values.uragsha.version }}
+      - name: {{ .Values.uragsha.apps.webapp.name }}
+        image: {{ .Values.uragsha.apps.webapp.image }}
         ports:
         - containerPort: 80

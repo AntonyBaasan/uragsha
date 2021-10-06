@@ -3,25 +3,26 @@ kind: Deployment
 metadata:
   name: scheduler-deployment
   labels:
-    app: scheduler
+    app: {{ .Values.uragsha.apps.scheduler.name }}
 spec:
-  replicas: 1
+  replicas: {{ .Values.uragsha.apps.scheduler.replicas }}
   selector:
     matchLabels:
-      app: scheduler
+      app: {{ .Values.uragsha.apps.scheduler.name }}
   template:
     metadata:
       labels:
-        app: scheduler
+        app: {{ .Values.uragsha.apps.scheduler.name }}
     spec:
       containers:
-      - name: scheduler
-        image: antonybaasan/uragsha.scheduler:{{ .Values.uragsha.version }}
-        ports:
-        - containerPort: 80
-        envFrom:
-          - configMapRef:
-              name: backend-env-config
-          - secretRef:
-              name: backend-env-config-secret
+        - name: {{ .Values.uragsha.apps.scheduler.name }}
+          image: {{ .Values.uragsha.apps.scheduler.image }}
+          ports:
+            - containerPort: 80
+          envFrom:
+            - configMapRef:
+                name: backend-env-config
+            - secretRef:
+                name: backend-env-config-secret
+
 

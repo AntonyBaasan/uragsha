@@ -1,7 +1,7 @@
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
-  name: mysql-pv-claim-block-storage
+  name: mysql-pv-claim-do-block-storage
 spec:
   storageClassName: do-block-storage
   accessModes:
