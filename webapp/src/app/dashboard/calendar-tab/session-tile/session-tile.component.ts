@@ -51,6 +51,7 @@ export class SessionTileComponent {
 
   isJoinDisabled() {
     // return this.sessionRequest.status === SessionRequestStatus.Scheduled && this.sessionRequest.canJoin;
-    return !this.sessionRequest.canJoin;
+    // return !this.sessionRequest.canJoin;
+    return false;
   }
 }

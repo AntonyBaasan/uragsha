@@ -2,29 +2,26 @@ uragsha:
   apps:
     signalling:
       name: signalling
-      image: antonybaasan/uragsha.signalling:v0.8
+      image: antonybaasan/uragsha.signalling:v0.11
       replicas: 1
       domain: signalling.uragsha.com
     webapi:
       name: webapi
-      image: antonybaasan/uragsha.webapi:v0.8
+      image: antonybaasan/uragsha.webapi:v0.11
       replicas: 1
       domain: webapi.uragsha.com
     scheduler:
       name: scheduler
-      image: antonybaasan/uragsha.scheduler:v0.8
+      image: antonybaasan/uragsha.scheduler:v0.11
       replicas: 1
     webapp:
       name: webapp
-      image: antonybaasan/uragsha.webapp:v0.8
+      image: antonybaasan/uragsha.webapp:v0.11
       replicas: 1
       domain: app.uragsha.com
 
-image:
-  repository: nginx
-  pullPolicy: IfNotPresent
-  # Overrides the image tag whose default is the chart appVersion.
-  tag: ""
+ingress:
+  do_loadbalancer_hostname: workaround.uragsha.com
 
 serviceAccount:
   # Specifies whether a service account should be created

@@ -7,6 +7,7 @@ import {
   getMonth,
   getYear,
   isEqual,
+  subMinutes,
 } from 'date-fns';
 import { SessionRequest, SessionRequestStatus } from '../../models';
 import { COLORS } from 'src/app/shared/colors';
@@ -17,10 +18,10 @@ export class CalendarTabService {
     if (!sessions || sessions.length === 0) {
       return [];
     }
-    sessions = sessions.filter(s => s.start >= new Date());
+    sessions = sessions.filter(s => s.start >= subMinutes(new Date(), 30));
     sessions = sessions.sort((s1, s2) => (s1.start as any) - (s2.start as any));
 
-    if (sessions.length > 0){
+    if (sessions.length > 0) {
       return this.getSessionsOfDay(sessions[0].start, sessions);
     }
     return [];

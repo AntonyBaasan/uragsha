@@ -8,7 +8,4 @@ data:
   Uragsha_Url__WebApi: https://webapi.uragsha.com
   Uragsha_AllowedCors__0: https://uragsha.com
   Uragsha_AllowedCors__1: https://app.uragsha.com
-  Uragsha_Scheduler__Interval: 30000
-
-
-    
+  Uragsha_Scheduler__Interval: "10000"

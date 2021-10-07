@@ -11,7 +11,7 @@ metadata:
     helm.sh/chart: ingress-nginx-4.0.2
   annotations:
     service.beta.kubernetes.io/do-loadbalancer-enable-proxy-protocol: 'true'
-    service.beta.kubernetes.io/do-loadbalancer-hostname: workaround.uragsha.com
+    service.beta.kubernetes.io/do-loadbalancer-hostname: {{ .Values.ingress.do_loadbalancer_hostname }}
   managedFields:
 spec:
   ports:

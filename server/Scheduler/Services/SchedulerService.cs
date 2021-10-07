@@ -8,6 +8,7 @@ using Email.Interfaces.Services;
 using Email.Interfaces.Models;
 using Messaging.Interfaces.Services;
 using Messaging.Interfaces.Models;
+using Microsoft.Extensions.Logging;
 
 namespace Scheduler.Services
 {
@@ -17,17 +18,20 @@ namespace Scheduler.Services
         private readonly ISessionService sessionService;
         private readonly IEmailService emailService;
         private readonly IMessageSender messageSender;
+        private readonly ILogger<SchedulerService> logger;
 
         public SchedulerService(
             ISessionRequestService sessionRequestService,
             ISessionService sessionService,
             IEmailService emailService,
-            IMessageSender messageSender)
+            IMessageSender messageSender,
+            ILogger<SchedulerService> logger)
         {
             this.sessionRequestService = sessionRequestService;
             this.sessionService = sessionService;
             this.emailService = emailService;
             this.messageSender = messageSender;
+            this.logger = logger;
         }
 
         /// <summary>
@@ -38,12 +42,12 @@ namespace Scheduler.Services
         {
             var found = await sessionRequestService.FindWaitingSessionRequest(DateTime.Now.ToUniversalTime(), null);
 
-            Console.WriteLine($"Found {found.Count} non scheduled session requests!");
+            logger.LogInformation($"Found {found.Count} non scheduled session requests!");
 
             var groupByStartDate = found.GroupBy(f => f.Start);
             foreach (var group in groupByStartDate)
             {
-                Console.WriteLine($"{group.Count()} session requests found at {group.Key}!");
+                logger.LogInformation($"{group.Count()} session requests found at {group.Key}!");
 
                 SessionRequest previousSessionRequest = null;
                 foreach (var sessionRequest in group)
@@ -55,8 +59,7 @@ namespace Scheduler.Services
                     else
                     {
                         var session = await Match(previousSessionRequest, sessionRequest);
-                        //Task.WaitAll(session);
-                        Console.WriteLine($"Session {session.Id} was created!");
+                        logger.LogInformation($"Session {session.Id} was created!");
                         previousSessionRequest = null;
                         await SendEmail(session);
                         await SendMessageAfterSessionCreate(session);
@@ -135,16 +138,23 @@ namespace Scheduler.Services
 
         private async Task SendEmail(Session session)
         {
-            var result = await emailService.SendEmailAsync(new EmailInfo
-            (
-                new Contact("Uragsha Support", "antony.baasan@gmail.com"),
-                new Contact("Baasandorj", "ankhbayar.baasandorj@gmail.com"),
-                $"Uragsha session scheduled!",
-                $"Session {session.Id} was created!",
-                $"<b>Session {session.Id}</b> was created!"
-            ));
+            try
+            {
+                var result = await emailService.SendEmailAsync(new EmailInfo
+                (
+                    new Contact("Uragsha Support", "antony.baasan@gmail.com"),
+                    new Contact("Baasandorj", "ankhbayar.baasandorj@gmail.com"),
+                    $"Uragsha session scheduled!",
+                    $"Session {session.Id} was created!",
+                    $"<b>Session {session.Id}</b> was created!"
+                ));
 
-            Console.WriteLine($"Email Send: {result}");
+                Console.WriteLine($"Email Send: {result}");
+            }
+            catch (Exception ex)
+            {
+                logger.LogWarning(ex.StackTrace);
+            }
 
         }
 
