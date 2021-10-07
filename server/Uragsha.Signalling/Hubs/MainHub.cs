@@ -41,29 +41,20 @@ namespace Uragsha.Signalling.Hubs
             ClearSessionWebRtcInfom();
 
             GlobalInfo.ConnectedIds.Remove(Context.ConnectionId);
-            foreach (var userId in GlobalInfo.UserConnections.Keys)
-            {
-                GlobalInfo.UserConnections[userId].RemoveAll(value => value.Equals(Context.ConnectionId));
-            }
 
             return base.OnDisconnectedAsync(exception);
         }
 
         private async void ClearSessionWebRtcInfom()
         {
-            foreach (var userId in GlobalInfo.UserConnections.Keys)
+            var userId = GetCurrentUid();
+            foreach (var sessionId in GlobalInfo.ActiveSession.Keys)
             {
-                if (GlobalInfo.UserConnections[userId].Any(value => value.Equals(Context.ConnectionId)))
+                var sessionDetail = GlobalInfo.ActiveSession[sessionId];
+                if ((sessionDetail.Offer != null && sessionDetail.Offer.UserId.Equals(userId))
+                    || (sessionDetail.Answer != null && sessionDetail.Answer.UserId.Equals(userId)))
                 {
-                    foreach (var sessionId in GlobalInfo.ActiveSession.Keys)
-                    {
-                        var sessionDetail = GlobalInfo.ActiveSession[sessionId];
-                        if ((sessionDetail.Offer != null && sessionDetail.Offer.UserId.Equals(userId))
-                            || (sessionDetail.Answer != null && sessionDetail.Answer.UserId.Equals(userId)))
-                        {
-                            await LeaveSession(sessionId);
-                        }
-                    }
+                    await LeaveSession(sessionId);
                 }
             }
         }
@@ -85,19 +76,6 @@ namespace Uragsha.Signalling.Hubs
             if (!await UserService.UserExistAsync(uid))
             {
                 UserService.AddUser(user);
-            }
-
-            if (!GlobalInfo.UserConnections.ContainsKey(uid))
-            {
-                GlobalInfo.UserConnections.Add(uid, new List<string>());
-                GlobalInfo.UserConnections[uid].Add(Context.ConnectionId);
-            }
-            else
-            {
-                if (!GlobalInfo.UserConnections[uid].Contains(Context.ConnectionId))
-                {
-                    GlobalInfo.UserConnections[uid].Add(Context.ConnectionId);
-                }
             }
         }
 
@@ -237,52 +215,6 @@ namespace Uragsha.Signalling.Hubs
         public async Task SendMessage(string message)
         {
             await Clients.All.OnTextMessage(message);
-        }
-
-        //public async Task GetUserSessionRequests()
-        //{
-        //    string userId = GetCurrentUid();
-        //    var found = SessionRequestService.FindSessionRequest(userId);
-        //    var connections = GetUserConnections(userId);
-        //    await Clients.Clients(connections).OnGetUserSessionRequests(found);
-        //}
-
-        //public async Task CreateSessionRequest(SessionRequest sessionRequest)
-        //{
-        //    if (string.IsNullOrEmpty(sessionRequest.UserId))
-        //    {
-        //        Console.WriteLine("Uid can't be empty!");
-        //        return;
-        //    }
-        //    var request = SessionRequestService.CreateSessionRequest(sessionRequest);
-
-        //    var connections = GetUserConnections(sessionRequest.UserId);
-        //    await Clients.Clients(connections).OnSessionRequestCreated(request);
-
-        //    // TODO: this has to be done in the hosted service
-        //    await CreateSession(request);
-        //}
-
-        //public async Task CreateSession(SessionRequest sessionRequest)
-        //{
-        //    Session session = SessionService.CreateSession(sessionRequest.Id);
-        //    if (session == null)
-        //    {
-        //        Console.WriteLine("Can't find matching partner!");
-        //        return;
-        //    }
-
-        //    foreach (var request in session.SessionRequests)
-        //    {
-        //        var connections = GetUserConnections(request.UserId);
-        //        await Clients.Clients(connections).OnSessionRequestUpdated(request);
-        //    }
-        //}
-
-        private List<string> GetUserConnections(string userId)
-        {
-            GlobalInfo.UserConnections.TryGetValue(userId, out List<string> connections);
-            return connections ?? new List<string>();
         }
 
         private string GetCurrentUid()

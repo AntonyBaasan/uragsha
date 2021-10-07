@@ -6,7 +6,6 @@ using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using Scheduler.Interfaces.Models;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using Uragsha.Signalling.Hubs;
 
@@ -47,14 +46,7 @@ namespace Uragsha.WebApi.Controllers
                     List<string> userConnections = new();
                     foreach (var userId in hubMessage.Content.ToUserId)
                     {
-                        if (GlobalInfo.UserConnections.TryGetValue(userId, out List<string> connections))
-                        {
-                            userConnections.AddRange(connections);
-                        }
-                    }
-                    if (userConnections.Any())
-                    {
-                        await hubcontext.Clients.Clients(userConnections).SendAsync(hubMessage.Content.Method, sessionRequest);
+                        await hubcontext.Clients.User(userId).SendAsync(hubMessage.Content.Method, sessionRequest);
                     }
                 }
             }
