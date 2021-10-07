@@ -2,7 +2,7 @@ name: Deploy Webapp project to Firebase Webapp on push
 'on':
   push:
     branches:
-      - main
+      - no_branch
     paths:
       - 'webapp/**'
       - '!webapp/functions/**'
