@@ -31,6 +31,7 @@ namespace Uragsha.Signalling.Pages
         {
             connections = GlobalInfo.ConnectedIds.ToList();
             rooms = GlobalInfo.ActiveSession;
+            TestEnvValue = "bla";
 
         }
     }

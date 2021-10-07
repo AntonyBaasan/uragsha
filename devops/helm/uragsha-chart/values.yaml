@@ -8,7 +8,7 @@ uragsha:
     webapi:
       name: webapi
       image: antonybaasan/uragsha.webapi:v0.11
-      replicas: 1
+      replicas: 3
       domain: webapi.uragsha.com
     scheduler:
       name: scheduler

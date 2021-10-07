@@ -1,5 +1,5 @@
 ﻿using AutoMapper;
-using Entity.Models;
+using Entity.Models.Identity;
 using Identity.Interfaces.Models;
 
 namespace Identity

@@ -1,4 +1,5 @@
 ﻿using Entity.Models;
+using Entity.Models.Identity;
 using Microsoft.EntityFrameworkCore;
 
 namespace Entity

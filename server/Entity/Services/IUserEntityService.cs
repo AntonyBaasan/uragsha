@@ -1,5 +1,6 @@
 ﻿using System.Threading.Tasks;
 using Entity.Models;
+using Entity.Models.Identity;
 
 namespace Entity.Services
 {

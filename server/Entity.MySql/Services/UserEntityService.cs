@@ -1,4 +1,4 @@
-﻿using Entity.Models;
+﻿using Entity.Models.Identity;
 using Entity.Services;
 using Microsoft.Extensions.DependencyInjection;
 using System.Threading.Tasks;

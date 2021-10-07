@@ -1,5 +1,5 @@
 ﻿using AutoMapper;
-using Entity.Models;
+using Entity.Models.Identity;
 using Entity.Services;
 using Identity.Interfaces.Models;
 using Identity.Interfaces.Services;
