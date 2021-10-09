@@ -3,7 +3,6 @@ import {
   Component,
   EventEmitter,
   Input,
-  OnInit,
   Output,
 } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -14,7 +13,6 @@ import { SessionRequest, SessionRequestStatus } from '../../../models';
   templateUrl: './session-tile.component.html',
   styleUrls: ['./session-tile.component.scss'],
   changeDetection: ChangeDetectionStrategy.Default
-  ,
 })
 export class SessionTileComponent {
   @Input() sessionRequest: SessionRequest;
