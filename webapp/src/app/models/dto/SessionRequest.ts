@@ -4,6 +4,7 @@ export interface SessionRequest {
   end: Date;
   title: string;
   userId: string;
+  sessionType: SessionRequestType;
   status: SessionRequestStatus;
   sessionId?: string;
 
@@ -13,5 +14,12 @@ export interface SessionRequest {
 
 export enum SessionRequestStatus {
   Waiting,
+  Scheduled,
+  Started,
+  Done,
+}
+
+export enum SessionRequestType {
+  Instant,
   Scheduled,
 }

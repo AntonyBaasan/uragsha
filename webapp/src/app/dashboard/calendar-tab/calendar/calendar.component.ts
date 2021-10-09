@@ -1,13 +1,6 @@
 import {
-  ChangeDetectionStrategy,
-  ChangeDetectorRef,
-  Component,
-  EventEmitter,
-  HostListener,
-  Input,
-  OnDestroy,
-  OnInit,
-  Output,
+  ChangeDetectionStrategy, ChangeDetectorRef, Component,
+  EventEmitter, HostListener, Input, Output
 } from '@angular/core';
 import {
   CalendarEvent,
@@ -65,7 +58,7 @@ export class CalendarComponent {
   constructor(
     private calendarService: CalendarService,
     private cdr: ChangeDetectorRef
-  ) {}
+  ) { }
 
   /**
    * Listen windows resize event. If small screen than show CalendarView.Day
@@ -103,7 +96,7 @@ export class CalendarComponent {
     this.view = view;
   }
 
-  closeOpenMonthViewDay() {}
+  closeOpenMonthViewDay() { }
 
   handleEvent(action: string, event: CalendarEvent): void {
     switch (action) {
