@@ -1,13 +1,12 @@
-<div class="row w-100 h-100" >
+<div class="row w-100 h-100">
   <div
     class="
       col-sm
       d-flex
       justify-content-center
-      align-items-sm-center
-      align-items-end
+      align-items-sm-center align-items-end
     "
-    style="padding: 20px;"
+    style="padding: 20px"
   >
     <div>
       <div>105 people online</div>
@@ -18,13 +17,60 @@
       col-sm
       d-flex
       justify-content-center
-      align-items-sm-center
-      align-items-start
+      align-items-sm-center align-items-start
     "
-    style="padding: 20px;"
+    style="padding: 20px"
   >
     <div class="">
-      <button class="btn btn-primary">Start Workout</button>
+      <div class="btn-group">
+        <button
+          type="button"
+          class="btn btn-primary dropdown-toggle"
+          data-bs-toggle="dropdown"
+          aria-expanded="false"
+        >
+          Start Workout
+        </button>
+        <ul class="dropdown-menu">
+          <li>
+            <a class="dropdown-item" (click)="instantWorkout()">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="16"
+                height="16"
+                fill="currentColor"
+                class="bi bi-plus-lg me-2"
+                viewBox="0 0 16 16"
+              >
+                <path
+                  d="M8 0a1 1 0 0 1 1 1v6h6a1 1 0 1 1 0 2H9v6a1 1 0 1 1-2 0V9H1a1 1 0 0 1 0-2h6V1a1 1 0 0 1 1-1z"
+                />
+              </svg>
+              <span class="fs-6">Instant workout</span>
+            </a>
+          </li>
+          <li>
+            <a class="dropdown-item" (click)="scheduledWorkout()">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="16"
+                height="16"
+                fill="currentColor"
+                class="bi bi-calendar-plus me-2"
+                viewBox="0 0 16 16"
+              >
+                <path
+                  d="M8 7a.5.5 0 0 1 .5.5V9H10a.5.5 0 0 1 0 1H8.5v1.5a.5.5 0 0 1-1 0V10H6a.5.5 0 0 1 0-1h1.5V7.5A.5.5 0 0 1 8 7z"
+                />
+                <path
+                  d="M3.5 0a.5.5 0 0 1 .5.5V1h8V.5a.5.5 0 0 1 1 0V1h1a2 2 0 0 1 2 2v11a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V3a2 2 0 0 1 2-2h1V.5a.5.5 0 0 1 .5-.5zM1 4v10a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V4H1z"
+                />
+              </svg>
+              <span class="fs-6">Schedule for later</span>
+            </a>
+          </li>
+        </ul>
+      </div>
     </div>
   </div>
 </div>

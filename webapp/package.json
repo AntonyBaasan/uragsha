@@ -22,17 +22,19 @@
     "@angular/platform-browser-dynamic": "~12.1.2",
     "@angular/router": "~12.1.2",
     "@microsoft/signalr": "^5.0.8",
+    "@popperjs/core": "^2.10.2",
     "angular-calendar": "^0.28.26",
     "bootstrap": "^5.0.2",
+    "bootstrap-icons": "^1.5.0",
     "date-fns": "^2.16.1",
+    "firebase": "9.0.0-202171919375",
     "jquery": "^3.6.0",
     "lodash-es": "^4.17.21",
+    "rxfire": "6.0.0-rc.0",
     "rxjs": "~6.6.0",
     "tslib": "^2.2.0",
     "uuid": "^8.3.2",
-    "zone.js": "~0.11.4",
-    "firebase": "9.0.0-202171919375",
-    "rxfire": "6.0.0-rc.0"
+    "zone.js": "~0.11.4"
   },
   "devDependencies": {
     "@angular-devkit/build-angular": "~12.1.2",
