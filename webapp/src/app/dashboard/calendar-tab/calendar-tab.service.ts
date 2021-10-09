@@ -9,7 +9,7 @@ import {
   isEqual,
   subMinutes,
 } from 'date-fns';
-import { SessionRequest, SessionRequestStatus } from '../../models';
+import { SessionRequest, SessionRequestStatus, SessionRequestType } from '../../models';
 import { COLORS } from 'src/app/shared/colors';
 
 @Injectable()
@@ -45,6 +45,7 @@ export class CalendarTabService {
       start: date,
       end: addMinutes(date, 30),
       title: 'New Session',
+      sessionType: SessionRequestType.Scheduled,
       status: SessionRequestStatus.Waiting,
       userId: userId,
       color: COLORS.red,

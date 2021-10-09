@@ -3,6 +3,8 @@
     public enum SessionRequestStatus
     {
         Waiting,
-        Scheduled
+        Scheduled,
+        Started,
+        Done,
     }
 }
