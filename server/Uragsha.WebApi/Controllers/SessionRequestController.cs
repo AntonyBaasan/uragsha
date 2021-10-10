@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using HttpUtilities.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Scheduler.Interfaces.Models;
@@ -16,22 +17,26 @@ namespace Uragsha.WebApi.Controllers
         private readonly ILogger<SessionRequestController> _logger;
         private readonly ISessionRequestService sessionRequestService;
         private readonly IMatcherService matcherService;
+        private readonly IContextService contextService;
 
         public SessionRequestController(
             ILogger<SessionRequestController> logger,
             ISessionRequestService sessionRequestService,
-            IMatcherService matcherService
+            IMatcherService matcherService,
+            IContextService contextService
             )
         {
             _logger = logger;
             this.sessionRequestService = sessionRequestService;
             this.matcherService = matcherService;
+            this.contextService = contextService;
         }
 
         [HttpGet]
         public async Task<IEnumerable<SessionRequest>> Get()
         {
-            var found = await sessionRequestService.FindSessionRequest();
+            var userId = contextService.GetUserId();
+            var found = await sessionRequestService.FindSessionRequest(userId);
             return found;
         }
 

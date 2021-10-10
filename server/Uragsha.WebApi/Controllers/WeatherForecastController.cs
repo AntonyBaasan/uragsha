@@ -8,7 +8,6 @@ using System.Linq;
 namespace Uragsha.WebApi.Controllers
 {
     [ApiController]
-    [Authorize(Policy = "ServicePolicy")]
     [Route("api/[controller]")]
     public class WeatherForecastController : ControllerBase
     {
