@@ -1,6 +1,6 @@
 ### Create migration file
 ```powershell
-dotnet ef migrations add InitialCreate --project .\Uragsha.Signalling\Uragsha.Signalling.csproj
+dotnet ef migrations add <MIGRATION> --project .\Uragsha.Signalling\Uragsha.Signalling.csproj
 ```
 
 ### Update database until latest migration
@@ -8,9 +8,9 @@ dotnet ef migrations add InitialCreate --project .\Uragsha.Signalling\Uragsha.Si
 dotnet ef database update --project .\Uragsha.Signalling\Uragsha.Signalling.csproj
 ```
 
-### Update database to migration with name "InitialCreate"
+### Update database to migration with name \<MIGRATION\>
 ```powershell
-dotnet ef database update InitialCreate --project .\Uragsha.Signalling\Uragsha.Signalling.csproj
+dotnet ef database update <MIGRATION> --project .\Uragsha.Signalling\Uragsha.Signalling.csproj
 ```
 
 Note: For the production we do call migration from the Signalling.Startup class.
