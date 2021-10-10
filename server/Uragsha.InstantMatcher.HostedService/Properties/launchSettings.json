@@ -1,0 +1,11 @@
+﻿{
+  "profiles": {
+    "Uragsha.InstantMatcher.HostedService": {
+      "commandName": "Project",
+      "dotnetRunMessages": "true",
+      "environmentVariables": {
+        "DOTNET_ENVIRONMENT": "Development"
+      }
+    }
+  }
+}

@@ -63,16 +63,29 @@ namespace Scheduler.Services
             return Task.FromResult(new List<SessionRequest>());
         }
 
-        public async Task<List<SessionRequest>> FindSessionRequest(string userId, DateTime? start = null, DateTime? end = null, SessionRequestStatus? status = null)
+        public async Task<List<SessionRequest>> FindSessionRequest(string userId = null, DateTime? start = null, DateTime? end = null, SessionRequestStatus? status = null, SessionRequestType? sessionType = null)
         {
-            var query = new SessionRequestQueryParam { UserId = userId, StartDate = start, EndDate = end, Status = status != null ? (int)status : null };
+            var query = new SessionRequestQueryParam
+            {
+                UserId = userId,
+                StartDate = start,
+                EndDate = end,
+                Status = status != null ? (int)status : null,
+                SessionType = sessionType != null ? (int)sessionType : null,
+            };
             var result = await _sessionRequestEntityService.FindAsync(query);
             return result.Select(r => _mapper.Map<SessionRequestEntity, SessionRequest>(r)).ToList();
         }
 
-        public async Task<List<SessionRequest>> FindWaitingSessionRequest(DateTime? start = null, DateTime? end = null)
+        public async Task<List<SessionRequest>> FindWaitingScheduledSessionRequest(DateTime? start = null, DateTime? end = null)
         {
-            return await FindSessionRequest(null, start, end, SessionRequestStatus.Waiting);
+            return await FindSessionRequest(null, start, end, SessionRequestStatus.Waiting, SessionRequestType.Instant);
         }
+
+        public async Task<List<SessionRequest>> FindWaitingIntantSessionRequest()
+        {
+            return await FindSessionRequest(null, null, null, SessionRequestStatus.Waiting, SessionRequestType.Scheduled);
+        }
+
     }
 }

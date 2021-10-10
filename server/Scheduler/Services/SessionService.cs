@@ -55,5 +55,9 @@ namespace Scheduler.Services
             await sessionEntityService.UpdateAsync(entity);
             return session;
         }
+
+
+
+
     }
 }

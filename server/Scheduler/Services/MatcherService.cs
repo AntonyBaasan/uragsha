@@ -1,7 +1,6 @@
 ﻿using System;
 using Scheduler.Interfaces.Services;
 using Scheduler.Interfaces.Models;
-using System.Linq;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Email.Interfaces.Services;
@@ -12,20 +11,20 @@ using Microsoft.Extensions.Logging;
 
 namespace Scheduler.Services
 {
-    public class SchedulerService : ISchedulerService
+    public class MatcherService : IMatcherService
     {
-        private readonly ISessionRequestService sessionRequestService;
-        private readonly ISessionService sessionService;
-        private readonly IEmailService emailService;
-        private readonly IMessageSender messageSender;
-        private readonly ILogger<SchedulerService> logger;
+        protected readonly ISessionRequestService sessionRequestService;
+        protected readonly ISessionService sessionService;
+        protected readonly IEmailService emailService;
+        protected readonly IMessageSender messageSender;
+        protected readonly ILogger<MatcherService> logger;
 
-        public SchedulerService(
+        public MatcherService(
             ISessionRequestService sessionRequestService,
             ISessionService sessionService,
             IEmailService emailService,
             IMessageSender messageSender,
-            ILogger<SchedulerService> logger)
+            ILogger<MatcherService> logger)
         {
             this.sessionRequestService = sessionRequestService;
             this.sessionService = sessionService;
@@ -34,29 +33,23 @@ namespace Scheduler.Services
             this.logger = logger;
         }
 
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="algorithm">What type of matching algorithm has to be used.</param>
-        public async void Schedule(ScheduleAlgorithm algorithm)
+        public virtual void Match(MatchAlgorithm algorithm)
         {
-            var found = await sessionRequestService.FindWaitingSessionRequest(DateTime.Now.ToUniversalTime(), null);
+            throw new InvalidOperationException("Operation is not available!");
+        }
 
-            logger.LogInformation($"Found {found.Count} non scheduled session requests!");
-
-            var groupByStartDate = found.GroupBy(f => f.Start);
-            foreach (var group in groupByStartDate)
+        public async void Match(MatchAlgorithm algorithm, IEnumerable<SessionRequest> sessionRequests)
+        {
+            SessionRequest previousSessionRequest = null;
+            foreach (var sessionRequest in sessionRequests)
             {
-                logger.LogInformation($"{group.Count()} session requests found at {group.Key}!");
-
-                SessionRequest previousSessionRequest = null;
-                foreach (var sessionRequest in group)
+                if (previousSessionRequest == null)
                 {
-                    if (previousSessionRequest == null)
-                    {
-                        previousSessionRequest = sessionRequest;
-                    }
-                    else
+                    previousSessionRequest = sessionRequest;
+                }
+                else
+                {
+                    if (CanMatch(previousSessionRequest, sessionRequest))
                     {
                         var session = await Match(previousSessionRequest, sessionRequest);
                         logger.LogInformation($"Session {session.Id} was created!");
@@ -68,6 +61,14 @@ namespace Scheduler.Services
             }
         }
 
+        private bool CanMatch(SessionRequest previousSessionRequest, SessionRequest sessionRequest)
+        {
+            if (previousSessionRequest.UserId.Equals(sessionRequest.UserId))
+            {
+                return false;
+            }
+            return true;
+        }
 
         private async Task<Session> Match(SessionRequest sessionRequest1, SessionRequest sessionRequest2)
         {
@@ -91,31 +92,20 @@ namespace Scheduler.Services
             return session;
         }
 
-        public Session ScheduleSession(string sessionRequestId)
-        {
-            throw new NotImplementedException();
-        }
-
-        public Session RescheduleSession(string sessionRequestId)
-        {
-            throw new NotImplementedException();
-        }
-
-        public async Task RemoveSession(string sessionId)
+        public async Task UnmatchBySession(string sessionId)
         {
             var session = await sessionService.GetByIdAsync(sessionId);
             await RemoveSession(session);
         }
 
-        public async Task RemoveSessionRequest(string id)
+        public async Task UnmatchBySessionRequest(string sessionRequestId)
         {
-            var sessionRequest = await sessionRequestService.GetByIdAsync(id);
+            var sessionRequest = await sessionRequestService.GetByIdAsync(sessionRequestId);
             if (sessionRequest.SessionId != null)
             {
                 var session = await sessionService.GetByIdAsync(sessionRequest.SessionId);
                 await RemoveSession(session);
             }
-            await sessionRequestService.RemoveSessionRequest(id);
         }
 
         private async Task RemoveSession(Session session)
@@ -155,7 +145,6 @@ namespace Scheduler.Services
             {
                 logger.LogWarning(ex.StackTrace);
             }
-
         }
 
         private async Task SendMessageAfterSessionCreate(Session session)

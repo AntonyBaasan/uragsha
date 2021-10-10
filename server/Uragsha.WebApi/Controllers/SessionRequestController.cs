@@ -1,6 +1,4 @@
-﻿using HttpUtilities.Services;
-using Identity.Interfaces.Services;
-using Microsoft.AspNetCore.Authorization;
+﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Scheduler.Interfaces.Models;
@@ -17,30 +15,23 @@ namespace Uragsha.WebApi.Controllers
     {
         private readonly ILogger<SessionRequestController> _logger;
         private readonly ISessionRequestService sessionRequestService;
-        private readonly ISchedulerService schedulerService;
-        private readonly IUserService userService;
-        private readonly IContextService contextUtility;
+        private readonly IMatcherService matcherService;
 
         public SessionRequestController(
             ILogger<SessionRequestController> logger,
             ISessionRequestService sessionRequestService,
-            ISchedulerService schedulerService,
-            IUserService userService,
-            IContextService contextUtility
+            IMatcherService matcherService
             )
         {
             _logger = logger;
             this.sessionRequestService = sessionRequestService;
-            this.schedulerService = schedulerService;
-            this.userService = userService;
-            this.contextUtility = contextUtility;
+            this.matcherService = matcherService;
         }
 
         [HttpGet]
         public async Task<IEnumerable<SessionRequest>> Get()
         {
-            string uid = this.contextUtility.GetUserId();
-            var found = await sessionRequestService.FindSessionRequest(uid);
+            var found = await sessionRequestService.FindSessionRequest();
             return found;
         }
 
@@ -68,7 +59,8 @@ namespace Uragsha.WebApi.Controllers
         {
             try
             {
-                await schedulerService.RemoveSessionRequest(id);
+                await matcherService.UnmatchBySessionRequest(id);
+                await sessionRequestService.RemoveSessionRequest(id);
             }
             catch (KeyNotFoundException)
             {

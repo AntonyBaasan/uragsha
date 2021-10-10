@@ -1,6 +1,6 @@
 ﻿namespace Scheduler.Interfaces.Models
 {
-    public enum ScheduleAlgorithmType
+    public enum MatchAlgorithmType
     {
         FCFS,
         Priority

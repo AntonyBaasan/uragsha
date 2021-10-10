@@ -16,7 +16,7 @@ using Scheduler;
 using Scheduler.Interfaces.Services;
 using Scheduler.Services;
 
-namespace Uragsha.Scheduler.HostedService
+namespace Uragsha.InstantMatcher.HostedService
 {
     public static class ConfigureUtils
     {
@@ -40,7 +40,7 @@ namespace Uragsha.Scheduler.HostedService
             // Internal services
             services.AddSingleton<ISessionRequestService, SessionRequestService>();
             services.AddSingleton<ISessionService, SessionService>();
-            services.AddSingleton<IMatcherService, MatcherScheduledService>();
+            services.AddSingleton<IMatcherService, MatcherInstantService>();
             services.AddSingleton<IUserService, UserService>();
             services.AddSingleton<IEmailService>(new SendGridEmailService(configuration.GetSection("ApiKey:SendGridKey").Value));
 

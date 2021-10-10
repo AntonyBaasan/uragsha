@@ -1,0 +1,21 @@
+<Project Sdk="Microsoft.NET.Sdk.Worker">
+
+  <PropertyGroup>
+    <TargetFramework>net5.0</TargetFramework>
+    <UserSecretsId>dotnet-Uragsha.InstantMatcher.HostedService-0654B4E5-F464-4A6E-B900-57886AB8770B</UserSecretsId>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="8.1.1" />
+    <PackageReference Include="Microsoft.Extensions.Hosting" Version="5.0.0" />
+    <PackageReference Include="MySql.EntityFrameworkCore" Version="5.0.5" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Email.SendGrid\Email.SendGrid.csproj" />
+    <ProjectReference Include="..\Entity.MySql\Entity.MySql.csproj" />
+    <ProjectReference Include="..\Identity\Identity.csproj" />
+    <ProjectReference Include="..\Messaging.Http\Messaging.Http.csproj" />
+    <ProjectReference Include="..\Scheduler\Scheduler.csproj" />
+  </ItemGroup>
+</Project>

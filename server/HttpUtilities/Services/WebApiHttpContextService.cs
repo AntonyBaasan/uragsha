@@ -19,7 +19,7 @@ namespace HttpUtilities.Services
             using var scope = scopeFactory.CreateScope();
             var httpContextAccessor = scope.ServiceProvider.GetRequiredService<IHttpContextAccessor>();
             var uid = httpContextAccessor.HttpContext.User.Claims.FirstOrDefault(c => c.Type == "user_id");
-            return uid != null ? uid.Value : "";
+            return uid.Value;
         }
 
         public string GetUserToken()
@@ -27,7 +27,7 @@ namespace HttpUtilities.Services
             using var scope = scopeFactory.CreateScope();
             var httpContextAccessor = scope.ServiceProvider.GetRequiredService<IHttpContextAccessor>();
             var uid = httpContextAccessor.HttpContext.User.Claims.FirstOrDefault(c => c.Type == "token");
-            return uid != null ? uid.Value : "";
+            return uid.Value;
         }
     }
 }

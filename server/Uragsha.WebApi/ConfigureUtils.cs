@@ -43,7 +43,8 @@ namespace Uragsha.WebApi
             // Internal services
             services.AddSingleton<ISessionRequestService, SessionRequestService>();
             services.AddSingleton<ISessionService, SessionService>();
-            services.AddSingleton<ISchedulerService, SchedulerService>();
+            // NOTE: we need all matcher services for this webapi
+            services.AddSingleton<IMatcherService, MatcherService>();
             services.AddSingleton<IUserService, UserService>();
             services.AddSingleton<DashboardService>();
             services.AddSingleton<IEmailService>(new SendGridEmailService(configuration.GetSection("ApiKey:SendGridKey").Value));

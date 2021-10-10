@@ -33,13 +33,17 @@
         </button>
         <ul class="dropdown-menu">
           <li>
-            <a class="dropdown-item" (click)="instantWorkout()">
+            <a
+              class="dropdown-item"
+              data-bs-toggle="modal"
+              data-bs-target="#instructionModal"
+            >
               <i class="bi bi-plus-lg me-2"></i>
               <span class="fs-6">Instant workout</span>
             </a>
           </li>
           <li>
-            <a class="dropdown-item" (click)="scheduledWorkout()">
+            <a class="dropdown-item">
               <i class="bi bi-calendar-plus me-2"></i>
               <span class="fs-6">Schedule for later</span>
             </a>
