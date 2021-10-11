@@ -1,15 +1,25 @@
 export interface SessionRequest {
   id: string;
-  start: Date;
-  end: Date;
   title: string;
   userId: string;
   sessionType: SessionRequestType;
   status: SessionRequestStatus;
-  sessionId?: string;
 
+  sessionId?: string;
+  // TODO: Separate - non Dto related properties
+  color: { primary: string; secondary: string };
+}
+
+export interface SessionRequestScheduled extends SessionRequest {
+  start: Date;
+  end: Date;
+
+  // TODO: Separate - non Dto related properties
   color: { primary: string; secondary: string };
   canJoin: boolean;
+}
+
+export interface SessionRequestInstant extends SessionRequest {
 }
 
 export enum SessionRequestStatus {

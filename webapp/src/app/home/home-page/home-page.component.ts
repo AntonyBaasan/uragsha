@@ -1,7 +1,6 @@
-import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { AuthService, SingnallingService, StoreService } from 'src/app/services';
-import { SessionRequestsService } from 'src/app/services/webapi/session-requests.service';
+import { AuthService, SessionRequestFactoryService, SessionRequestsDataService } from 'src/app/services';
 
 @Component({
   selector: 'app-home-page',
@@ -12,8 +11,8 @@ export class HomePageComponent {
 
   constructor(
     public authService: AuthService,
-    private signallingService: SingnallingService,
-    private sessionRequestsService: SessionRequestsService,
+    private sessionRequestsDataService: SessionRequestsDataService,
+    private sessionRequestFactoryService: SessionRequestFactoryService,
     private router: Router,
     private activatedRoute: ActivatedRoute,
     // private store: StoreService,
@@ -21,7 +20,13 @@ export class HomePageComponent {
   ) { }
 
   startIntstantSession() {
-    this.router.navigate(['/call', 'session.id']);
+    const user = this.authService.currentUser;
+    if (user.value) {
+      const newInstantSessionRequest = this.sessionRequestFactoryService.createInstant(user.value.uid);
+      this.sessionRequestsDataService.create(newInstantSessionRequest).subscribe(sessionRequest => {
+        this.router.navigate(['/call', sessionRequest.id]);
+      });
+    }
   }
 
 }

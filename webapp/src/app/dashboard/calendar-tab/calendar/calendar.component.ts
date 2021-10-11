@@ -10,7 +10,7 @@ import {
 } from 'angular-calendar';
 import { isSameDay, isSameMonth } from 'date-fns';
 import { Subject } from 'rxjs';
-import { SessionRequest } from '../../../models';
+import { SessionRequestScheduled } from 'src/app/models';
 import { CalendarService } from './calendar.service';
 
 @Component({
@@ -20,7 +20,7 @@ import { CalendarService } from './calendar.service';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class CalendarComponent {
-  @Input() set sessionRequests(sessions: SessionRequest[]) {
+  @Input() set sessionRequests(sessions: SessionRequestScheduled[]) {
     this.events = this.calendarService.mapToCalendarEvent(
       sessions,
       this.actions

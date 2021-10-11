@@ -6,9 +6,8 @@ import {
   OnInit,
 } from '@angular/core';
 import { Subscription } from 'rxjs';
-import { SessionRequest } from '../models';
-import { AuthService, BackendService, SingnallingService, StoreService } from '../services';
-import { SessionRequestsService } from '../services/webapi/session-requests.service';
+import { SessionRequest, SessionRequestScheduled } from '../models';
+import { AuthService, SingnallingService, StoreService, SessionRequestsDataService } from '../services';
 import { CalendarTabService } from './calendar-tab/calendar-tab.service';
 import { CalendarService } from './calendar-tab/calendar/calendar.service';
 import { SessionService } from './session/session.service';
@@ -33,7 +32,7 @@ export class DashboardPageComponent implements OnInit, OnDestroy {
   constructor(
     public authService: AuthService,
     private signallingService: SingnallingService,
-    private sessionRequestsService: SessionRequestsService,
+    private sessionRequestsDataService: SessionRequestsDataService,
     private store: StoreService,
     private cdr: ChangeDetectorRef
   ) { }
@@ -72,7 +71,7 @@ export class DashboardPageComponent implements OnInit, OnDestroy {
   }
 
   loadSessionRequest() {
-    this.sessionRequestsService.getAll().subscribe(sessionRequests => {
+    this.sessionRequestsDataService.getAllScheduled().subscribe(sessionRequests => {
       this.store.setSessionRequests(sessionRequests);
     })
   }
@@ -105,11 +104,11 @@ export class DashboardPageComponent implements OnInit, OnDestroy {
   }
 
   private handleOnSessionRequestUpdate(sessionRequest: SessionRequest): void {
-    this.store.updateSessionRequest(sessionRequest);
+    this.store.updateSessionRequest(sessionRequest as SessionRequestScheduled);
   }
 
   private handleOnSessionRequestCreated(sessionRequest: SessionRequest): void {
-    this.store.insertSessionRequest(sessionRequest);
+    this.store.insertSessionRequest(sessionRequest as SessionRequestScheduled);
   }
 
   private handleOnSessionRequestDeleted(sessionRequestId: string): void {

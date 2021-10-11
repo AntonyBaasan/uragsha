@@ -1,9 +1,8 @@
 import { ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
 import { Subscription } from 'rxjs';
-import { SessionRequest } from '../../models';
+import { SessionRequest, SessionRequestScheduled } from '../../models';
 import { CalendarTabService } from './calendar-tab.service';
-import { AuthService, SingnallingService, StoreService } from '../../services';
-import { SessionRequestsService } from 'src/app/services/webapi/session-requests.service';
+import { AuthService, SingnallingService, StoreService, SessionRequestsDataService } from '../../services';
 
 @Component({
   selector: 'app-calendar-tab',
@@ -11,8 +10,8 @@ import { SessionRequestsService } from 'src/app/services/webapi/session-requests
   styleUrls: ['./calendar-tab.component.scss'],
 })
 export class CalendarTabComponent implements OnInit, OnDestroy {
-  sessionRequests: SessionRequest[] = [];
-  todaysWorkouts: SessionRequest[] = [];
+  sessionRequests: SessionRequestScheduled[] = [];
+  todaysWorkouts: SessionRequestScheduled[] = [];
   // subscriptions
   subSessionRequestsSubject: Subscription | undefined;
 
@@ -21,14 +20,14 @@ export class CalendarTabComponent implements OnInit, OnDestroy {
     private store: StoreService,
     private calendarTabService: CalendarTabService,
     private signallingService: SingnallingService,
-    private sessionRequestService: SessionRequestsService,
+    private sessionRequestDataService: SessionRequestsDataService,
     private cdr: ChangeDetectorRef) { }
 
   ngOnInit(): void {
     this.subSessionRequestsSubject =
       this.store.SessionRequestsSubject.subscribe((sessions) => {
-        this.sessionRequests = [...sessions];
-        this.todaysWorkouts = this.calendarTabService.getSessionsClosest([...sessions]);
+        this.sessionRequests = [...sessions] as SessionRequestScheduled[];
+        this.todaysWorkouts = this.calendarTabService.getSessionsClosest([...sessions]) as SessionRequestScheduled[];
         this.cdr.detectChanges();
       });
   }
@@ -45,15 +44,15 @@ export class CalendarTabComponent implements OnInit, OnDestroy {
       const request = this.calendarTabService.createSessionRequestByStartDate(date, user.uid);
 
       this.store.insertSessionRequest(request);
-      this.sessionRequestService.create(request).subscribe(sessionRequest => {
+      this.sessionRequestDataService.create(request).subscribe(sessionRequest => {
         //returned value has ID with it.
-        this.store.updateSessionRequest(sessionRequest);
+        this.store.updateSessionRequest(sessionRequest as SessionRequestScheduled);
       });
     }
   }
 
   removeSession(id: string) {
-    this.sessionRequestService.delete(id).subscribe(() => {
+    this.sessionRequestDataService.delete(id).subscribe(() => {
       this.store.deleteSessionRequest(id);
     });
   }

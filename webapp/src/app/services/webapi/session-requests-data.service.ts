@@ -3,20 +3,20 @@ import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { environment } from 'src/environments/environment';
-import { SessionRequest } from 'src/app/models';
+import { SessionRequestScheduled, SessionRequest } from 'src/app/models';
 import { ModelHelperService } from '../model-helper.service';
 
 @Injectable({ providedIn: 'root' })
-export class SessionRequestsService {
+export class SessionRequestsDataService {
 
   private endpoint: string = environment.webApiUrl + '/api/SessionRequest';
 
   constructor(private http: HttpClient, private modelHelperService: ModelHelperService) { }
 
-  getAll(): Observable<Array<SessionRequest>> {
-    return this.http.get<Array<SessionRequest>>(this.endpoint)
+  getAllScheduled(): Observable<Array<SessionRequestScheduled>> {
+    return this.http.get<Array<SessionRequestScheduled>>(this.endpoint)
       .pipe(
-        map(sessionRequests => sessionRequests.map(s => this.modelHelperService.fixSessionRequestDateUtcToLocal(s)))
+        map(sessionRequests => sessionRequests.map(s => this.modelHelperService.fixSessionRequestDateUtcToLocal(s) as SessionRequestScheduled))
       );
   }
 

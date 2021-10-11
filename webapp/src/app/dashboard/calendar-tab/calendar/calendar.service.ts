@@ -1,13 +1,13 @@
 import { Injectable } from '@angular/core';
 import { CalendarEvent } from 'angular-calendar';
-import { SessionRequest } from '../../../models';
+import { SessionRequestScheduled } from '../../../models';
 
 @Injectable()
 export class CalendarService {
-  constructor() {}
+  constructor() { }
 
   mapToCalendarEvent(
-    SessionRequests: SessionRequest[],
+    SessionRequests: SessionRequestScheduled[],
     actions: any /*EventAction[]*/
   ): CalendarEvent[] {
     return SessionRequests.map((s) => ({

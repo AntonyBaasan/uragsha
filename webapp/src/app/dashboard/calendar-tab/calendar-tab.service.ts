@@ -1,34 +1,36 @@
 import { Injectable } from '@angular/core';
-import { v4 as uuidv4 } from 'uuid';
 import {
-  addMinutes,
   compareAsc,
   getDate,
   getMonth,
   getYear,
-  isEqual,
   subMinutes,
 } from 'date-fns';
-import { SessionRequest, SessionRequestStatus, SessionRequestType } from '../../models';
-import { COLORS } from 'src/app/shared/colors';
+import { SessionRequestFactoryService } from 'src/app/services';
+import { SessionRequest, SessionRequestScheduled, SessionRequestType } from '../../models';
 
 @Injectable()
 export class CalendarTabService {
+
+  constructor(private sessionRequestFactoryService: SessionRequestFactoryService) { }
+
   getSessionsClosest(sessions: SessionRequest[]): SessionRequest[] {
     if (!sessions || sessions.length === 0) {
       return [];
     }
-    sessions = sessions.filter(s => s.start >= subMinutes(new Date(), 30));
-    sessions = sessions.sort((s1, s2) => (s1.start as any) - (s2.start as any));
 
-    if (sessions.length > 0) {
-      return this.getSessionsOfDay(sessions[0].start, sessions);
+    let scheduledSessions = sessions.filter(s => s.sessionType === SessionRequestType.Scheduled) as SessionRequestScheduled[];
+    scheduledSessions = scheduledSessions.filter(s => s.start >= subMinutes(new Date(), 30))
+      .sort((s1, s2) => (s1.start as any) - (s2.start as any));
+
+    if (scheduledSessions.length > 0) {
+      return this.getSessionsOfDay(scheduledSessions[0].start, scheduledSessions);
     }
     return [];
   }
 
   // Filter sessions by start date
-  getSessionsOfDay(day: Date, sessions: SessionRequest[]): SessionRequest[] {
+  getSessionsOfDay(day: Date, sessions: SessionRequestScheduled[]): SessionRequestScheduled[] {
     const dateWithoutTime = new Date(getYear(day), getMonth(day), getDate(day));
     return sessions.filter(
       (s) =>
@@ -39,18 +41,7 @@ export class CalendarTabService {
     );
   }
 
-  createSessionRequestByStartDate(date: Date, userId: string) {
-    const newSessionRequest: SessionRequest = {
-      id: uuidv4(),
-      start: date,
-      end: addMinutes(date, 30),
-      title: 'New Session',
-      sessionType: SessionRequestType.Scheduled,
-      status: SessionRequestStatus.Waiting,
-      userId: userId,
-      color: COLORS.red,
-      canJoin: false,
-    };
-    return newSessionRequest;
+  createSessionRequestByStartDate(date: Date, userId: string): SessionRequestScheduled {
+    return this.sessionRequestFactoryService.createScheduled(date, userId);
   }
 }

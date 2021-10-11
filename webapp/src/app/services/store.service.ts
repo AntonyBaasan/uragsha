@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { differenceInSeconds } from 'date-fns';
 import { BehaviorSubject } from 'rxjs';
-import { NORMAL_SESSION_TIME_MIN, SessionRequest, SESSION_BEFORE_MIN } from '../models';
+import { NORMAL_SESSION_TIME_MIN, SessionRequest, SessionRequestScheduled, SessionRequestType, SESSION_BEFORE_MIN } from '../models';
 import { TimerService } from './timer.service';
 
 @Injectable()
@@ -50,23 +50,29 @@ export class StoreService {
     });
   }
 
+  // sets up timer that changes CanJoin property of the Scheduled sessionRequest
   private setupTimers(sessionRequests: SessionRequest[]) {
     sessionRequests.forEach(s => {
-      const endIntervalSec = differenceInSeconds(s.end, new Date());
-      const startIntervalSec = differenceInSeconds(s.start, new Date());
+      // ignore if it is not Scheduled sessionrequest
+      if (s.sessionType !== SessionRequestType.Scheduled) { return; }
+
+      const scheduledSessionRequest = s as SessionRequestScheduled;
+
+      const endIntervalSec = differenceInSeconds(scheduledSessionRequest.end, new Date());
+      const startIntervalSec = differenceInSeconds(scheduledSessionRequest.start, new Date());
       // already passed more than 30 min
       if (endIntervalSec <= -1 * this.timeOfSessionSec) {
-        s.canJoin = false;
+        scheduledSessionRequest.canJoin = false;
         return;
       }
       // 5 min before start
       if (startIntervalSec <= this.timeBeforeSessionSec) {
-        s.canJoin = true;
+        scheduledSessionRequest.canJoin = true;
         return;
       }
       // start timer that enables canJoin before 5 min
       this.timerService.setTimer(s.id, (startIntervalSec - this.timeBeforeSessionSec) * 1000, false, () => {
-        s.canJoin = true;
+        scheduledSessionRequest.canJoin = true;
         this.SessionRequestsSubject.next([...this.sessionRequests]);
       });
 

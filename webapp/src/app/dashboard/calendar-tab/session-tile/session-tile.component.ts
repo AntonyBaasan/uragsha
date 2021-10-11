@@ -6,7 +6,7 @@ import {
   Output,
 } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { SessionRequest, SessionRequestStatus } from '../../../models';
+import { SessionRequestScheduled, SessionRequestStatus } from '../../../models';
 
 @Component({
   selector: 'app-session-tile',
@@ -15,7 +15,7 @@ import { SessionRequest, SessionRequestStatus } from '../../../models';
   changeDetection: ChangeDetectionStrategy.Default
 })
 export class SessionTileComponent {
-  @Input() sessionRequest: SessionRequest;
+  @Input() sessionRequest: SessionRequestScheduled;
   @Input() canJoin: boolean;
 
   @Output() sessionEdit = new EventEmitter<Date>();
