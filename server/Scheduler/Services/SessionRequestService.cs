@@ -79,12 +79,12 @@ namespace Scheduler.Services
 
         public async Task<List<SessionRequest>> FindWaitingScheduledSessionRequest(DateTime? start = null, DateTime? end = null)
         {
-            return await FindSessionRequest(null, start, end, SessionRequestStatus.Waiting, SessionRequestType.Instant);
+            return await FindSessionRequest(null, start, end, SessionRequestStatus.Waiting, SessionRequestType.Scheduled);
         }
 
         public async Task<List<SessionRequest>> FindWaitingIntantSessionRequest()
         {
-            return await FindSessionRequest(null, null, null, SessionRequestStatus.Waiting, SessionRequestType.Scheduled);
+            return await FindSessionRequest(null, null, null, SessionRequestStatus.Waiting, SessionRequestType.Instant);
         }
 
     }
