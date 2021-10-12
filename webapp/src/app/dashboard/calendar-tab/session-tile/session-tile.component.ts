@@ -47,9 +47,9 @@ export class SessionTileComponent {
     return 'Unknown';
   }
 
-  isJoinDisabled() {
+  isJoinEnabled() {
     // return this.sessionRequest.status === SessionRequestStatus.Scheduled && this.sessionRequest.canJoin;
-    // return !this.sessionRequest.canJoin;
-    return false;
+    // return this.sessionRequest.canJoin;
+    return true;
   }
 }

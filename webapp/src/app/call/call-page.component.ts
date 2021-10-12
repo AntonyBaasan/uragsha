@@ -2,7 +2,7 @@ import { ChangeDetectorRef, Component, HostListener, OnDestroy, OnInit, ViewChil
 import { ActivatedRoute, Router } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { SessionDetail } from '../models';
-import { AuthService, StoreService } from '../services';
+import { AuthService } from '../services';
 import { SingnallingService } from '../services/signalling.service';
 import { WebrtcService } from '../services/webrtc.service';
 import { VideoComponent } from './video/video.component';
