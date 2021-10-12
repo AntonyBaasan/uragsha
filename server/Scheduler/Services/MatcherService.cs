@@ -38,6 +38,11 @@ namespace Scheduler.Services
             throw new InvalidOperationException("Operation is not available!");
         }
 
+        public virtual void CollectGarbage()
+        {
+            throw new InvalidOperationException("Operation is not available!");
+        }
+
         public async void Match(MatchAlgorithm algorithm, IEnumerable<SessionRequest> sessionRequests)
         {
             SessionRequest previousSessionRequest = null;

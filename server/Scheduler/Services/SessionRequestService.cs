@@ -14,24 +14,20 @@ namespace Scheduler.Services
     public class SessionRequestService : ISessionRequestService
     {
         private readonly IMapper _mapper;
-        private readonly IContextService _contextService;
         private readonly ISessionRequestEntityService _sessionRequestEntityService;
 
         public SessionRequestService(
             ISessionRequestEntityService sessionRequestEntityService,
-            IMapper mapper,
-            IContextService contextService
+            IMapper mapper
         )
         {
             _sessionRequestEntityService = sessionRequestEntityService;
             _mapper = mapper;
-            _contextService = contextService;
         }
 
         public async Task<SessionRequest> CreateSessionRequestAsync(SessionRequest sessionRequest)
         {
             var entity = _mapper.Map<SessionRequest, SessionRequestEntity>(sessionRequest);
-            entity.UserId = _contextService.GetUserId();
             var result = await _sessionRequestEntityService.AddAsync(entity);
             sessionRequest.Id = result.Id;
             return sessionRequest;
@@ -45,15 +41,19 @@ namespace Scheduler.Services
 
         public async Task<SessionRequest> GetByIdAsync(string sessionRequestId)
         {
-            var userId = _contextService.GetUserId();
-            var entity = await _sessionRequestEntityService.GetByIdAsync(sessionRequestId, userId);
+            var entity = await _sessionRequestEntityService.GetByIdAsync(sessionRequestId);
             var sessionRequest = _mapper.Map<SessionRequestEntity, SessionRequest>(entity);
             return sessionRequest;
         }
 
         public async Task RemoveSessionRequest(string id)
         {
-            await _sessionRequestEntityService.DeleteAsync(id, _contextService.GetUserId());
+            await _sessionRequestEntityService.DeleteAsync(id);
+        }
+
+        public async Task RemoveSessionRequest(string userId, string id)
+        {
+            await _sessionRequestEntityService.DeleteAsync(id, userId);
         }
 
         public Task<List<SessionRequest>> GetSessionRequestsByDate(DateTime start, SessionRequestStatus status)
@@ -72,7 +72,7 @@ namespace Scheduler.Services
                 StartDate2 = arg.Start2,
                 EndDate1 = arg.End1,
                 EndDate2 = arg.End2,
-                Status = arg.Status != null ? (int)arg.Status : null,
+                Status = arg.Status != null ? arg.Status.Select(s => (int)s).ToList() : null,
                 SessionType = arg.SessionType != null ? (int)arg.SessionType : null,
             };
             var result = await _sessionRequestEntityService.FindAsync(query);
@@ -85,7 +85,7 @@ namespace Scheduler.Services
             {
                 Start1 = start,
                 Start2 = end,
-                Status = SessionRequestStatus.Waiting,
+                Status = new List<SessionRequestStatus> { SessionRequestStatus.Waiting },
                 SessionType = SessionRequestType.Scheduled
             };
             return await FindSessionRequest(findSessionRequestArg);
@@ -95,7 +95,7 @@ namespace Scheduler.Services
         {
             var findSessionRequestArg = new FindSessionRequestArgs
             {
-                Status = SessionRequestStatus.Waiting,
+                Status = new List<SessionRequestStatus> { SessionRequestStatus.Waiting },
                 SessionType = SessionRequestType.Instant
             };
             return await FindSessionRequest(findSessionRequestArg);

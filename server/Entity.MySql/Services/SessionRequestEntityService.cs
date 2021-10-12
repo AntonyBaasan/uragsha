@@ -100,7 +100,11 @@ namespace Entity.MySql.Services
             }
             if (queryParam.Status != null)
             {
-                query = query.Where(s => s.Status == queryParam.Status);
+                query = query.Where(s => queryParam.Status.Contains(s.Status));
+            }
+            if (queryParam.SessionType != null)
+            {
+                query = query.Where(s => s.SessionType == queryParam.SessionType);
             }
             return query.ToListAsync();
         }

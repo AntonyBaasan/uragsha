@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace Entity.Services
 {
@@ -9,7 +10,7 @@ namespace Entity.Services
         public DateTime? StartDate2 { get; init; }
         public DateTime? EndDate1 { get; init; }
         public DateTime? EndDate2 { get; init; }
-        public int? Status { get; init; }
+        public List<int> Status { get; init; }
         public int? SessionType { get; init; }
     }
 }

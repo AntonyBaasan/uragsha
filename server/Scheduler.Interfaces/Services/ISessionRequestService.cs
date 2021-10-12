@@ -18,5 +18,6 @@ namespace Scheduler.Interfaces.Services
         Task<SessionRequest> CreateSessionRequestAsync(SessionRequest sessionRequest);
         Task UpdateSessionRequest(SessionRequest sessionRequest);
         Task RemoveSessionRequest(string id);
+        Task RemoveSessionRequest(string userId, string id);
     }
 }

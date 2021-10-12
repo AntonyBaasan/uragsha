@@ -39,7 +39,7 @@ namespace Uragsha.WebApi.Controllers
             var findSessionRequestArg = new FindSessionRequestArgs
             {
                 UserId = userId,
-                Status = SessionRequestStatus.Waiting,
+                Status = new List<SessionRequestStatus> { SessionRequestStatus.Waiting },
                 SessionType = SessionRequestType.Scheduled
             };
             var found = await sessionRequestService.FindSessionRequest(findSessionRequestArg);
@@ -54,14 +54,18 @@ namespace Uragsha.WebApi.Controllers
             {
                 return NotFound();
             }
+            if (!found.UserId.Equals(contextService.GetUserId()))
+            {
+                return NotFound();
+            }
             return Ok(found);
         }
 
         [HttpPost]
         public async Task<SessionRequest> Post([FromBody] SessionRequest sessionRequest)
         {
+            sessionRequest.UserId = contextService.GetUserId();
             var created = await sessionRequestService.CreateSessionRequestAsync(sessionRequest);
-
             return created;
         }
 
@@ -70,8 +74,17 @@ namespace Uragsha.WebApi.Controllers
         {
             try
             {
-                await matcherService.UnmatchBySessionRequest(id);
-                await sessionRequestService.RemoveSessionRequest(id);
+                var sessionRequest = await sessionRequestService.GetByIdAsync(id);
+                var userId = contextService.GetUserId();
+                if (sessionRequest != null && sessionRequest.UserId.Equals(userId))
+                {
+                    await matcherService.UnmatchBySessionRequest(id);
+                    await sessionRequestService.RemoveSessionRequest(userId, id);
+                }
+                else
+                {
+                    return NotFound();
+                }
             }
             catch (KeyNotFoundException)
             {

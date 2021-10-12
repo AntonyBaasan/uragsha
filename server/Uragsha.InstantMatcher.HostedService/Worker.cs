@@ -31,6 +31,8 @@ namespace Uragsha.InstantMatcher.HostedService
                 try
                 {
                     _matcherInstantdService.Match(new MatchAlgorithm { Algorithm = MatchAlgorithmType.FCFS });
+
+                    _matcherInstantdService.CollectGarbage();
                 }
                 catch (Exception ex)
                 {

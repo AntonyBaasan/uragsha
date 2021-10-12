@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace Scheduler.Interfaces.Models
 {
@@ -9,7 +10,7 @@ namespace Scheduler.Interfaces.Models
         public DateTime? Start2 { get; init; }
         public DateTime? End1 { get; init; }
         public DateTime? End2 { get; init; }
-        public SessionRequestStatus? Status { get; init; }
+        public List<SessionRequestStatus> Status { get; init; }
         public SessionRequestType? SessionType { get; init; }
     }
 }

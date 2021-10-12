@@ -8,6 +8,8 @@ namespace Scheduler.Interfaces.Services
     {
         public void Match(MatchAlgorithm algorithm);
 
+        public void CollectGarbage();
+
         public void Match(MatchAlgorithm algorithm, IEnumerable<SessionRequest> sessionRequests);
             
         public Task UnmatchBySession(string sessionId);
