@@ -46,6 +46,7 @@ namespace Uragsha.WebApi.Controllers
                     List<string> userConnections = new();
                     foreach (var userId in hubMessage.Content.ToUserId)
                     {
+                        _logger.LogDebug($"Method {hubMessage.Content.Method} was called for user {userId}");
                         await hubcontext.Clients.User(userId).SendAsync(hubMessage.Content.Method, sessionRequest);
                     }
                 }

@@ -1,8 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Dashboard.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Caching.Distributed;
 using Microsoft.Extensions.Logging;
@@ -29,10 +29,12 @@ namespace Uragsha.WebApi.Controllers
             this.cache = cache;
         }
 
-        [HttpGet]
-        public IEnumerable<SessionRequest> Get()
+        [Authorize]
+        [HttpGet("comingsoon")]
+        public async Task<IEnumerable<SessionRequest>> ComingSoon()
         {
-            return dashboarService.GetSessionByWeek(new DateTime());
+            var sessionRequests = await dashboarService.GetComingSessionRequests();
+            return sessionRequests.OrderBy(s=>s.Start);
         }
 
         //[HttpGet]

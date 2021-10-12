@@ -82,13 +82,21 @@ namespace Entity.MySql.Services
             {
                 query = query.Where(s => s.UserId.Equals(queryParam.UserId));
             }
-            if (queryParam.StartDate != null)
+            if (queryParam.StartDate1 != null)
             {
-                query = query.Where(s => s.Start >= queryParam.StartDate);
+                query = query.Where(s => s.Start >= queryParam.StartDate1);
             }
-            if (queryParam.EndDate != null)
+            if (queryParam.StartDate2 != null)
             {
-                query = query.Where(s => s.End <= queryParam.EndDate);
+                query = query.Where(s => s.Start <= queryParam.StartDate2);
+            }
+            if (queryParam.EndDate1 != null)
+            {
+                query = query.Where(s => s.End >= queryParam.EndDate1);
+            }
+            if (queryParam.EndDate2 != null)
+            {
+                query = query.Where(s => s.End <= queryParam.EndDate2);
             }
             if (queryParam.Status != null)
             {

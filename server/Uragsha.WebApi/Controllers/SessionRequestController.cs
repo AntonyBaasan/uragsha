@@ -36,7 +36,13 @@ namespace Uragsha.WebApi.Controllers
         public async Task<IEnumerable<SessionRequest>> Get()
         {
             var userId = contextService.GetUserId();
-            var found = await sessionRequestService.FindSessionRequest(userId);
+            var findSessionRequestArg = new FindSessionRequestArgs
+            {
+                UserId = userId,
+                Status = SessionRequestStatus.Waiting,
+                SessionType = SessionRequestType.Scheduled
+            };
+            var found = await sessionRequestService.FindSessionRequest(findSessionRequestArg);
             return found;
         }
 

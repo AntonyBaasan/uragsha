@@ -1,6 +1,7 @@
 export interface SessionRequest {
   id: string;
   title: string;
+  start: Date;
   userId: string;
   sessionType: SessionRequestType;
   status: SessionRequestStatus;
@@ -11,9 +12,7 @@ export interface SessionRequest {
 }
 
 export interface SessionRequestScheduled extends SessionRequest {
-  start: Date;
   end: Date;
-
   // TODO: Separate - non Dto related properties
   color: { primary: string; secondary: string };
   canJoin: boolean;

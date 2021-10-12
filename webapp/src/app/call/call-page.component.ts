@@ -1,8 +1,9 @@
 import { ChangeDetectorRef, Component, HostListener, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { Subscription } from 'rxjs';
-import { SessionDetail } from '../models';
-import { AuthService } from '../services';
+import { from, Observable, Subscription } from 'rxjs';
+import { mergeMap, tap } from 'rxjs/operators';
+import { SessionDetail, SessionRequest, SessionRequestType } from '../models';
+import { AuthService, SessionRequestsDataService } from '../services';
 import { SingnallingService } from '../services/signalling.service';
 import { WebrtcService } from '../services/webrtc.service';
 import { VideoComponent } from './video/video.component';
@@ -22,8 +23,10 @@ export class CallPageComponent implements OnInit, OnDestroy {
   orientation: 'horizontal' | 'vertical' = 'horizontal';
   connectedToSessionRoom = false;
   sessionRequestId = '';
+  sessionRequest: SessionRequest;
   sessionDetail: SessionDetail;
   connectionState: RTCPeerConnectionState;
+  callState: 'waiting' | 'joined' | 'started' | 'timepassed' | 'done' = 'waiting';
 
   otherUserInfo: any = {};
   userId: string = '';
@@ -41,6 +44,7 @@ export class CallPageComponent implements OnInit, OnDestroy {
   private subOnReceiveIceCandidate: Subscription | undefined;
 
   constructor(
+    private sessionRequestDataService: SessionRequestsDataService,
     private signallingService: SingnallingService,
     private webRtcService: WebrtcService,
     private authService: AuthService,
@@ -55,10 +59,14 @@ export class CallPageComponent implements OnInit, OnDestroy {
     this.authService.currentUser.subscribe(user => {
       this.userId = user && user.uid ? user.uid : '';
       if (this.userId) {
-        this.showMe().then(() => {
-          this.subscribeSignallingServiceEvents();
-          this.signallingService.joinSession(this.sessionRequestId);
-        });
+        this.sessionRequestDataService.get(this.sessionRequestId)
+          .pipe(
+            tap(sessionRequest => this.sessionRequest = sessionRequest),
+            mergeMap(s => from(this.showMe()))
+          ).subscribe(() => {
+            this.subscribeSignallingServiceEvents();
+            this.signallingService.joinSession(this.sessionRequestId);
+          });
       } else {
         this.unsubscribeSignallingServiceEvents();
       }
@@ -86,6 +94,9 @@ export class CallPageComponent implements OnInit, OnDestroy {
     );
     this.subOnReceiveIceCandidate = this.signallingService.OnReceiveIceCandidate.subscribe(
       (iceCandidate: RTCIceCandidate) => this.handleReceiveIceCandidate(iceCandidate)
+    );
+    this.subOnReceiveIceCandidate = this.signallingService.OnSessionRequestUpdated.subscribe(
+      (sessionRequest: SessionRequest) => this.handleSessionRequestUpdated(sessionRequest)
     );
   }
 
@@ -160,6 +171,15 @@ export class CallPageComponent implements OnInit, OnDestroy {
     }
   }
 
+  // this method is used for the Intant call situations.
+  private handleSessionRequestUpdated(sessionRequest: SessionRequest): void {
+    if (sessionRequest.id !== this.sessionRequestId) { return; }
+    if (sessionRequest.sessionType !== SessionRequestType.Instant) { return; }
+    if (this.sessionDetail) { return; }
+
+    this.signallingService.joinSession(this.sessionRequestId);
+  }
+
   ngOnDestroy() {
     this.endCall();
     this.unsubscribeSignallingServiceEvents();
@@ -168,11 +188,14 @@ export class CallPageComponent implements OnInit, OnDestroy {
 
   endCall() {
     const user = this.authService.currentUser.getValue();
-    if (this.sessionDetail && user) {
+    if (!user) { return; }
+    if (this.sessionDetail) {
       this.signallingService.leaveSession(this.sessionDetail.sessionId);
       this.videoComponent.stopLocal();
       this.videoComponent.stopRemote();
       this.stopWebRtc();
+    } else {
+
     }
   }
 
@@ -193,7 +216,6 @@ export class CallPageComponent implements OnInit, OnDestroy {
       this.signallingService.offerVideoCall(this.sessionRequestId, offer);
     }
   }
-
 
   // came from a user who started video
   // so this user has to create answer

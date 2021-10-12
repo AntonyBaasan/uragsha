@@ -11,7 +11,7 @@ namespace Scheduler.Interfaces.Services
         Task<List<SessionRequest>> FindWaitingIntantSessionRequest();
 
         // TODO: make request params as args object instead of passing so many params
-        Task<List<SessionRequest>> FindSessionRequest(string userId = null, DateTime? start = null, DateTime? end = null, SessionRequestStatus? status = null, SessionRequestType? sessionType = null);
+        Task<List<SessionRequest>> FindSessionRequest(FindSessionRequestArgs arg);
         Task<List<SessionRequest>> GetSessionRequestsByDate(DateTime start, SessionRequestStatus status);
 
         Task<SessionRequest> GetByIdAsync(string sessionRequestId);

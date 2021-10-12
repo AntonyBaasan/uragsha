@@ -8,20 +8,7 @@
     "
     style="padding: 20px"
   >
-    <div>
-      <div>105 people online</div>
-    </div>
-  </div>
-  <div
-    class="
-      col-sm
-      d-flex
-      justify-content-center
-      align-items-sm-center align-items-start
-    "
-    style="padding: 20px"
-  >
-    <div class="">
+    <div class="d-flex flex-column" >
       <div class="btn-group">
         <button
           type="button"
@@ -50,6 +37,32 @@
           </li>
         </ul>
       </div>
+      <div>
+        <ul>
+          <li *ngFor="let session of sessions">
+            <div *ngIf="session" class="d-flex flex-row">
+              <div class="mx-1">{{getDateTime(session)}}</div>
+              <div class="mx-1">{{session.title}}</div>
+              <div *ngIf="canJoin(session)">
+                <button class="btn btn-success" (click)="join(session)">Join</button>
+              </div>
+            </div>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </div>
+  <div
+    class="
+      col-sm
+      d-flex
+      justify-content-center
+      align-items-sm-center align-items-start
+    "
+    style="padding: 20px"
+  >
+    <div>
+      <div>105 people online</div>
     </div>
   </div>
 </div>

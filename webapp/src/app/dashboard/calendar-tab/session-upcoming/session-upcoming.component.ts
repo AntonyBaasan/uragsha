@@ -1,12 +1,9 @@
 import {
-  ChangeDetectionStrategy,
-  Component,
-  EventEmitter,
-  Input,
-  Output,
+  ChangeDetectionStrategy, Component, EventEmitter,
+  Input, Output
 } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { SessionRequestScheduled, SessionRequestStatus } from '../../../models';
+import { SessionRequestScheduled } from '../../../models';
 
 @Component({
   selector: 'app-session-upcoming',
@@ -20,14 +17,14 @@ export class SessionUpcomingComponent {
   @Output() sessionInsert = new EventEmitter<Date>();
   @Output() sessionRemove = new EventEmitter<string>();
 
-  constructor(private router: Router, private activatedRoute: ActivatedRoute) {}
+  constructor(private router: Router, private activatedRoute: ActivatedRoute) { }
 
   formatDayAndTime(session: SessionRequestScheduled) {
     // return format(session.start, 'HH:mm') +'-'+ format(session.end, 'HH:mm');
     return session.start;
   }
 
-  edit(session: SessionRequestScheduled) {}
+  edit(session: SessionRequestScheduled) { }
 
   delete(session: SessionRequestScheduled) {
     this.sessionRemove.emit(session.id as string);
@@ -37,5 +34,5 @@ export class SessionUpcomingComponent {
     this.router.navigate(['/call', session.id]);
   }
 
-  bookNew() {}
+  bookNew() { }
 }

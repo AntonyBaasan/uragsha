@@ -26,6 +26,7 @@ export class SessionRequestFactoryService {
   createInstant(userId: string): SessionRequestInstant {
     return {
       id: uuidv4(),
+      start: new Date(),
       title: 'New Instant Session',
       sessionType: SessionRequestType.Instant,
       status: SessionRequestStatus.Waiting,

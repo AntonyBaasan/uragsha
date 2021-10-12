@@ -63,15 +63,17 @@ namespace Scheduler.Services
             return Task.FromResult(new List<SessionRequest>());
         }
 
-        public async Task<List<SessionRequest>> FindSessionRequest(string userId = null, DateTime? start = null, DateTime? end = null, SessionRequestStatus? status = null, SessionRequestType? sessionType = null)
+        public async Task<List<SessionRequest>> FindSessionRequest(FindSessionRequestArgs arg)
         {
             var query = new SessionRequestQueryParam
             {
-                UserId = userId,
-                StartDate = start,
-                EndDate = end,
-                Status = status != null ? (int)status : null,
-                SessionType = sessionType != null ? (int)sessionType : null,
+                UserId = arg.UserId,
+                StartDate1 = arg.Start1,
+                StartDate2 = arg.Start2,
+                EndDate1 = arg.End1,
+                EndDate2 = arg.End2,
+                Status = arg.Status != null ? (int)arg.Status : null,
+                SessionType = arg.SessionType != null ? (int)arg.SessionType : null,
             };
             var result = await _sessionRequestEntityService.FindAsync(query);
             return result.Select(r => _mapper.Map<SessionRequestEntity, SessionRequest>(r)).ToList();
@@ -79,12 +81,24 @@ namespace Scheduler.Services
 
         public async Task<List<SessionRequest>> FindWaitingScheduledSessionRequest(DateTime? start = null, DateTime? end = null)
         {
-            return await FindSessionRequest(null, start, end, SessionRequestStatus.Waiting, SessionRequestType.Scheduled);
+            var findSessionRequestArg = new FindSessionRequestArgs
+            {
+                Start1 = start,
+                Start2 = end,
+                Status = SessionRequestStatus.Waiting,
+                SessionType = SessionRequestType.Scheduled
+            };
+            return await FindSessionRequest(findSessionRequestArg);
         }
 
         public async Task<List<SessionRequest>> FindWaitingIntantSessionRequest()
         {
-            return await FindSessionRequest(null, null, null, SessionRequestStatus.Waiting, SessionRequestType.Instant);
+            var findSessionRequestArg = new FindSessionRequestArgs
+            {
+                Status = SessionRequestStatus.Waiting,
+                SessionType = SessionRequestType.Instant
+            };
+            return await FindSessionRequest(findSessionRequestArg);
         }
 
     }

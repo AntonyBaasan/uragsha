@@ -20,6 +20,13 @@ export class SessionRequestsDataService {
       );
   }
 
+  get(sessionRequestId: string) {
+    return this.http.get<SessionRequest>(this.endpoint + '/' + sessionRequestId)
+      .pipe(
+        map(sessionRequest => this.modelHelperService.fixSessionRequestDateUtcToLocal(sessionRequest))
+      );
+  }
+
   create(sessionRequest: SessionRequest): Observable<SessionRequest> {
     return this.http.post<SessionRequest>(this.endpoint, sessionRequest)
       .pipe(
