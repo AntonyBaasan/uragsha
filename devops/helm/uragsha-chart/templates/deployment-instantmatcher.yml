@@ -1,0 +1,28 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: instantmatcher-deployment
+  labels:
+    app: {{ .Values.uragsha.apps.instantmatcher.name }}
+spec:
+  replicas: {{ .Values.uragsha.apps.instantmatcher.replicas }}
+  selector:
+    matchLabels:
+      app: {{ .Values.uragsha.apps.instantmatcher.name }}
+  template:
+    metadata:
+      labels:
+        app: {{ .Values.uragsha.apps.instantmatcher.name }}
+    spec:
+      containers:
+        - name: {{ .Values.uragsha.apps.instantmatcher.name }}
+          image: {{ .Values.uragsha.apps.instantmatcher.image }}
+          ports:
+            - containerPort: 80
+          envFrom:
+            - configMapRef:
+                name: backend-env-config
+            - secretRef:
+                name: backend-env-config-secret
+
+

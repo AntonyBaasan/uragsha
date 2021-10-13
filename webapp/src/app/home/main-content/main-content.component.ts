@@ -1,4 +1,5 @@
 import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
 import compareAsc from 'date-fns/compareAsc';
 import differenceInSeconds from 'date-fns/differenceInSeconds';
 import formatDistance from 'date-fns/formatDistance';
@@ -16,6 +17,7 @@ export class MainContentComponent implements OnInit {
   constructor(
     private authService: AuthService,
     private dashboardDataService: DashboardDataService,
+    private router: Router,
     private cdr: ChangeDetectorRef,
   ) { }
 
@@ -67,7 +69,7 @@ export class MainContentComponent implements OnInit {
     return false;
   }
 
-  join(session: SessionRequest): void {
-
+  join(sessionRequest: SessionRequest): void {
+    this.router.navigate(['/call', sessionRequest.id]);
   }
 }

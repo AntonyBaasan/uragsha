@@ -13,6 +13,9 @@ docker push antonybaasan/uragsha.webapi:$VERSION
 docker build -f ./Uragsha.Scheduler.HostedService/Dockerfile --force-rm -t antonybaasan/uragsha.scheduler:$VERSION .
 docker push antonybaasan/uragsha.scheduler:$VERSION
 
+docker build -f ./Uragsha.InstantMatcher.HostedService/Dockerfile --force-rm -t antonybaasan/uragsha.instantmatcher:$VERSION .
+docker push antonybaasan/uragsha.instantmatcher:$VERSION
+
 # publish angular web application
 cd ../webapp
 npm run build
