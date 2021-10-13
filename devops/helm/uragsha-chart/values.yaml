@@ -20,7 +20,7 @@ uragsha:
       replicas: 1
     webapp:
       name: webapp
-      image: antonybaasan/uragsha.webapp:v0.12
+      image: antonybaasan/uragsha.webapp:v0.15
       replicas: 1
       domain: app.uragsha.com
 
