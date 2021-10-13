@@ -30,7 +30,7 @@ export class CallPageComponent implements OnInit, OnDestroy {
 
   otherUserInfo: any = {};
   userId: string = '';
-  secondsLeft: number = 5;// 1800; // 30min
+  secondsLeft: number = 900; // 15min
 
   private subOnSessionDetailUpdated: Subscription | undefined;
   private subOnUserJoinSession: Subscription | undefined;
@@ -189,6 +189,7 @@ export class CallPageComponent implements OnInit, OnDestroy {
   endCall() {
     const user = this.authService.currentUser.getValue();
     if (!user) { return; }
+
     if (this.sessionDetail) {
       this.signallingService.leaveSession(this.sessionDetail.sessionId);
       this.videoComponent.stopLocal();

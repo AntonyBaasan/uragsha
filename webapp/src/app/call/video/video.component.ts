@@ -11,6 +11,7 @@ export class VideoComponent {
   @ViewChild('remote') remote: ElementRef;
   @Input() orientation: 'horizontal' | 'vertical';
 
+  remoteUserState: 'waiting'|'joined'|'working'|'done'|'left' = 'waiting';
 
   constructor(private cdr: ChangeDetectorRef) { }
 

@@ -1,7 +1,19 @@
+.user-state {
+  position: absolute;
+  top: 0px;
+  right: 0px;
+  left: 0px;
+  bottom: 0px;
+  color: white;
+  background-color: rgba(0, 0, 0, 0.5);
+  z-index: 10;
+}
+
 .video-wrapper {
   background-color: black;
   display: flex;
   justify-content: center;
+  position: relative;
 }
 
 .video-player {

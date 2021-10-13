@@ -1,13 +1,20 @@
 <div [ngClass]="orientation === 'vertical' ? 'vertical' : 'horizontal'">
   <div
     class="d-flex"
-    [ngClass]="{'flex-column': orientation === 'vertical',
-              'flex-row justify-content-around': orientation === 'horizontal'}"
+    [ngClass]="{
+      'flex-column': orientation === 'vertical',
+      'flex-row justify-content-around': orientation === 'horizontal'
+    }"
   >
     <div class="video-wrapper">
+      <div class="user-state d-flex justify-content-center align-items-center fs-2"
+      *ngIf="remoteUserState === 'waiting'">
+        Waiting...
+      </div>
       <video id="device" class="video-player" autoplay #remote></video>
     </div>
     <div class="video-wrapper">
+      <!-- <div class="user-state" *ngIf="remoteUserState === 'waiting'">Waiting user Username...</div> -->
       <video id="me" class="video-player" autoplay #me></video>
     </div>
   </div>

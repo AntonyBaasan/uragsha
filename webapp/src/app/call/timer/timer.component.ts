@@ -20,7 +20,7 @@ export class TimerComponent implements OnInit, OnDestroy {
   constructor(private timerService: TimerService) { }
 
   ngOnInit(): void {
-    this.startTimer();
+    // this.startTimer();
   }
 
   ngOnDestroy(): void {
