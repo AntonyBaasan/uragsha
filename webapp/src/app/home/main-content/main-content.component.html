@@ -9,6 +9,19 @@
     style="padding: 20px"
   >
     <div class="d-flex flex-column" >
+      <div>
+        <ul>
+          <li *ngFor="let session of sessions">
+            <div *ngIf="session" class="d-flex flex-row">
+              <div class="mx-1">{{getDateTime(session)}}</div>
+              <div class="mx-1">{{session.title}}</div>
+              <div *ngIf="canJoin(session)">
+                <button class="btn btn-success" (click)="join(session)">Join</button>
+              </div>
+            </div>
+          </li>
+        </ul>
+      </div>
       <div class="btn-group">
         <button
           type="button"
@@ -16,7 +29,7 @@
           data-bs-toggle="dropdown"
           aria-expanded="false"
         >
-          Start Workout
+          New Workout
         </button>
         <ul class="dropdown-menu">
           <li>
@@ -34,19 +47,6 @@
               <i class="bi bi-calendar-plus me-2"></i>
               <span class="fs-6">Schedule for later</span>
             </a>
-          </li>
-        </ul>
-      </div>
-      <div>
-        <ul>
-          <li *ngFor="let session of sessions">
-            <div *ngIf="session" class="d-flex flex-row">
-              <div class="mx-1">{{getDateTime(session)}}</div>
-              <div class="mx-1">{{session.title}}</div>
-              <div *ngIf="canJoin(session)">
-                <button class="btn btn-success" (click)="join(session)">Join</button>
-              </div>
-            </div>
           </li>
         </ul>
       </div>
