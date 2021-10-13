@@ -1,10 +1,43 @@
-<app-video [orientation]="orientation"></app-video>
-<app-options
-  [connectionState]="connectionState"
-  (onLeave)="leave()"
-  (onMute)="mute()"
-  (onFullScreen)="fullScreen()"
-></app-options>
+<div [ngClass]="orientation === 'vertical' ? 'vertical' : 'horizontal'">
+  <div
+    class="d-flex"
+    [ngClass]="{
+      'flex-column': orientation === 'vertical',
+      'flex-row justify-content-around': orientation === 'horizontal'
+    }"
+  >
+    <div class="video-wrapper">
+      <div
+        class="user-state d-flex justify-content-center align-items-center fs-2"
+        *ngIf="remoteUserSetting.userState === UserCallStateEnum.waiting"
+      >
+        Waiting...
+      </div>
+      <app-video
+        #remoteVideo
+        [orientation]="orientation"
+        [isFit]="remoteUserSetting.isFit"
+        class="h-100 w-100 d-flex justify-content-center align-items-center"
+      ></app-video>
+    </div>
+    <div class="video-wrapper">
+      <!-- <div class="user-state" *ngIf="remoteUserState === 'waiting'">Waiting user Username...</div> -->
+      <app-video
+        #myVideo
+        [orientation]="orientation"
+        [isFit]="userSetting.isFit"
+        class="h-100 w-100 d-flex justify-content-center align-items-center"
+      ></app-video>
+      <app-options
+        [connectionState]="connectionState"
+        (onLeave)="leave()"
+        (onMute)="mute()"
+        (toggleFit)="toggleFit()"
+      ></app-options>
+    </div>
+  </div>
+</div>
+
 <app-timer [initSeconds]="secondsLeft" (timeDone)="timeDone()"></app-timer>
 
 <!-- <app-messages></app-messages> -->

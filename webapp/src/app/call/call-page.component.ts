@@ -1,8 +1,8 @@
 import { ChangeDetectorRef, Component, HostListener, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { from, Observable, Subscription } from 'rxjs';
+import { from, Subscription } from 'rxjs';
 import { mergeMap, tap } from 'rxjs/operators';
-import { SessionDetail, SessionRequest, SessionRequestType } from '../models';
+import { SessionDetail, SessionRequest, SessionRequestType, UserCallMetadata, UserCallStateEnum } from '../models';
 import { AuthService, SessionRequestsDataService } from '../services';
 import { SingnallingService } from '../services/signalling.service';
 import { WebrtcService } from '../services/webrtc.service';
@@ -17,8 +17,10 @@ const SERVICES = [WebrtcService];
   providers: [...SERVICES],
 })
 export class CallPageComponent implements OnInit, OnDestroy {
-  @ViewChild(VideoComponent) videoComponent: VideoComponent;
+  @ViewChild('myVideo') myVideoComponent: VideoComponent;
+  @ViewChild('remoteVideo') remoteVideoComponent: VideoComponent;
 
+  UserCallStateEnum = UserCallStateEnum;
   localStream: MediaStream | undefined;
   orientation: 'horizontal' | 'vertical' = 'horizontal';
   connectedToSessionRoom = false;
@@ -27,6 +29,15 @@ export class CallPageComponent implements OnInit, OnDestroy {
   sessionDetail: SessionDetail;
   connectionState: RTCPeerConnectionState;
   callState: 'waiting' | 'joined' | 'started' | 'timepassed' | 'done' = 'waiting';
+  userSetting: UserCallMetadata = {
+    isFit: false,
+    userState: UserCallStateEnum.waiting,
+  };
+  remoteUserSetting: UserCallMetadata = {
+    isFit: false,
+    userState: UserCallStateEnum.waiting,
+  };
+
 
   otherUserInfo: any = {};
   userId: string = '';
@@ -116,7 +127,7 @@ export class CallPageComponent implements OnInit, OnDestroy {
         this.cdr.detectChanges();
       });
     this.subOnRemoteStreamAddedSubject = this.webRtcService.OnRemoteStreamAddedSubject.subscribe(stream => {
-      this.videoComponent.setRemoteStream(stream);
+      this.remoteVideoComponent.setStream(stream);
     });
     this.subOnIceCandidateEventSubject = this.webRtcService.OnIceCandidateEventSubject.subscribe(candidate => {
       if (this.sessionDetail?.sessionId && candidate) {
@@ -137,9 +148,9 @@ export class CallPageComponent implements OnInit, OnDestroy {
       .then((stream) => {
         this.localStream = stream;
         // for the local only video is important!
-        this.videoComponent.setLocalStream(new MediaStream(stream.getVideoTracks()));
+        this.myVideoComponent.setStream(new MediaStream(stream.getVideoTracks()));
         // TODO: debug
-        // this.videoComponent.setRemoteStream(new MediaStream(stream.getVideoTracks()));
+        this.remoteVideoComponent.setStream(new MediaStream(stream.getVideoTracks()));
       });
   }
 
@@ -167,7 +178,7 @@ export class CallPageComponent implements OnInit, OnDestroy {
     if (this.userId !== leftUserId) {
       // other user left this session
       this.stopWebRtc();
-      this.videoComponent.stopRemote();
+      this.remoteVideoComponent.stopStream();
     }
   }
 
@@ -192,8 +203,8 @@ export class CallPageComponent implements OnInit, OnDestroy {
 
     if (this.sessionDetail) {
       this.signallingService.leaveSession(this.sessionDetail.sessionId);
-      this.videoComponent.stopLocal();
-      this.videoComponent.stopRemote();
+      this.myVideoComponent.stopStream();
+      this.remoteVideoComponent.stopStream();
       this.stopWebRtc();
     } else {
 
@@ -272,7 +283,9 @@ export class CallPageComponent implements OnInit, OnDestroy {
   mute() {
   }
 
-  fullScreen() {
+  toggleFit() {
+    this.userSetting.isFit = !this.userSetting.isFit;
+    this.remoteUserSetting.isFit = !this.remoteUserSetting.isFit;
   }
 
   timeDone() {

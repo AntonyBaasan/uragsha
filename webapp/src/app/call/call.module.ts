@@ -9,6 +9,8 @@ import { VideoComponent } from './video/video.component';
 import { OptionsComponent } from './options/options.component';
 import { TimerComponent } from './timer/timer.component';
 import { StoreService, TimerService } from '../services';
+import { WorkoutEditorComponent } from './workout-editor/workout-editor.component';
+import { WorkoutPlayerComponent } from './workout-player/workout-player.component';
 
 
 @NgModule({
@@ -17,7 +19,9 @@ import { StoreService, TimerService } from '../services';
     MessagesComponent,
     VideoComponent,
     OptionsComponent,
-    TimerComponent
+    TimerComponent,
+    WorkoutEditorComponent,
+    WorkoutPlayerComponent
   ],
   imports: [
     FormsModule,

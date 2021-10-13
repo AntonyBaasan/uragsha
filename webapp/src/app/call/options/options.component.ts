@@ -1,5 +1,5 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { User } from 'src/app/models';
+import { User, UserCallMetadata } from 'src/app/models';
 
 @Component({
   selector: 'app-options',
@@ -9,12 +9,13 @@ import { User } from 'src/app/models';
 export class OptionsComponent {
 
   @Input() user: User;
+  @Input() userCallState: UserCallMetadata;
   @Input() connectionState: RTCPeerConnectionState;
 
   @Output() startCall = new EventEmitter();
   @Output() endCall = new EventEmitter();
   @Output() mute = new EventEmitter();
-  @Output() fullScreen = new EventEmitter();
+  @Output() toggleFit = new EventEmitter();
   @Output() leave = new EventEmitter();
 
   constructor() { }
@@ -35,8 +36,8 @@ export class OptionsComponent {
     this.mute.emit();
   }
 
-  onFullScreen() {
-    this.fullScreen.emit();
+  onToggleFit() {
+    this.toggleFit.emit();
   }
 
   onLeave() {

@@ -7,35 +7,28 @@ import { ChangeDetectorRef, Component, ElementRef, Input, ViewChild } from '@ang
 })
 export class VideoComponent {
 
-  @ViewChild('me') me: ElementRef;
-  @ViewChild('remote') remote: ElementRef;
+  @ViewChild('videoPlayer') videoPlayer: ElementRef;
+  @Input() isFit: boolean;
   @Input() orientation: 'horizontal' | 'vertical';
-
-  remoteUserState: 'waiting'|'joined'|'working'|'done'|'left' = 'waiting';
 
   constructor(private cdr: ChangeDetectorRef) { }
 
-  stopLocal() {
-    this.setLocalStream(null);
+  stopStream() {
+    this.setStream(null);
     this.cdr.detectChanges();
   }
 
-  stopRemote() {
-    this.setRemoteStream(null);
-    this.cdr.detectChanges();
+  setStream(stream: MediaStream | null) {
+    if (!this.videoPlayer) { return; }
+    this.videoPlayer.nativeElement.srcObject = stream;
   }
 
-  setLocalStream(stream: MediaStream | null) {
-    this.setStream(this.me, stream);
+  getFitClass() {
+    if (this.isFit) {
+      return this.orientation === 'horizontal' ? 'h-100' : 'w-100';
+    } else {
+      return this.orientation === 'horizontal' ? 'w-100' : 'h-100';
+    }
   }
-
-  setRemoteStream(stream: MediaStream | null) {
-    this.setStream(this.remote, stream);
-  }
-  private setStream(element: ElementRef, stream: MediaStream | null) {
-    if (!element) { return; }
-    element.nativeElement.srcObject = stream;
-  }
-
 
 }
