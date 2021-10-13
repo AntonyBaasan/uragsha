@@ -18,7 +18,7 @@ docker push antonybaasan/uragsha.instantmatcher:$VERSION
 
 # publish angular web application
 cd ../webapp
-npm run build
+npm run build --aot --outputHashing=all
 docker build -t antonybaasan/uragsha.webapp:$VERSION  .
 docker push antonybaasan/uragsha.webapp:$VERSION
 
