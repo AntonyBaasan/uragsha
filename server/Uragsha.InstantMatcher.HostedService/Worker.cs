@@ -20,7 +20,7 @@ namespace Uragsha.InstantMatcher.HostedService
         {
             _logger = logger;
             _matcherInstantdService = matcherService;
-            _interval = int.Parse(configuration.GetSection("Scheduler:Interval").Value);
+            _interval = int.Parse(configuration.GetSection("InstantMatcher:Interval").Value);
         }
 
         protected override async Task ExecuteAsync(CancellationToken stoppingToken)
