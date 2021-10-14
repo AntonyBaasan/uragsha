@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { addSeconds, format } from 'date-fns';
 import { Exercise, UserCallMetadata, Workout } from 'src/app/models';
 

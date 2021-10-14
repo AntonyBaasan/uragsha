@@ -46,8 +46,8 @@ export class OptionsComponent {
 
   getPositionStyle() {
     if (this.userCallMetadata.uiLayout.position === 'left') {
-      return { left: '5px' };
+      return { left: '0px' };
     }
-    return { right: '5px' };
+    return { right: '0px' };
   }
 }

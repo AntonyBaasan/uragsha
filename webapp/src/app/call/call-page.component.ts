@@ -6,9 +6,10 @@ import { SessionDetail, SessionRequest, SessionRequestType, UserCallMetadata, Ca
 import { AuthService, SessionRequestsDataService } from '../services';
 import { SingnallingService } from '../services/signalling.service';
 import { WebrtcService } from '../services/webrtc.service';
+import { CallPageService } from './call-page.service';
 import { VideoComponent } from './video/video.component';
 
-const SERVICES = [WebrtcService];
+const SERVICES = [WebrtcService, CallPageService];
 
 @Component({
   selector: 'app-call-page',
@@ -29,54 +30,8 @@ export class CallPageComponent implements OnInit, OnDestroy {
   sessionDetail: SessionDetail;
   connectionState: RTCPeerConnectionState;
 
-  // TODO: move to a service
-  userSetting: UserCallMetadata = {
-    isFit: false,
-    isMute: false,
-    callState: CallStateEnum.waiting,
-    uiLayout: {
-      position: 'right',
-      visibleButtons: {
-        muteMic: true,
-        muteAudio: true,
-        fit: true,
-        options: true,
-        leave: true,
-      }
-    },
-    workout: {
-      title: 'new workout',
-      exercises: [
-        { title: 'warmpup', seconds: 30 },
-        { title: 'push ups', seconds: 60 },
-        { title: 'burpee', seconds: 60 },
-      ]
-    }
-  };
-  // TODO: move to a service
-  remoteUserSetting: UserCallMetadata = {
-    isFit: false,
-    isMute: false,
-    callState: CallStateEnum.waiting,
-    uiLayout: {
-      position: 'left',
-      visibleButtons: {
-        muteMic: false,
-        muteAudio: false,
-        fit: true,
-        options: false,
-        leave: false,
-      }
-    },
-    workout: {
-      title: 'new workout',
-      exercises: [
-        { title: 'warmpup', seconds: 30 },
-        { title: 'push ups', seconds: 60 },
-        { title: 'burpee', seconds: 60 },
-      ]
-    }
-  };
+  userSetting: UserCallMetadata;
+  remoteUserSetting: UserCallMetadata;
 
   userId: string = '';
   secondsLeft: number = 900; // 15min
@@ -97,12 +52,16 @@ export class CallPageComponent implements OnInit, OnDestroy {
     private signallingService: SingnallingService,
     private webRtcService: WebrtcService,
     private authService: AuthService,
+    private callPageService: CallPageService,
     private route: ActivatedRoute,
     private router: Router,
     private cdr: ChangeDetectorRef
   ) { }
 
   ngOnInit(): void {
+    this.userSetting = this.callPageService.createDefaltUserSetting();
+    this.remoteUserSetting = this.callPageService.createDefaltRemoteUserSetting();
+
     this.sessionRequestId = this.route.snapshot.params['sessionRequestId'];
 
     this.authService.currentUser.subscribe(user => {
