@@ -16,6 +16,7 @@ namespace Uragsha.Signalling.Hubs
 
         Task OnOfferVideoCall(object info);
         Task OnAnswerVideoCall(object info);
+        Task OnWorkoutStateUpdated(string userId, object WorkoutState);
         Task OnSessionDetailUpdated(SessionDetail sessionDetail);
         Task OnReceiveIceCandidate(object iceCandidate);
 

@@ -1,5 +1,5 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { UserCallMetadata, Workout } from 'src/app/models';
+import { UserCallMetadata, Workout, WorkoutState, WorkoutStateEnum } from 'src/app/models';
 
 @Component({
   selector: 'app-workout-editor',
@@ -9,14 +9,24 @@ import { UserCallMetadata, Workout } from 'src/app/models';
 export class WorkoutEditorComponent {
 
   @Input() set userCallMetadata(metadata: UserCallMetadata) {
-    this.workout = metadata.workout;
+    this.state = metadata.workoutState;
+    this.workout = metadata.workoutState.workout;
     this.position = metadata.uiLayout.position;
   }
 
+  WorkoutStateEnum = WorkoutStateEnum;
+  state: WorkoutState;
   workout: Workout;
   position: 'left' | 'right';
 
   constructor() { }
+
+  shouldShow(): boolean {
+    if (this.state.isLocal) {
+      return this.state.state === WorkoutStateEnum.planning;
+    }
+    return false;
+  }
 
   getPositionStyle() {
     if (this.position === 'left') {

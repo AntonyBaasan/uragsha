@@ -3,7 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { environment } from 'src/environments/environment';
-import { SessionRequestScheduled, SessionRequest } from 'src/app/models';
+import { SessionRequestScheduled, SessionRequest, Session, User } from 'src/app/models';
 import { ModelHelperService } from '../model-helper.service';
 
 @Injectable({ providedIn: 'root' })
@@ -25,6 +25,10 @@ export class SessionRequestsDataService {
       .pipe(
         map(sessionRequest => this.modelHelperService.fixSessionRequestDateUtcToLocal(sessionRequest))
       );
+  }
+
+  getOtherUser(sessionRequestId: string) {
+    return this.http.get<User>(this.endpoint + '/' + sessionRequestId+'/session/otheruser');
   }
 
   create(sessionRequest: SessionRequest): Observable<SessionRequest> {

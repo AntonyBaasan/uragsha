@@ -1,20 +1,20 @@
 import { Injectable, OnDestroy } from '@angular/core';
-import { CallStateEnum, UserCallMetadata } from '../models';
+import { UserCallMetadata, WorkoutStateEnum } from '../models';
 
 @Injectable()
 export class CallPageService implements OnDestroy {
-
 
   ngOnDestroy(): void {
     console.log('ngOnDestroy: CallPageService.');
   }
 
-  createDefaltUserSetting() {
+  createDefaltUserSetting(userId: string, userName: string) {
     var defaultSetting: UserCallMetadata = {
-      isFit: false,
-      isMute: false,
-      callState: CallStateEnum.waiting,
       uiLayout: {
+        optionValues: {
+          isFit: false,
+          isMute: false,
+        },
         position: 'right',
         visibleButtons: {
           muteMic: true,
@@ -24,13 +24,21 @@ export class CallPageService implements OnDestroy {
           leave: true,
         }
       },
-      workout: {
-        title: 'new workout',
-        exercises: []
+      userInfo: {
+        userId: userId,
+        userName: userName,
+      },
+      workoutState: {
+        isLocal: true,
+        state: WorkoutStateEnum.planning,
+        workout: {
+          title: 'new workout',
+          exercises: []
+        }
       }
     };
     //debug:
-    defaultSetting.workout = {
+    defaultSetting.workoutState.workout = {
       title: 'new workout',
       exercises: [
         { title: 'warmpup', seconds: 30 },
@@ -43,10 +51,11 @@ export class CallPageService implements OnDestroy {
 
   createDefaltRemoteUserSetting(): UserCallMetadata {
     const remoteUserSetting: UserCallMetadata = {
-      isFit: false,
-      isMute: false,
-      callState: CallStateEnum.waiting,
       uiLayout: {
+        optionValues: {
+          isFit: false,
+          isMute: false,
+        },
         position: 'left',
         visibleButtons: {
           muteMic: false,
@@ -56,16 +65,25 @@ export class CallPageService implements OnDestroy {
           leave: false,
         }
       },
-      workout: {
-        title: 'new workout',
-        exercises: []
+      userInfo: {
+        userId: '',
+        userName: '',
+      },
+      workoutState: {
+        isLocal: false,
+        state: WorkoutStateEnum.planning,
+        workout: {
+          title: 'new workout',
+          exercises: []
+        }
       }
     };
+
     //debug:
-    remoteUserSetting.workout = {
+    remoteUserSetting.workoutState.workout = {
       title: 'new workout',
       exercises: [
-        { title: 'warmpup', seconds: 30 },
+        { title: 'remote user', seconds: 120 },
         { title: 'push ups', seconds: 60 },
         { title: 'burpee', seconds: 60 },
       ]

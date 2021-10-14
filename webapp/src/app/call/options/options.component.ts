@@ -9,6 +9,7 @@ import { User, UserCallMetadata } from 'src/app/models';
 export class OptionsComponent {
 
   @Input() user: User;
+  // TODO: pass only what it need, for detection change performance improvement
   @Input() userCallMetadata: UserCallMetadata;
   @Input() connectionState: RTCPeerConnectionState;
 

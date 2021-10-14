@@ -5,11 +5,11 @@
       class="btn btn-primary options-button m-1"
       (click)="onMute()"
     >
-      <ng-container *ngIf="userCallMetadata.isMute">
+      <ng-container *ngIf="userCallMetadata.uiLayout.optionValues.isMute">
         <i class="bi bi-mic-mute me-1 text-danger"></i>
         Unmute
       </ng-container>
-      <ng-container *ngIf="!userCallMetadata.isMute">
+      <ng-container *ngIf="!userCallMetadata.uiLayout.optionValues.isMute">
         <i class="bi bi-mic me-1"></i>
         Mute
       </ng-container>
@@ -20,11 +20,11 @@
       class="btn btn-primary options-button m-1"
       (click)="onToggleFit()"
     >
-      <ng-container *ngIf="!userCallMetadata.isFit">
+      <ng-container *ngIf="!userCallMetadata.uiLayout.optionValues.isFit">
         <i class="bi bi-arrows-expand me-1"></i>
         Fit
       </ng-container>
-      <ng-container *ngIf="userCallMetadata.isFit">
+      <ng-container *ngIf="userCallMetadata.uiLayout.optionValues.isFit">
         <i class="bi bi-arrows-collapse me-1"></i>
         Fit
       </ng-container>

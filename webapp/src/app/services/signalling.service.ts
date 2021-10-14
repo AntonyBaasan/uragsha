@@ -2,7 +2,7 @@ import { Injectable, OnDestroy } from '@angular/core';
 import * as signalR from '@microsoft/signalr';
 import { Subject } from 'rxjs';
 import { environment } from 'src/environments/environment';
-import { SessionDetail, SessionRequest, SignallingReceiveEvents, SignallingSendEvents, User } from '../models';
+import { SessionDetail, SessionRequest, SignallingReceiveEvents, SignallingSendEvents, User, WorkoutState } from '../models';
 import { ModelHelperService } from './model-helper.service';
 
 @Injectable({
@@ -27,6 +27,8 @@ export class SingnallingService implements OnDestroy {
     sessionId: string;
     sessionDetail: SessionDetail;
   }>();
+
+  public OnWorkoutStateUpdated = new Subject<{ userId: string, workoutState: WorkoutState }>();
   public OnSessionDetailUpdated = new Subject<SessionDetail>();
   public OnReceiveIceCandidate = new Subject<any>();
   public OnUserLeaveSesson = new Subject<string>();
@@ -129,15 +131,26 @@ export class SingnallingService implements OnDestroy {
     );
   }
 
-  UpdateSessionDetail(userId: string, sessionDetail: SessionDetail): Promise<void> {
+  UpdateSessionDetail(sessionDetail: SessionDetail): Promise<void> {
     if (!this.isConnected()) {
       console.log('Connection is not established!');
       return Promise.resolve();
     }
     return this.connection.invoke(
       SignallingSendEvents.UpdateSessionDetail,
-      userId,
       sessionDetail
+    );
+  }
+
+  UpdateWorkoutState(sessionRequestId: string, workoutState: WorkoutState): Promise<void> {
+    if (!this.isConnected()) {
+      console.log('Connection is not established!');
+      return Promise.resolve();
+    }
+    return this.connection.invoke(
+      SignallingSendEvents.UpdateWorkoutState,
+      sessionRequestId,
+      workoutState
     );
   }
 
@@ -210,6 +223,12 @@ export class SingnallingService implements OnDestroy {
         sessionDetail: SessionDetail;
       }) => {
         this.OnAnswerVideoCall.next(result);
+      }
+    );
+    this.connection.on(
+      SignallingReceiveEvents.OnWorkoutStateUpdated,
+      (userId: string, workoutState: WorkoutState) => {
+        this.OnWorkoutStateUpdated.next({ userId, workoutState });
       }
     );
     this.connection.on(

@@ -1,10 +1,12 @@
 ﻿using HttpUtilities.Services;
+using Identity.Interfaces.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Scheduler.Interfaces.Models;
 using Scheduler.Interfaces.Services;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace Uragsha.WebApi.Controllers
@@ -16,18 +18,24 @@ namespace Uragsha.WebApi.Controllers
     {
         private readonly ILogger<SessionRequestController> _logger;
         private readonly ISessionRequestService sessionRequestService;
+        private readonly ISessionService sessionService;
+        private readonly IUserService userService;
         private readonly IMatcherService matcherService;
         private readonly IContextService contextService;
 
         public SessionRequestController(
             ILogger<SessionRequestController> logger,
             ISessionRequestService sessionRequestService,
+            ISessionService sessionService,
+            IUserService userService,
             IMatcherService matcherService,
             IContextService contextService
             )
         {
             _logger = logger;
             this.sessionRequestService = sessionRequestService;
+            this.sessionService = sessionService;
+            this.userService = userService;
             this.matcherService = matcherService;
             this.contextService = contextService;
         }
@@ -59,6 +67,22 @@ namespace Uragsha.WebApi.Controllers
                 return NotFound();
             }
             return Ok(found);
+        }
+        // Get session information based on session request id
+        [HttpGet("{id}/session/otheruser")]
+        public async Task<IActionResult> GetOtherUser(string id)
+        {
+            var userId = contextService.GetUserId();
+            var sessionRequest = await sessionRequestService.GetByIdAsync(id);
+            if (sessionRequest == null) { return NotFound(); }
+            if (!sessionRequest.UserId.Equals(userId)) { return NotFound(); }
+
+            var session = await sessionService.GetBySessionRequestIdAsync(id);
+            if (session == null) { return NotFound(); }
+            var otherUserId = session.SessionRequests.First(sr => !sr.UserId.Equals(userId)).UserId;
+            var otherUser = await this.userService.GetUserByIdAsync(otherUserId);
+
+            return Ok(otherUser);
         }
 
         [HttpPost]

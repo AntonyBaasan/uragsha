@@ -6,6 +6,7 @@ using Scheduler.Interfaces.Models;
 using System.Collections.Generic;
 using Uragsha.Signalling.Hubs;
 using Microsoft.Extensions.Configuration;
+using System.Collections.Concurrent;
 
 namespace Uragsha.Signalling.Pages
 {
@@ -15,7 +16,7 @@ namespace Uragsha.Signalling.Pages
         private readonly IHubContext<MainHub> _hubContext;
 
         public List<string> connections = new List<string>();
-        public Dictionary<string, SessionDetail> rooms = new ();
+        public ConcurrentDictionary<string, SessionDetail> rooms = new ();
         public string TestEnvValue = "";
         public string ConnectionString = "";
 
@@ -30,7 +31,7 @@ namespace Uragsha.Signalling.Pages
         public void OnGet()
         {
             connections = GlobalInfo.ConnectedIds.ToList();
-            rooms = GlobalInfo.ActiveSession;
+            rooms = GlobalInfo.ActiveSessions;
             TestEnvValue = "bla";
 
         }

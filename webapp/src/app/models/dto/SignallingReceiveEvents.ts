@@ -8,6 +8,7 @@ export enum SignallingReceiveEvents {
 
   OnOfferVideoCall = 'OnOfferVideoCall',
   OnAnswerVideoCall = 'OnAnswerVideoCall',
+  OnWorkoutStateUpdated = 'OnWorkoutStateUpdated',
   OnSessionDetailUpdated = 'OnSessionDetailUpdated',
   OnReceiveIceCandidate = 'OnReceiveIceCandidate',
 

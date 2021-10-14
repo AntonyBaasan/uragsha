@@ -1,6 +1,6 @@
 import { Component, Input } from '@angular/core';
 import { addSeconds, format } from 'date-fns';
-import { Exercise, UserCallMetadata, Workout } from 'src/app/models';
+import { Exercise, UserCallMetadata, Workout, WorkoutState, WorkoutStateEnum } from 'src/app/models';
 
 @Component({
   selector: 'app-workout-player',
@@ -10,14 +10,22 @@ import { Exercise, UserCallMetadata, Workout } from 'src/app/models';
 export class WorkoutPlayerComponent {
 
   @Input() set userCallMetadata(metadata: UserCallMetadata) {
-    this.workout = metadata.workout;
+    this.state = metadata.workoutState;
+    this.workout = metadata.workoutState.workout;
     this.position = metadata.uiLayout.position;
   }
 
+  WorkoutStateEnum = WorkoutStateEnum;
+  state: WorkoutState;
   workout: Workout;
   position: 'left' | 'right'
 
   constructor() { }
+
+  shouldShow(): boolean {
+    return this.state.state === WorkoutStateEnum.exercising
+      || this.state.state === WorkoutStateEnum.done;
+  }
 
   getExerciseTime(exercise: Exercise): string {
     return this.formattedTime(exercise.seconds);

@@ -25,9 +25,9 @@ namespace Uragsha.InstantMatcher.HostedService
 
         protected override async Task ExecuteAsync(CancellationToken stoppingToken)
         {
+            _logger.LogInformation($"Worker will match every {_interval/1000} seconds");
             while (!stoppingToken.IsCancellationRequested)
             {
-                _logger.LogInformation("Worker running at: {time}", DateTimeOffset.Now);
                 try
                 {
                     _matcherInstantdService.Match(new MatchAlgorithm { Algorithm = MatchAlgorithmType.FCFS });

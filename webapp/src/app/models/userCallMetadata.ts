@@ -1,14 +1,13 @@
-import { Workout } from './workout';
+import { WorkoutState } from './workout';
 
 export interface UserCallMetadata {
-  callState: CallStateEnum;
-  isFit: boolean;
-  isMute: boolean;
   uiLayout: UILayout;
-  workout: Workout;
+  userInfo: UserInfo;
+  workoutState: WorkoutState;
 }
 
 export interface UILayout {
+  optionValues: OptionValues;
   visibleButtons: OptionsButtons;
   position: 'left' | 'right';
 }
@@ -21,12 +20,13 @@ export interface OptionsButtons {
   leave: boolean;
 }
 
-export enum CallStateEnum {
-  waiting = 'waiting',
-  joined = 'joined',
-  exercising = 'exercising',
-  done = 'done',
-  left = 'left'
+export interface OptionValues {
+  isFit: boolean;
+  isMute: boolean;
 }
 
+export interface UserInfo{
+  userId: string,
+  userName: string,
+}
 

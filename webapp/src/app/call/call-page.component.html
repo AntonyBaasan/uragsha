@@ -9,18 +9,23 @@
     <div class="video-wrapper">
       <div
         class="user-state d-flex justify-content-center align-items-center fs-2"
-        *ngIf="remoteUserSetting.callState === CallStateEnum.waiting"
+        *ngIf="getSessionState() === null"
       >
-        Waiting...
+        Matching...
+      </div>
+      <div
+        class="user-state d-flex justify-content-center align-items-center fs-2"
+        *ngIf="getSessionState() === CallStateEnum.waiting"
+      >
+        Waiting other user...
       </div>
       <app-workout-player
-        *ngIf="remoteUserSetting.callState === CallStateEnum.waiting"
         [userCallMetadata]="remoteUserSetting"
       ></app-workout-player>
       <app-video
         #remoteVideo
         [orientation]="orientation"
-        [isFit]="remoteUserSetting.isFit"
+        [isFit]="remoteUserSetting.uiLayout.optionValues.isFit"
         class="h-100 w-100 d-flex justify-content-center align-items-center"
       ></app-video>
       <app-options
@@ -30,21 +35,12 @@
       ></app-options>
     </div>
     <div class="video-wrapper">
-      <app-workout-editor
-        *ngIf="
-          remoteUserSetting.callState === CallStateEnum.waiting ||
-          remoteUserSetting.callState === CallStateEnum.joined
-        "
-        [userCallMetadata]="userSetting"
-      ></app-workout-editor>
-      <app-workout-player
-        *ngIf="remoteUserSetting.callState === CallStateEnum.waiting"
-        [userCallMetadata]="userSetting"
-      ></app-workout-player>
+      <app-workout-editor [userCallMetadata]="userSetting"></app-workout-editor>
+      <app-workout-player [userCallMetadata]="userSetting"></app-workout-player>
       <app-video
         #myVideo
         [orientation]="orientation"
-        [isFit]="userSetting.isFit"
+        [isFit]="userSetting.uiLayout.optionValues.isFit"
         class="h-100 w-100 d-flex justify-content-center align-items-center"
       ></app-video>
       <app-options

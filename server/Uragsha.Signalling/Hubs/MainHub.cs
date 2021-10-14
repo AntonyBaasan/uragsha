@@ -13,6 +13,7 @@ using Scheduler.Interfaces.Models;
 
 namespace Uragsha.Signalling.Hubs
 {
+    // TODO: move methods to a service
     [Authorize]
     public class MainHub : Hub<IClients>
     {
@@ -31,6 +32,7 @@ namespace Uragsha.Signalling.Hubs
 
         public override Task OnConnectedAsync()
         {
+            //debug
             GlobalInfo.ConnectedIds.Add(Context.ConnectionId);
             return base.OnConnectedAsync();
         }
@@ -39,18 +41,17 @@ namespace Uragsha.Signalling.Hubs
         public override Task OnDisconnectedAsync(Exception exception)
         {
             ClearSessionWebRtcInfom();
-
+            //debug
             GlobalInfo.ConnectedIds.Remove(Context.ConnectionId);
-
             return base.OnDisconnectedAsync(exception);
         }
 
         private async void ClearSessionWebRtcInfom()
         {
             var userId = GetCurrentUid();
-            foreach (var sessionId in GlobalInfo.ActiveSession.Keys)
+            foreach (var sessionId in GlobalInfo.ActiveSessions.Keys)
             {
-                var sessionDetail = GlobalInfo.ActiveSession[sessionId];
+                var sessionDetail = GlobalInfo.ActiveSessions[sessionId];
                 if ((sessionDetail.Offer != null && sessionDetail.Offer.UserId.Equals(userId))
                     || (sessionDetail.Answer != null && sessionDetail.Answer.UserId.Equals(userId)))
                 {
@@ -63,20 +64,38 @@ namespace Uragsha.Signalling.Hubs
         {
             string uid = this.GetCurrentUid();
 
-            var user = new User
-            {
-                Id = uid,
-                DisplayName = userDto.DisplayName,
-                Email = userDto.Email,
-                PhotoUrl = userDto.PhotoUrl,
-                Plan = UserPlan.Free,
-                Status = UserStatus.Active,
-                Roles = new List<UserRole> { new UserRole { Name = "User" } }
-            };
             if (!await UserService.UserExistAsync(uid))
             {
+                var user = new User
+                {
+                    Id = uid,
+                    DisplayName = userDto.DisplayName,
+                    Email = userDto.Email,
+                    PhotoUrl = userDto.PhotoUrl,
+                    Plan = UserPlan.Free,
+                    Status = UserStatus.Active,
+                    Roles = new List<UserRole> { new UserRole { Name = "User" } }
+                };
                 UserService.AddUser(user);
             }
+        }
+
+        public async void UpdateWorkoutState(string sessionRequestId, object workoutState)
+        {
+            string userId = this.GetCurrentUid();
+            var session = await SessionService.GetBySessionRequestIdAsync(sessionRequestId);
+            if (session == null)
+            {
+                Console.WriteLine("Session doesn't exist!");
+                return;
+            }
+            if (!GlobalInfo.ActiveSessions.ContainsKey(session.Id))
+            {
+                Console.WriteLine("Session detail haven't created. Something went wrong!");
+                return;
+            }
+
+            await Clients.GroupExcept(session.Id, new List<string> { Context.ConnectionId }).OnWorkoutStateUpdated(userId, workoutState);
         }
 
         public async Task OfferVideoCall(string sessionRequestId, object offer)
@@ -88,13 +107,13 @@ namespace Uragsha.Signalling.Hubs
                 Console.WriteLine("Session doesn't exist!");
                 return;
             }
-            if (!GlobalInfo.ActiveSession.ContainsKey(session.Id))
+            if (!GlobalInfo.ActiveSessions.ContainsKey(session.Id))
             {
                 Console.WriteLine("Session detail haven't created. Something went wrong!");
                 return;
             }
 
-            GlobalInfo.ActiveSession.TryGetValue(session.Id, out SessionDetail sessionDetail);
+            GlobalInfo.ActiveSessions.TryGetValue(session.Id, out SessionDetail sessionDetail);
 
             if (sessionDetail.Offer != null)
             {
@@ -121,13 +140,13 @@ namespace Uragsha.Signalling.Hubs
                 Console.WriteLine("Session doesn't exist!");
                 return;
             }
-            if (!GlobalInfo.ActiveSession.ContainsKey(session.Id))
+            if (!GlobalInfo.ActiveSessions.ContainsKey(session.Id))
             {
                 Console.WriteLine("Session detail haven't created. Something went wrong!");
                 return;
             }
 
-            GlobalInfo.ActiveSession.TryGetValue(session.Id, out SessionDetail sessionDetail);
+            GlobalInfo.ActiveSessions.TryGetValue(session.Id, out SessionDetail sessionDetail);
 
             if (sessionDetail.Answer != null)
             {
@@ -159,19 +178,33 @@ namespace Uragsha.Signalling.Hubs
                 Console.WriteLine("User doesn't belong to session request" + sessionRequestId);
                 return;
             }
+
             var session = await SessionService.GetBySessionRequestIdAsync(sessionRequestId);
             if (session == null)
             {
                 Console.WriteLine("Can't find any session for sessionRequestId: " + sessionRequestId);
                 return;
             }
-            Console.WriteLine("Session.id: " + session.Id);
 
-            if (!GlobalInfo.ActiveSession.ContainsKey(session.Id))
+            Console.WriteLine("Session.id: " + session.Id);
+            if (!GlobalInfo.ActiveSessions.ContainsKey(session.Id))
             {
-                var sessionDetail = new SessionDetail { SessionId = session.Id, Started = new DateTime() };
-                GlobalInfo.ActiveSession.Add(session.Id, sessionDetail);
+                var sessionDetail = new SessionDetail
+                {
+                    SessionId = session.Id,
+                    Started = DateTime.UtcNow,
+                    State = CallStateEnum.waiting,
+                };
+                // set latest
+                GlobalInfo.ActiveSessions.AddOrUpdate(session.Id, sessionDetail, (id, detail) => detail);
             }
+            else
+            {
+                // second user joined
+                var sessionDetail = GlobalInfo.ActiveSessions[session.Id];
+                await Clients.Group(session.Id).OnSessionDetailUpdated(sessionDetail);
+            }
+
 
             await Groups.AddToGroupAsync(Context.ConnectionId, session.Id);
             await Clients.GroupExcept(session.Id, new List<string> { Context.ConnectionId }).OnUserJoinSession(userId);
@@ -180,12 +213,12 @@ namespace Uragsha.Signalling.Hubs
         public async Task LeaveSession(string sessionId)
         {
             var userId = GetCurrentUid();
-            if (!GlobalInfo.ActiveSession.ContainsKey(sessionId))
+            if (!GlobalInfo.ActiveSessions.ContainsKey(sessionId))
             {
                 Console.WriteLine("Can't find session with id:" + sessionId);
                 return;
             }
-            var sessionDetail = GlobalInfo.ActiveSession[sessionId];
+            var sessionDetail = GlobalInfo.ActiveSessions[sessionId];
             if (sessionDetail.Offer?.UserId != userId && sessionDetail.Answer?.UserId != userId)
             {
                 Console.WriteLine("Trying to leave a session that user doesn't belong!");
@@ -198,12 +231,13 @@ namespace Uragsha.Signalling.Hubs
             Console.WriteLine("Reset webrtc Answer and Offer!");
             sessionDetail.Answer = null;
             sessionDetail.Offer = null;
+            sessionDetail.State = CallStateEnum.waiting;
             await Clients.GroupExcept(sessionDetail.SessionId, new List<string> { Context.ConnectionId }).OnSessionDetailUpdated(sessionDetail);
         }
 
-        public async Task UpdateSessionDetail(string userId, SessionDetail sessionDetail)
+        public async Task UpdateSessionDetail(SessionDetail sessionDetail)
         {
-            GlobalInfo.ActiveSession[sessionDetail.SessionId] = sessionDetail;
+            GlobalInfo.ActiveSessions[sessionDetail.SessionId] = sessionDetail;
             await Clients.GroupExcept(sessionDetail.SessionId, new List<string> { Context.ConnectionId }).OnSessionDetailUpdated(sessionDetail);
         }
 

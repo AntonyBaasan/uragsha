@@ -2,7 +2,7 @@ import { ChangeDetectorRef, Component, HostListener, OnDestroy, OnInit, ViewChil
 import { ActivatedRoute, Router } from '@angular/router';
 import { from, Subscription } from 'rxjs';
 import { mergeMap, tap } from 'rxjs/operators';
-import { SessionDetail, SessionRequest, SessionRequestType, UserCallMetadata, CallStateEnum } from '../models';
+import { SessionDetail, SessionRequest, SessionRequestType, UserCallMetadata, CallStateEnum, WorkoutState, User } from '../models';
 import { AuthService, SessionRequestsDataService } from '../services';
 import { SingnallingService } from '../services/signalling.service';
 import { WebrtcService } from '../services/webrtc.service';
@@ -36,6 +36,7 @@ export class CallPageComponent implements OnInit, OnDestroy {
   userId: string = '';
   secondsLeft: number = 900; // 15min
 
+  private subOnWorkoutStateUpdated: Subscription | undefined;
   private subOnSessionDetailUpdated: Subscription | undefined;
   private subOnUserJoinSession: Subscription | undefined;
   private subOnUserLeaveSession: Subscription | undefined;
@@ -59,14 +60,23 @@ export class CallPageComponent implements OnInit, OnDestroy {
   ) { }
 
   ngOnInit(): void {
-    this.userSetting = this.callPageService.createDefaltUserSetting();
-    this.remoteUserSetting = this.callPageService.createDefaltRemoteUserSetting();
 
     this.sessionRequestId = this.route.snapshot.params['sessionRequestId'];
+
+    this.userSetting = this.callPageService.createDefaltUserSetting('', '');
+    this.remoteUserSetting = this.callPageService.createDefaltRemoteUserSetting();
 
     this.authService.currentUser.subscribe(user => {
       this.userId = user && user.uid ? user.uid : '';
       if (this.userId) {
+
+        this.userSetting.userInfo.userId = this.userId;
+        this.userSetting.userInfo.userName = user?.displayName ?? '';
+
+        this.sessionRequestDataService.getOtherUser(this.sessionRequestId).subscribe((otherUser: User) => {
+          this.remoteUserSetting.userInfo.userId = otherUser.uid;
+          this.remoteUserSetting.userInfo.userName = otherUser?.displayName ?? '';
+        });
         this.sessionRequestDataService.get(this.sessionRequestId)
           .pipe(
             tap(sessionRequest => this.sessionRequest = sessionRequest),
@@ -85,6 +95,9 @@ export class CallPageComponent implements OnInit, OnDestroy {
   }
 
   private subscribeSignallingServiceEvents() {
+    this.subOnWorkoutStateUpdated = this.signallingService.OnWorkoutStateUpdated.subscribe(
+      (args: { userId: string, workoutState: WorkoutState }) => this.handleWorkoutStateUpdated(args.userId, args.workoutState)
+    );
     this.subOnSessionDetailUpdated = this.signallingService.OnSessionDetailUpdated.subscribe(
       (sessionDetail: SessionDetail) => this.handleSessionDetailUpdated(sessionDetail)
     );
@@ -109,6 +122,7 @@ export class CallPageComponent implements OnInit, OnDestroy {
   }
 
   private unsubscribeSignallingServiceEvents() {
+    this.subOnWorkoutStateUpdated?.unsubscribe();
     this.subOnSessionDetailUpdated?.unsubscribe();
     this.subOnUserJoinSession?.unsubscribe();
     this.subOnUserLeaveSession?.unsubscribe();
@@ -125,6 +139,10 @@ export class CallPageComponent implements OnInit, OnDestroy {
       });
     this.subOnRemoteStreamAddedSubject = this.webRtcService.OnRemoteStreamAddedSubject.subscribe(stream => {
       this.remoteVideoComponent.setStream(stream);
+      if (this.sessionDetail && this.sessionDetail.state === CallStateEnum.waiting) {
+        this.sessionDetail.state = CallStateEnum.joined;
+        this.signallingService.UpdateSessionDetail(this.sessionDetail);
+      }
     });
     this.subOnIceCandidateEventSubject = this.webRtcService.OnIceCandidateEventSubject.subscribe(candidate => {
       if (this.sessionDetail?.sessionId && candidate) {
@@ -144,11 +162,19 @@ export class CallPageComponent implements OnInit, OnDestroy {
       .getUserMedia({ audio: true, video: true })
       .then((stream) => {
         this.localStream = stream;
-        // for the local only video is important!
+        // for the local, only video is important!
         this.myVideoComponent.setStream(new MediaStream(stream.getVideoTracks()));
         // TODO: debug
         // this.remoteVideoComponent.setStream(new MediaStream(stream.getVideoTracks()));
       });
+  }
+
+  // null means users haven't matched yet.
+  getSessionState(): CallStateEnum | null {
+    if (this.sessionDetail) {
+      return this.sessionDetail.state;
+    }
+    return null;
   }
 
   private startWebRtc() {
@@ -273,16 +299,20 @@ export class CallPageComponent implements OnInit, OnDestroy {
     this.sessionDetail = sessionDetail;
   }
 
+  handleWorkoutStateUpdated(userId: string, workoutState: WorkoutState) {
+    console.log('handleWorkoutStateUpdated called!');
+  }
+
   leave() {
     this.router.navigate(['/']);
   }
 
   toggleMute(setting: UserCallMetadata) {
-    setting.isMute = !setting.isMute;
+    setting.uiLayout.optionValues.isMute = !setting.uiLayout.optionValues.isMute;
   }
 
   toggleFit(setting: UserCallMetadata) {
-    setting.isFit = !setting.isFit;
+    setting.uiLayout.optionValues.isFit = !setting.uiLayout.optionValues.isFit;
   }
 
   timeDone() {

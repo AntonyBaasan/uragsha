@@ -10,7 +10,8 @@ export enum SignallingSendEvents {
   AnswerVideoCall = 'AnswerVideoCall',
   JoinSession = 'JoinSession',
   LeaveSession = 'LeaveSession',
-  
+
+  UpdateWorkoutState = 'UpdateWorkoutState',
   UpdateSessionDetail = 'UpdateSessionDetail',
   SendIceCandidate = 'SendIceCandidate',
 }

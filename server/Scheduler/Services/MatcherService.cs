@@ -82,7 +82,7 @@ namespace Scheduler.Services
                 Start = sessionRequest1.Start,
                 End = sessionRequest1.End,
                 SessionRequests = new List<SessionRequest> { sessionRequest1, sessionRequest2 },
-                Status = SessionStatus.InProgress
+                Status = SessionStatus.New
             };
 
             var session = await sessionService.CreateAsync(newSession);

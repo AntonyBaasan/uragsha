@@ -3,9 +3,17 @@ export interface SessionDetail {
   started: Date;
   offer: WebRtcMessage;
   answer: WebRtcMessage;
+  state: CallStateEnum;
 }
 
 export interface WebRtcMessage {
   userId: string;
   content: RTCSessionDescriptionInit;
 }
+
+export enum CallStateEnum {
+  waiting,
+  joined,
+  done,
+}
+

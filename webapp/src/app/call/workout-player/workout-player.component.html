@@ -1,4 +1,6 @@
-<div class="workout-player" [ngStyle]="getPositionStyle()">
+<div
+*ngIf="shouldShow()"
+class="workout-player" [ngStyle]="getPositionStyle()">
   <div *ngFor="let exercise of workout.exercises">
     {{exercise.title}} | {{getExerciseTime(exercise)}}
   </div>

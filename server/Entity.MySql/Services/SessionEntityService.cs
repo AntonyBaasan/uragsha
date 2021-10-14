@@ -65,6 +65,7 @@ namespace Entity.MySql.Services
             var dbContext = scope.ServiceProvider.GetRequiredService<MainDbContext>();
             var result = GetAsQueryable(dbContext)
                 .Where(s => s.SessionRequests.Any(sr => sr.Id.Equals(sessionRequestId)))
+                .Include(s=>s.SessionRequests)
                 .FirstOrDefaultAsync();
             return result;
         }

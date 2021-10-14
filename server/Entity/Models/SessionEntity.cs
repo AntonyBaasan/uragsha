@@ -14,7 +14,7 @@ namespace Entity.Models
         public string Name { get; set; }
         public DateTime Start { get; set; }
         public DateTime? End { get; set; }
-        public virtual ICollection<SessionRequestEntity> SessionRequests { get; set; }
+        public ICollection<SessionRequestEntity> SessionRequests { get; set; }
         public int Status { get; set; }
     }
 }
