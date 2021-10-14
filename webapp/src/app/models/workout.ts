@@ -1,7 +1,7 @@
 export interface Workout {
   title: string;
   description?: string;
-  exercise: Exercise[];
+  exercises: Exercise[];
 }
 
 export interface Exercise {

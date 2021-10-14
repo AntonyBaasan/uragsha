@@ -1,3 +1,5 @@
-<div class="workout-player"  [ngStyle]="getPositionStyle()">
-  player playing
+<div class="workout-player" [ngStyle]="getPositionStyle()">
+  <div *ngFor="let exercise of workout.exercises">
+    {{exercise.title}} | {{getExerciseTime(exercise)}}
+  </div>
 </div>

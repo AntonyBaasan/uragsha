@@ -46,7 +46,11 @@ export class CallPageComponent implements OnInit, OnDestroy {
     },
     workout: {
       title: 'new workout',
-      exercise: [{ title: 'warmpup', seconds: 30 }]
+      exercises: [
+        { title: 'warmpup', seconds: 30 },
+        { title: 'push ups', seconds: 60 },
+        { title: 'burpee', seconds: 60 },
+      ]
     }
   };
   // TODO: move to a service
@@ -66,7 +70,11 @@ export class CallPageComponent implements OnInit, OnDestroy {
     },
     workout: {
       title: 'new workout',
-      exercise: [{ title: 'warmpup', seconds: 30 }]
+      exercises: [
+        { title: 'warmpup', seconds: 30 },
+        { title: 'push ups', seconds: 60 },
+        { title: 'burpee', seconds: 60 },
+      ]
     }
   };
 

@@ -1,12 +1,13 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { UserCallMetadata, Workout } from 'src/app/models';
+import { addSeconds, format } from 'date-fns';
+import { Exercise, UserCallMetadata, Workout } from 'src/app/models';
 
 @Component({
   selector: 'app-workout-player',
   templateUrl: './workout-player.component.html',
   styleUrls: ['./workout-player.component.scss']
 })
-export class WorkoutPlayerComponent implements OnInit {
+export class WorkoutPlayerComponent {
 
   @Input() set userCallMetadata(metadata: UserCallMetadata) {
     this.workout = metadata.workout;
@@ -18,7 +19,14 @@ export class WorkoutPlayerComponent implements OnInit {
 
   constructor() { }
 
-  ngOnInit(): void {
+  getExerciseTime(exercise: Exercise): string {
+    return this.formattedTime(exercise.seconds);
+  }
+
+  // TODO: move to shared service
+  private formattedTime(seconds: number) {
+    var helperDate = addSeconds(new Date(0), seconds);
+    return format(helperDate, 'mm:ss');
   }
 
   getPositionStyle() {
