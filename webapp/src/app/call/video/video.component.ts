@@ -11,15 +11,24 @@ export class VideoComponent {
   @Input() isFit: boolean;
   @Input() orientation: 'horizontal' | 'vertical';
 
+  stream: MediaStream | null;
+
   constructor(private cdr: ChangeDetectorRef) { }
 
   stopStream() {
+    this.stream?.getTracks().forEach((track) => {
+      if (track.readyState == 'live') {
+        track.stop();
+      }
+    });
     this.setStream(null);
     this.cdr.detectChanges();
   }
 
   setStream(stream: MediaStream | null) {
     if (!this.videoPlayer) { return; }
+
+    this.stream = stream;
     this.videoPlayer.nativeElement.srcObject = stream;
   }
 

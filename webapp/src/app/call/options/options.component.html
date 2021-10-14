@@ -1,5 +1,64 @@
-<div class="options">
-  <div class="options-panel collapse" id="options-panel">
+<div
+  class="options"
+  [ngStyle]="
+    userCallMetadata.uiLayout.position === 'left'
+      ? { left: '5px' }
+      : { right: '5px' }
+  "
+>
+  <div class="options-buttons d-flex justify-content-end">
+    <button
+      *ngIf="userCallMetadata.uiLayout.visibleButtons.muteMic"
+      class="btn btn-primary options-button m-1"
+      (click)="onMute()"
+    >
+      <ng-container *ngIf="userCallMetadata.isMute">
+        <i class="bi bi-mic-mute me-1 text-danger"></i>
+        Unmute
+      </ng-container>
+      <ng-container *ngIf="!userCallMetadata.isMute">
+        <i class="bi bi-mic me-1"></i>
+        Mute
+      </ng-container>
+      <!-- <i class="bi bi-mic me-1"></i> -->
+    </button>
+    <button
+      *ngIf="userCallMetadata.uiLayout.visibleButtons.fit"
+      class="btn btn-primary options-button m-1"
+      (click)="onToggleFit()"
+    >
+      <ng-container *ngIf="!userCallMetadata.isFit">
+        <i class="bi bi-arrows-expand me-1"></i>
+        Fit
+      </ng-container>
+      <ng-container *ngIf="userCallMetadata.isFit">
+        <i class="bi bi-arrows-collapse me-1"></i>
+        Fit
+      </ng-container>
+    </button>
+    <button
+      *ngIf="userCallMetadata.uiLayout.visibleButtons.options"
+      class="btn btn-primary options-button m-1"
+      data-bs-toggle="collapse"
+      data-bs-target="#options-panel"
+    >
+      <i class="bi bi-gear me-1"></i>
+      Options
+    </button>
+    <button
+      *ngIf="userCallMetadata.uiLayout.visibleButtons.leave"
+      class="btn btn-danger options-button m-1"
+      (click)="onLeave()"
+    >
+      <i class="bi bi-box-arrow-right me-1"></i>
+      Leave
+    </button>
+  </div>
+  <div
+    *ngIf="userCallMetadata.uiLayout.visibleButtons.options"
+    class="options-panel collapse"
+    id="options-panel"
+  >
     <div class="card border-secondary mb-3">
       <div class="card-header">
         <div class="row">
@@ -29,24 +88,5 @@
         </p>
       </div>
     </div>
-  </div>
-
-  <div class="options-buttons d-flex justify-content-end">
-    <button class="btn btn-primary options-button m-1" (click)="onMute()">
-      Mute
-    </button>
-    <button class="btn btn-primary options-button m-1" (click)="onToggleFit()">
-      Fit
-    </button>
-    <button
-      class="btn btn-primary options-button m-1"
-      data-bs-toggle="collapse"
-      data-bs-target="#options-panel"
-    >
-      More Options
-    </button>
-    <button class="btn btn-danger options-button m-1" (click)="onLeave()">
-      Leave
-    </button>
   </div>
 </div>

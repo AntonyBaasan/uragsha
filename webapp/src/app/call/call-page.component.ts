@@ -2,7 +2,7 @@ import { ChangeDetectorRef, Component, HostListener, OnDestroy, OnInit, ViewChil
 import { ActivatedRoute, Router } from '@angular/router';
 import { from, Subscription } from 'rxjs';
 import { mergeMap, tap } from 'rxjs/operators';
-import { SessionDetail, SessionRequest, SessionRequestType, UserCallMetadata, UserCallStateEnum } from '../models';
+import { SessionDetail, SessionRequest, SessionRequestType, UserCallMetadata, CallStateEnum } from '../models';
 import { AuthService, SessionRequestsDataService } from '../services';
 import { SingnallingService } from '../services/signalling.service';
 import { WebrtcService } from '../services/webrtc.service';
@@ -20,7 +20,7 @@ export class CallPageComponent implements OnInit, OnDestroy {
   @ViewChild('myVideo') myVideoComponent: VideoComponent;
   @ViewChild('remoteVideo') remoteVideoComponent: VideoComponent;
 
-  UserCallStateEnum = UserCallStateEnum;
+  CallStateEnum = CallStateEnum;
   localStream: MediaStream | undefined;
   orientation: 'horizontal' | 'vertical' = 'horizontal';
   connectedToSessionRoom = false;
@@ -28,18 +28,40 @@ export class CallPageComponent implements OnInit, OnDestroy {
   sessionRequest: SessionRequest;
   sessionDetail: SessionDetail;
   connectionState: RTCPeerConnectionState;
-  callState: 'waiting' | 'joined' | 'started' | 'timepassed' | 'done' = 'waiting';
+
+  // TODO: move to a service
   userSetting: UserCallMetadata = {
     isFit: false,
-    userState: UserCallStateEnum.waiting,
+    isMute: false,
+    callState: CallStateEnum.waiting,
+    uiLayout: {
+      position: 'right',
+      visibleButtons: {
+        muteMic: true,
+        muteAudio: true,
+        fit: true,
+        options: true,
+        leave: true,
+      }
+    }
   };
+  // TODO: move to a service
   remoteUserSetting: UserCallMetadata = {
     isFit: false,
-    userState: UserCallStateEnum.waiting,
+    isMute: false,
+    callState: CallStateEnum.waiting,
+    uiLayout: {
+      position: 'left',
+      visibleButtons: {
+        muteMic: false,
+        muteAudio: false,
+        fit: true,
+        options: false,
+        leave: false,
+      }
+    }
   };
 
-
-  otherUserInfo: any = {};
   userId: string = '';
   secondsLeft: number = 900; // 15min
 
@@ -150,7 +172,7 @@ export class CallPageComponent implements OnInit, OnDestroy {
         // for the local only video is important!
         this.myVideoComponent.setStream(new MediaStream(stream.getVideoTracks()));
         // TODO: debug
-        this.remoteVideoComponent.setStream(new MediaStream(stream.getVideoTracks()));
+        // this.remoteVideoComponent.setStream(new MediaStream(stream.getVideoTracks()));
       });
   }
 
@@ -201,10 +223,10 @@ export class CallPageComponent implements OnInit, OnDestroy {
     const user = this.authService.currentUser.getValue();
     if (!user) { return; }
 
+    this.myVideoComponent.stopStream();
+    this.remoteVideoComponent.stopStream();
     if (this.sessionDetail) {
       this.signallingService.leaveSession(this.sessionDetail.sessionId);
-      this.myVideoComponent.stopStream();
-      this.remoteVideoComponent.stopStream();
       this.stopWebRtc();
     } else {
 
@@ -280,12 +302,12 @@ export class CallPageComponent implements OnInit, OnDestroy {
     this.router.navigate(['/']);
   }
 
-  mute() {
+  toggleMute(setting: UserCallMetadata) {
+    setting.isMute = !setting.isMute;
   }
 
-  toggleFit() {
-    this.userSetting.isFit = !this.userSetting.isFit;
-    this.remoteUserSetting.isFit = !this.remoteUserSetting.isFit;
+  toggleFit(setting: UserCallMetadata) {
+    setting.isFit = !setting.isFit;
   }
 
   timeDone() {

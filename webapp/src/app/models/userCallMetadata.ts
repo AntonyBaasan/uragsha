@@ -1,15 +1,29 @@
 export interface UserCallMetadata {
+  callState: CallStateEnum;
   isFit: boolean;
-  userState: UserCallStateEnum;
+  isMute: boolean;
+  uiLayout: UILayout;
 }
 
-export enum UserCallStateEnum {
+export interface UILayout {
+  visibleButtons: OptionsButtons;
+  position: 'left' | 'right';
+}
+
+export interface OptionsButtons {
+  muteMic: boolean;
+  muteAudio: boolean;
+  fit: boolean;
+  options: boolean;
+  leave: boolean;
+}
+
+export enum CallStateEnum {
   waiting = 'waiting',
   joined = 'joined',
   exercising = 'exercising',
   done = 'done',
   left = 'left'
-
 }
 
 

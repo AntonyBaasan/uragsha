@@ -9,7 +9,7 @@
     <div class="video-wrapper">
       <div
         class="user-state d-flex justify-content-center align-items-center fs-2"
-        *ngIf="remoteUserSetting.userState === UserCallStateEnum.waiting"
+        *ngIf="remoteUserSetting.callState === CallStateEnum.waiting"
       >
         Waiting...
       </div>
@@ -19,6 +19,11 @@
         [isFit]="remoteUserSetting.isFit"
         class="h-100 w-100 d-flex justify-content-center align-items-center"
       ></app-video>
+      <app-options
+        [connectionState]="connectionState"
+        [userCallMetadata]="remoteUserSetting"
+        (toggleFit)="toggleFit(remoteUserSetting)"
+      ></app-options>
     </div>
     <div class="video-wrapper">
       <!-- <div class="user-state" *ngIf="remoteUserState === 'waiting'">Waiting user Username...</div> -->
@@ -30,9 +35,10 @@
       ></app-video>
       <app-options
         [connectionState]="connectionState"
-        (onLeave)="leave()"
-        (onMute)="mute()"
-        (toggleFit)="toggleFit()"
+        [userCallMetadata]="userSetting"
+        (leave)="leave()"
+        (toggleMute)="toggleMute(userSetting)"
+        (toggleFit)="toggleFit(userSetting)"
       ></app-options>
     </div>
   </div>

@@ -9,12 +9,12 @@ import { User, UserCallMetadata } from 'src/app/models';
 export class OptionsComponent {
 
   @Input() user: User;
-  @Input() userCallState: UserCallMetadata;
+  @Input() userCallMetadata: UserCallMetadata;
   @Input() connectionState: RTCPeerConnectionState;
 
   @Output() startCall = new EventEmitter();
   @Output() endCall = new EventEmitter();
-  @Output() mute = new EventEmitter();
+  @Output() toggleMute = new EventEmitter();
   @Output() toggleFit = new EventEmitter();
   @Output() leave = new EventEmitter();
 
@@ -33,7 +33,7 @@ export class OptionsComponent {
   }
 
   onMute() {
-    this.mute.emit();
+    this.toggleMute.emit();
   }
 
   onToggleFit() {
