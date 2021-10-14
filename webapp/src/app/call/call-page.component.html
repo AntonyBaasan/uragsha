@@ -13,6 +13,10 @@
       >
         Waiting...
       </div>
+      <app-workout-player
+        *ngIf="remoteUserSetting.callState === CallStateEnum.waiting"
+        [userCallMetadata]="remoteUserSetting"
+      ></app-workout-player>
       <app-video
         #remoteVideo
         [orientation]="orientation"

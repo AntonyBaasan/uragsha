@@ -1,5 +1,5 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { UserCallMetadata } from 'src/app/models';
+import { UserCallMetadata, Workout } from 'src/app/models';
 
 @Component({
   selector: 'app-workout-player',
@@ -13,7 +13,7 @@ export class WorkoutPlayerComponent implements OnInit {
     this.position = metadata.uiLayout.position;
   }
 
-  workout: string[];
+  workout: Workout;
   position: 'left' | 'right'
 
   constructor() { }

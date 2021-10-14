@@ -7,4 +7,5 @@ export * from './dto/User';
 
 export * from './constants';
 export * from './userCallMetadata';
+export * from './workout';
 

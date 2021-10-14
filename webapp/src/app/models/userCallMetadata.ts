@@ -1,9 +1,11 @@
+import { Workout } from './workout';
+
 export interface UserCallMetadata {
   callState: CallStateEnum;
   isFit: boolean;
   isMute: boolean;
   uiLayout: UILayout;
-  workout: string[]
+  workout: Workout;
 }
 
 export interface UILayout {

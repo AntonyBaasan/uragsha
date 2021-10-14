@@ -44,7 +44,10 @@ export class CallPageComponent implements OnInit, OnDestroy {
         leave: true,
       }
     },
-    workout: ['warmpup']
+    workout: {
+      title: 'new workout',
+      exercise: [{ title: 'warmpup', seconds: 30 }]
+    }
   };
   // TODO: move to a service
   remoteUserSetting: UserCallMetadata = {
@@ -61,7 +64,10 @@ export class CallPageComponent implements OnInit, OnDestroy {
         leave: false,
       }
     },
-    workout: ['warmpup']
+    workout: {
+      title: 'new workout',
+      exercise: [{ title: 'warmpup', seconds: 30 }]
+    }
   };
 
   userId: string = '';

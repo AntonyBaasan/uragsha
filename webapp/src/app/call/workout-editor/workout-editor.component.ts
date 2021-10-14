@@ -1,25 +1,22 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { UserCallMetadata } from 'src/app/models';
+import { UserCallMetadata, Workout } from 'src/app/models';
 
 @Component({
   selector: 'app-workout-editor',
   templateUrl: './workout-editor.component.html',
   styleUrls: ['./workout-editor.component.scss']
 })
-export class WorkoutEditorComponent implements OnInit {
+export class WorkoutEditorComponent {
 
   @Input() set userCallMetadata(metadata: UserCallMetadata) {
     this.workout = metadata.workout;
     this.position = metadata.uiLayout.position;
   }
 
-  workout: string[];
+  workout: Workout;
   position: 'left' | 'right';
 
   constructor() { }
-
-  ngOnInit(): void {
-  }
 
   getPositionStyle() {
     if (this.position === 'left') {
