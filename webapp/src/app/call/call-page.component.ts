@@ -305,6 +305,7 @@ export class CallPageComponent implements OnInit, OnDestroy {
 
   leave() {
     this.router.navigate(['/']);
+    // setTimeout(() => this.router.navigate(['/']), 1000);
   }
 
   toggleMute(setting: UserCallMetadata) {

@@ -17,7 +17,7 @@
         class="user-state d-flex justify-content-center align-items-center fs-2"
         *ngIf="getSessionState() === CallStateEnum.waiting"
       >
-        Waiting other user...
+        Waiting {{remoteUserSetting.userInfo.userName}}...
       </div>
       <app-workout-player
         [userCallMetadata]="remoteUserSetting"

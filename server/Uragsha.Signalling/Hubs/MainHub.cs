@@ -202,7 +202,7 @@ namespace Uragsha.Signalling.Hubs
             {
                 // second user joined
                 var sessionDetail = GlobalInfo.ActiveSessions[session.Id];
-                await Clients.Group(session.Id).OnSessionDetailUpdated(sessionDetail);
+                await Clients.Client(Context.ConnectionId).OnSessionDetailUpdated(sessionDetail);
             }
 
 

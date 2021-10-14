@@ -12,7 +12,7 @@ export class CallPageService implements OnDestroy {
     var defaultSetting: UserCallMetadata = {
       uiLayout: {
         optionValues: {
-          isFit: false,
+          isFit: true,
           isMute: false,
         },
         position: 'right',
@@ -53,7 +53,7 @@ export class CallPageService implements OnDestroy {
     const remoteUserSetting: UserCallMetadata = {
       uiLayout: {
         optionValues: {
-          isFit: false,
+          isFit: true,
           isMute: false,
         },
         position: 'left',
