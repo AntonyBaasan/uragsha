@@ -1,11 +1,4 @@
-<div
-  class="options"
-  [ngStyle]="
-    userCallMetadata.uiLayout.position === 'left'
-      ? { left: '5px' }
-      : { right: '5px' }
-  "
->
+<div class="options" [ngStyle]="getPositionStyle()">
   <div class="options-buttons d-flex justify-content-end">
     <button
       *ngIf="userCallMetadata.uiLayout.visibleButtons.muteMic"

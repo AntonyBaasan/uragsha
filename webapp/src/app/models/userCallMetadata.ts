@@ -3,6 +3,7 @@ export interface UserCallMetadata {
   isFit: boolean;
   isMute: boolean;
   uiLayout: UILayout;
+  workout: string[]
 }
 
 export interface UILayout {

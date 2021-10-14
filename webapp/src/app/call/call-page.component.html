@@ -26,7 +26,17 @@
       ></app-options>
     </div>
     <div class="video-wrapper">
-      <!-- <div class="user-state" *ngIf="remoteUserState === 'waiting'">Waiting user Username...</div> -->
+      <app-workout-editor
+        *ngIf="
+          remoteUserSetting.callState === CallStateEnum.waiting ||
+          remoteUserSetting.callState === CallStateEnum.joined
+        "
+        [userCallMetadata]="userSetting"
+      ></app-workout-editor>
+      <app-workout-player
+        *ngIf="remoteUserSetting.callState === CallStateEnum.waiting"
+        [userCallMetadata]="userSetting"
+      ></app-workout-player>
       <app-video
         #myVideo
         [orientation]="orientation"

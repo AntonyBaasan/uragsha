@@ -43,7 +43,8 @@ export class CallPageComponent implements OnInit, OnDestroy {
         options: true,
         leave: true,
       }
-    }
+    },
+    workout: ['warmpup']
   };
   // TODO: move to a service
   remoteUserSetting: UserCallMetadata = {
@@ -59,7 +60,8 @@ export class CallPageComponent implements OnInit, OnDestroy {
         options: false,
         leave: false,
       }
-    }
+    },
+    workout: ['warmpup']
   };
 
   userId: string = '';

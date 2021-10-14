@@ -43,4 +43,11 @@ export class OptionsComponent {
   onLeave() {
     this.leave.emit();
   }
+
+  getPositionStyle() {
+    if (this.userCallMetadata.uiLayout.position === 'left') {
+      return { left: '5px' };
+    }
+    return { right: '5px' };
+  }
 }
