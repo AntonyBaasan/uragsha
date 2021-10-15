@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
+import { ChangeDetectorRef, Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
 import { addSeconds, format } from 'date-fns'
 import { TimerService } from 'src/app/services/timer.service';
 
@@ -10,17 +10,19 @@ import { TimerService } from 'src/app/services/timer.service';
 export class TimerComponent implements OnInit, OnDestroy {
   @Input()
   set initSeconds(seconds: number) {
+    this.initTime = seconds;
     this.timeLeft = seconds;
   }
   @Output() timeDone = new EventEmitter();
 
+  private initTime: number = 0;
   private timeLeft: number = 0;
   private interval: any;
 
-  constructor(private timerService: TimerService) { }
+  constructor(private timerService: TimerService, private cdr: ChangeDetectorRef) { }
 
   ngOnInit(): void {
-    // this.startTimer();
+    this.startTimer();
   }
 
   ngOnDestroy(): void {
@@ -41,16 +43,22 @@ export class TimerComponent implements OnInit, OnDestroy {
     this.timerService.setTimer('secondCounter', 1000, true, () => {
       if (this.timeLeft > 0) {
         this.timeLeft--;
+        this.cdr;
       } else {
         this.timeDone.emit();
         this.stopTimer();
       }
     });
-
   }
 
   stopTimer() {
     this.timerService.stopTimer('secondCounter');
+  }
+
+  getWidth() {
+
+    const left = 100 * this.timeLeft / this.initTime;
+    return { width: `${left}%` }
   }
 
 }

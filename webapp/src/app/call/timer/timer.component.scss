@@ -1,17 +1,22 @@
 .timer-panel {
   position: absolute;
   // background-color: greenyellow;
-  bottom: 5px;
+  bottom: 0px;
   // height: 50px;
   width: 100%;
   z-index: 11;
+
+  .fill{
+    position: absolute;
+    right: 0px;
+    bottom: 0px;
+    height: 5px;
+    background-color: blue;
+  }
 }
 .time-title {
-  background-color: rgb(220, 220, 220, 0.2);
+  background-color: rgb(220, 220, 220, 0.6);
   font-size: 24px;
   font-weight: bold;
-  color: white;
-  // -webkit-text-fill-color: blue; /* Will override color (regardless of order) */
-  // -webkit-text-stroke-width: 1px;
-  // -webkit-text-stroke-color: white;
+  color: black;
 }
