@@ -6,12 +6,18 @@
   width: 100%;
   z-index: 11;
 
-  .fill{
+  .fill {
     position: absolute;
     right: 0px;
     bottom: 0px;
     height: 5px;
-    background-color: blue;
+  }
+  .fill-front {
+    background-color: green;
+  }
+  .fill-back {
+    left: 0px;
+    background-color: red;
   }
 }
 .time-title {

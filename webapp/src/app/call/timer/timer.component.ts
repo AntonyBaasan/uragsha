@@ -36,7 +36,7 @@ export class TimerComponent implements OnInit, OnDestroy {
       var helperDate = addSeconds(new Date(0), this.timeLeft);
       return format(helperDate, 'mm:ss');
     }
-    return 'Empty!';
+    return 'Done';
   }
 
   startTimer() {
