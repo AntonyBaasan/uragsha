@@ -7,10 +7,12 @@
     {{ workout.title }}
   </div> -->
   <div *ngFor="let exercise of workout.exercises; let i = index" class="mb-1">
-    {{ exercise.title }} | {{ getExerciseTime(exercise) }} |
-    <button (click)="delete(i)" class="btn btn-danger">
-      <i class="bi bi-trash"></i>
-    </button>
+    <div class="exercise-text">
+      {{ exercise.title }} | {{ getExerciseTime(exercise) }} |
+      <button (click)="delete(i)" class="btn btn-danger">
+        <i class="bi bi-trash"></i>
+      </button>
+    </div>
   </div>
   <div class="input-group mb-3">
     <input

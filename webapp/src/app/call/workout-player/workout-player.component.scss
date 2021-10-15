@@ -1,15 +1,18 @@
 .workout-player {
   background-color: cyan;
   position: absolute;
-  bottom: 5px;
-  z-index: 11;
-  background-color: rgb(220, 220, 220, 0.2);
+  bottom: 0px;
+  z-index: 12;
+  background-color: rgb(220, 220, 220, 0.6);
   color: white;
-}
+  min-width: 200px;
 
-.workout-player {
+  .exercise-text {
+    color: black;
+  }
+
   .active {
-    border: 1px solid rgb(104, 145, 63, 1);
+    border: 1px solid rgb(250, 0, 0, 1);
     position: relative;
     z-index: 1;
   }
@@ -20,9 +23,7 @@
     top: 0;
     bottom: 0;
     right: 0;
-    width: 50%; /* Specify the width.. */
-    background-color: rgb(104, 145, 63, 0.3);
+    background-color: rgb(250, 0, 0, 0.4);
     z-index: 0;
   }
-
 }

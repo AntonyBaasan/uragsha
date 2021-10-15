@@ -5,20 +5,31 @@
 >
   <div
     *ngFor="let exercise of workout.exercises; let i = index"
-    class="exercise mb-1 p-1 "
+    class="exercise mb-1 p-1"
     [ngClass]="{ active: isActive(i) }"
   >
-    <div>{{ exercise.title }} | {{ getExerciseTime(exercise) }}</div>
-    <div *ngIf="isLocal() && isActive(i)" class="active-fill" [ngStyle]="activeFillLeft(i)"></div>
+    <div class="exercise-text">
+      {{ exercise.title }} | {{ getExerciseTime(exercise) }}
+    </div>
+    <div
+      *ngIf="isLocal() && isActive(i)"
+      class="active-fill"
+      [ngStyle]="activeFillLeft(i)"
+    ></div>
   </div>
   <div *ngIf="isLocal()" class="d-flex justify-content-center">
-    <button [disabled]="isPauseButtonsDisabled()" (click)="onTogglePause()" class="btn btn-success">
-      <i *ngIf="!isPaused()" class="bi bi-pause"></i>
-      <i *ngIf="isPaused()" class="bi bi-play"></i>
-    </button>
-  </div>
-  <div *ngIf="isLocal()" class="d-flex justify-content-center">
-    <button (click)="onTogglePause()" class="btn btn-success"><i class="bi bi-pause"></i></button>
-    <button (click)="onRestart()" class="btn btn-success"><i class="bi bi-restart"></i></button>
+    <div>
+      <button
+        [disabled]="isPauseButtonsDisabled()"
+        (click)="onTogglePause()"
+        class="btn btn-success me-1"
+      >
+        <i *ngIf="!isPaused()" class="bi bi-pause"></i>
+        <i *ngIf="isPaused()" class="bi bi-play"></i>
+      </button>
+      <button (click)="onRestart()" class="btn btn-success ms-1">
+        <i class="bi bi-arrow-counterclockwise"></i>
+      </button>
+    </div>
   </div>
 </div>
