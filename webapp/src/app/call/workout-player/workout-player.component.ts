@@ -16,6 +16,7 @@ export class WorkoutPlayerComponent {
   }
 
   @Output() togglePause = new EventEmitter();
+  @Output() restart = new EventEmitter();
 
   WorkoutStateEnum = WorkoutStateEnum;
   state: WorkoutState;
@@ -61,6 +62,10 @@ export class WorkoutPlayerComponent {
 
   onTogglePause() {
     this.togglePause.emit();
+  }
+
+  onRestart() {
+    this.restart.emit();
   }
 
   isPaused() {

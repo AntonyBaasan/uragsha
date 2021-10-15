@@ -326,12 +326,17 @@ export class CallPageComponent implements OnInit, OnDestroy {
     this.userSetting.workoutState.workout.current.isPaused = !this.userSetting.workoutState.workout.current.isPaused;
   }
 
+  restartWorkout() {
+    this.taskEditingDone();
+  }
+
   updateWorkout(workout: Workout) {
     this.userSetting.workoutState.workout = workout;
   }
 
   // TODO: move to a service
   taskEditingDone() {
+    this.timerService.stopTimer('workoutTimer');
     const state = this.userSetting.workoutState;
     state.state = WorkoutStateEnum.exercising;
     state.workout.current = { index: 0, second: 0, isPaused: false };
@@ -344,7 +349,7 @@ export class CallPageComponent implements OnInit, OnDestroy {
   }
 
   private startWorkoutTimer() {
-    this.timerService.setTimer('workout', 1000, true, () => {
+    this.timerService.setTimer('workoutTimer', 1000, true, () => {
       const workoutState = this.userSetting.workoutState;
       // skip if it is in pause state
       if (workoutState.workout.current.isPaused) { return; }
@@ -362,7 +367,7 @@ export class CallPageComponent implements OnInit, OnDestroy {
           workoutState.state = WorkoutStateEnum.done;
           workoutState.workout.current.index = -1;
           workoutState.workout.current.second = 0;
-          this.timerService.stopTimer('workout');
+          this.timerService.stopTimer('workoutTimer');
         }
       }
 
