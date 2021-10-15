@@ -35,8 +35,8 @@ export class CallPageComponent implements OnInit, OnDestroy {
   remoteUserSetting: UserCallMetadata;
 
   userId: string = '';
-  // secondsLeft: number = 900; // 15min
-  secondsLeft: number = 10;
+  sessionTimerInSeconds: number = 900;// 15min
+  // sessionTimerInSeconds: number = 10;
 
   private subOnWorkoutStateUpdated: Subscription | undefined;
   private subOnSessionDetailUpdated: Subscription | undefined;
