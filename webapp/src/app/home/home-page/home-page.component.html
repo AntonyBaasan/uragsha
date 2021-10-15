@@ -16,10 +16,15 @@
     >
 
     <nav class="d-flex flex-row mt-0 mt-sm-0 ms-sm-auto">
-      <a class="me-3 py-2 text-light text-decoration-none" data-bs-toggle="modal" data-bs-target="#introModal"
+      <a
+        class="me-3 py-2 text-light text-decoration-none"
+        data-bs-toggle="modal"
+        data-bs-target="#introModal"
         >Intro</a
       >
-      <a class="me-3 py-2 text-light text-decoration-none" routerLink="/dashboard"
+      <a
+        class="me-3 py-2 text-light text-decoration-none"
+        routerLink="/dashboard"
         >Calendar</a
       >
       <a class="me-3 py-2 text-light text-decoration-none" routerLink="session"
@@ -48,7 +53,9 @@
               >
             </li>
             <li>
-              <a class="dropdown-item text-light text-decoration-none"
+              <a
+                class="dropdown-item text-light text-decoration-none"
+                (click)="logout()"
                 >Logout</a
               >
             </li>
@@ -68,7 +75,8 @@
   <div class="row m-0" style="height: calc(100vh - 50px)">
     <app-main-content></app-main-content>
     <app-introduction></app-introduction>
-    <app-call-instruction (letsGo)="startIntstantSession()"></app-call-instruction>
+    <app-call-instruction
+      (letsGo)="startIntstantSession()"
+    ></app-call-instruction>
   </div>
-
 </div>

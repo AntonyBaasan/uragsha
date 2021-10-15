@@ -37,6 +37,10 @@ export class MainContentComponent implements OnInit {
     this.cdr.detectChanges();
   }
 
+  isLoggedIn(){
+    return this.authService.isLoggedIn();
+  }
+
 
   // TODO: move to a service
   getDateTime(sessionRequest: SessionRequest): String {

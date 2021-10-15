@@ -29,4 +29,8 @@ export class HomePageComponent {
     }
   }
 
+  logout() {
+    this.authService.logout();
+  }
+
 }
