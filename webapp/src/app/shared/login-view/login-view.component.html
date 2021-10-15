@@ -6,16 +6,22 @@
     </div>
     <ng-template #showLogin>
       <p class="fs-1 d-flex justify-content-center">Uragsha</p>
-      <div class="p-2">
-        <button class="btn btn-google rounded" (click)="loginGoogle()"></button>
+      <div class="row p-2">
+        <!-- <button class="btn btn-google rounded" (click)="loginGoogle()"></button> -->
+        <button class="btn btn-danger" (click)="loginGoogle()">
+          <i class="bi bi-google me-1"></i>
+          Login with Google
+        </button>
       </div>
-      <div class="p-2">
+      <div class="row p-2">
         <button class="btn btn-primary" (click)="loginFacebook()">
+          <i class="bi bi-facebook me-1"></i>
           Login with Facebook
         </button>
       </div>
-      <div class="p-2">
+      <div class="row p-2">
         <button class="btn btn-secondary" (click)="loginTwitter()">
+          <i class="bi bi-twitter me-1"></i>
           Login with Twitter
         </button>
       </div>
