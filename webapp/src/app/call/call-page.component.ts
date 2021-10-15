@@ -1,9 +1,10 @@
 import { ChangeDetectorRef, Component, HostListener, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
+import { cloneDeep } from 'lodash';
 import { from, Subscription } from 'rxjs';
 import { mergeMap, tap } from 'rxjs/operators';
-import { SessionDetail, SessionRequest, SessionRequestType, UserCallMetadata, CallStateEnum, WorkoutState, User } from '../models';
-import { AuthService, SessionRequestsDataService } from '../services';
+import { SessionDetail, SessionRequest, SessionRequestType, UserCallMetadata, CallStateEnum, WorkoutState, User, WorkoutStateEnum, Workout } from '../models';
+import { AuthService, SessionRequestsDataService, TimerService } from '../services';
 import { SingnallingService } from '../services/signalling.service';
 import { WebrtcService } from '../services/webrtc.service';
 import { CallPageService } from './call-page.service';
@@ -54,6 +55,7 @@ export class CallPageComponent implements OnInit, OnDestroy {
     private webRtcService: WebrtcService,
     private authService: AuthService,
     private callPageService: CallPageService,
+    private timerService: TimerService,
     private route: ActivatedRoute,
     private router: Router,
     private cdr: ChangeDetectorRef
@@ -301,6 +303,10 @@ export class CallPageComponent implements OnInit, OnDestroy {
 
   handleWorkoutStateUpdated(userId: string, workoutState: WorkoutState) {
     console.log('handleWorkoutStateUpdated called!');
+    // other user has updated workout state
+    if (this.remoteUserSetting.userInfo.userId === userId) {
+      this.remoteUserSetting.workoutState = workoutState;
+    }
   }
 
   leave() {
@@ -314,6 +320,52 @@ export class CallPageComponent implements OnInit, OnDestroy {
 
   toggleFit(setting: UserCallMetadata) {
     setting.uiLayout.optionValues.isFit = !setting.uiLayout.optionValues.isFit;
+  }
+
+  updateWorkout(workout: Workout) {
+    this.userSetting.workoutState.workout = workout;
+  }
+
+  // TODO: move to a service
+  taskEditingDone() {
+    const state = this.userSetting.workoutState;
+    state.state = WorkoutStateEnum.exercising;
+    state.workout.current = { index: 0, second: 0, isPaused: false };
+    // TODO: will be refactored to make immutable to pass to components
+    this.userSetting = cloneDeep(this.userSetting);
+    this.cdr.detectChanges();
+
+    this.startWorkoutTimer();
+    // this.signallingService.UpdateWorkoutState(this.sessionRequestId, workoutState);
+  }
+
+  private startWorkoutTimer() {
+    this.timerService.setTimer('workout', 1000, true, () => {
+      const workoutState = this.userSetting.workoutState;
+      // skip if it is in pause state
+      if (workoutState.workout.current.isPaused) { return; }
+      const activeExercise = workoutState.workout.exercises[workoutState.workout.current.index];
+      // increment timer if still in current exercise
+      if (workoutState.workout.current.second < activeExercise.seconds) {
+        workoutState.workout.current.second++;
+      } else {
+        if (workoutState.workout.exercises.length > workoutState.workout.current.index + 1) {
+          // move to next exercise
+          workoutState.workout.current.index++;
+          workoutState.workout.current.second = 0;
+        } else {
+          // stop the exercises timer and finish workout
+          workoutState.state = WorkoutStateEnum.done;
+          workoutState.workout.current.index = -1;
+          workoutState.workout.current.second = 0;
+          this.timerService.stopTimer('workout');
+        }
+      }
+
+      // TODO: will refactored to make immutable to pass to components
+      this.userSetting = cloneDeep(this.userSetting);
+      this.cdr.detectChanges();
+    });;
   }
 
   timeDone() {

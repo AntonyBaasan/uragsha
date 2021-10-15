@@ -11,6 +11,7 @@ export class TimerService implements OnDestroy {
     this.stopAll();
   }
 
+  // time is in milliseconds
   setTimer(name: string, time: number, repeat: boolean, callback: () => void) {
     if (this.handles[name]) {
       this.stopTimer(name);

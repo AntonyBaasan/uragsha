@@ -8,6 +8,8 @@ export interface Workout {
   title: string;
   description?: string;
   exercises: Exercise[];
+  // shows what is current exercise and time
+  current: { isPaused: boolean, index: number, second: number }
 }
 
 export interface Exercise {

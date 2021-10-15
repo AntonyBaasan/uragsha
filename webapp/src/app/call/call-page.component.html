@@ -17,7 +17,7 @@
         class="user-state d-flex justify-content-center align-items-center fs-2"
         *ngIf="getSessionState() === CallStateEnum.waiting"
       >
-        Waiting {{remoteUserSetting.userInfo.userName}}...
+        Waiting {{ remoteUserSetting.userInfo.userName }}...
       </div>
       <app-workout-player
         [userCallMetadata]="remoteUserSetting"
@@ -35,8 +35,15 @@
       ></app-options>
     </div>
     <div class="video-wrapper">
-      <app-workout-editor [userCallMetadata]="userSetting"></app-workout-editor>
-      <app-workout-player [userCallMetadata]="userSetting"></app-workout-player>
+      <app-workout-editor
+        [userCallMetadata]="userSetting"
+        (ready)="taskEditingDone()"
+        (updateWorkout)="updateWorkout($event)"
+      ></app-workout-editor>
+      <app-workout-player
+        [userCallMetadata]="userSetting"
+        (togglePause)="togglePause()"
+      ></app-workout-player>
       <app-video
         #myVideo
         [orientation]="orientation"

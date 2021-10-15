@@ -33,19 +33,17 @@ export class CallPageService implements OnDestroy {
         state: WorkoutStateEnum.planning,
         workout: {
           title: 'new workout',
-          exercises: []
+          exercises: [],
+          current: { isPaused: false, index: 1, second: 50 }
         }
       }
     };
     //debug:
-    defaultSetting.workoutState.workout = {
-      title: 'new workout',
-      exercises: [
-        { title: 'warmpup', seconds: 30 },
-        { title: 'push ups', seconds: 60 },
-        { title: 'burpee', seconds: 60 },
-      ]
-    }
+    defaultSetting.workoutState.workout.exercises = [
+      { title: 'warmpup', seconds: 10 },
+      { title: 'push ups', seconds: 60 },
+      { title: 'burpee', seconds: 60 },
+    ];
     return defaultSetting;
   }
 
@@ -74,20 +72,18 @@ export class CallPageService implements OnDestroy {
         state: WorkoutStateEnum.planning,
         workout: {
           title: 'new workout',
-          exercises: []
+          exercises: [],
+          current: { isPaused: false, index: 0, second: 0 }
         }
       }
     };
 
     //debug:
-    remoteUserSetting.workoutState.workout = {
-      title: 'new workout',
-      exercises: [
-        { title: 'remote user', seconds: 120 },
-        { title: 'push ups', seconds: 60 },
-        { title: 'burpee', seconds: 60 },
-      ]
-    }
+    remoteUserSetting.workoutState.workout.exercises = [
+      { title: 'remote user', seconds: 120 },
+      { title: 'push ups', seconds: 60 },
+      { title: 'burpee', seconds: 60 },
+    ];
 
     return remoteUserSetting;
   }

@@ -1,3 +1,37 @@
-<div *ngIf="shouldShow()" class="workout-editor" [ngStyle]="getPositionStyle()">
-  workout-editor works!
+<div
+  *ngIf="shouldShow()"
+  class="workout-editor p-2"
+  [ngStyle]="getPositionStyle()"
+>
+  <!-- <div>
+    {{ workout.title }}
+  </div> -->
+  <div *ngFor="let exercise of workout.exercises; let i = index" class="mb-1">
+    {{ exercise.title }} | {{ getExerciseTime(exercise) }} |
+    <button (click)="delete(i)" class="btn btn-danger">
+      <i class="bi bi-trash"></i>
+    </button>
+  </div>
+  <div class="input-group mb-3">
+    <input
+      [(ngModel)]="inputExercise"
+      (keyup.enter)="insert()"
+      type="text"
+      class="form-control"
+      placeholder="Insert exercise"
+      aria-label="Insert exercise"
+      aria-describedby="button-insert-exercise"
+    />
+    <button
+      (click)="insert()"
+      class="btn btn-primary"
+      type="button"
+      id="bbutton-insert-exercise"
+    >
+      OK
+    </button>
+  </div>
+  <div class="d-flex justify-content-center">
+    <button (click)="onReady()" class="btn btn-success">Start Timer</button>
+  </div>
 </div>

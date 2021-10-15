@@ -3,6 +3,26 @@
   position: absolute;
   bottom: 5px;
   z-index: 11;
-  background-color: rgb(220,220,220,0.2);
+  background-color: rgb(220, 220, 220, 0.2);
   color: white;
+}
+
+.workout-player {
+  .active {
+    border: 1px solid rgb(104, 145, 63, 1);
+    position: relative;
+    z-index: 1;
+  }
+  .active-fill {
+    content: "";
+    position: absolute;
+    background: black;
+    top: 0;
+    bottom: 0;
+    right: 0;
+    width: 50%; /* Specify the width.. */
+    background-color: rgb(104, 145, 63, 0.3);
+    z-index: 0;
+  }
+
 }
