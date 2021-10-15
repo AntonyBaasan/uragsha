@@ -322,6 +322,10 @@ export class CallPageComponent implements OnInit, OnDestroy {
     setting.uiLayout.optionValues.isFit = !setting.uiLayout.optionValues.isFit;
   }
 
+  togglePause() {
+    this.userSetting.workoutState.workout.current.isPaused = !this.userSetting.workoutState.workout.current.isPaused;
+  }
+
   updateWorkout(workout: Workout) {
     this.userSetting.workoutState.workout = workout;
   }
