@@ -1,7 +1,7 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { CalendarTabComponent } from './calendar-tab/calendar-tab.component';
-import { DashboardPageComponent } from './dashboard-page.component';
+import { DashboardPageComponent } from './dashboard-page/dashboard-page.component';
 import { SessionComponent } from './session/session.component';
 
 const routes: Routes = [

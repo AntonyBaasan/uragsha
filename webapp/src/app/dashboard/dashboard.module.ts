@@ -4,7 +4,7 @@ import { CalendarModule, DateAdapter } from 'angular-calendar';
 import { adapterFactory } from 'angular-calendar/date-adapters/date-fns';
 
 import { DashboardRoutingModule } from './dashboard-routing.module';
-import { DashboardPageComponent } from './dashboard-page.component';
+import { DashboardPageComponent } from './dashboard-page/dashboard-page.component';
 import { CalendarComponent } from './calendar-tab/calendar/calendar.component';
 import { SessionComponent } from './session/session.component';
 import { FormsModule } from '@angular/forms';
