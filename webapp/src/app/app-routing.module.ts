@@ -28,7 +28,7 @@ const routes: Routes = [
   {
     path: 'result',
     loadChildren: () => import('./pages/result/result.module').then((m) => m.ResultModule),
-    canActivate: [AngularFireAuthGuard]
+    // canActivate: [AngularFireAuthGuard]
   },
   {
     path: 'login',

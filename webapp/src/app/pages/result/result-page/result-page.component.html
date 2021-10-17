@@ -1,2 +1,35 @@
-<app-header></app-header>
-Result page is working!
+<div class="d-flex align-items-center justify-content-center box w-100 h-100">
+  <div *ngIf="isLoading; else resultpage">
+    <h1>Loading...</h1>
+  </div>
+  <ng-template #resultpage>
+    <div class="border rounded-3 p-5">
+      <div>
+        <h1>Good job Antony!</h1>
+        <div>
+          <div>Did David workout fully?</div>
+          <div>
+            <button class="btn btn-success">Yes</button>
+            <button class="btn btn-danger">No</button>
+          </div>
+        </div>
+        <div>
+          <div>
+            <span>Advice for David?</span><span class="ms-1">(optional)</span>
+          </div>
+          <div>
+            <textarea
+              placeholder="e.g. I like how you did pull ups!"
+            ></textarea>
+          </div>
+        </div>
+        <br/>
+        <br/>
+        <br/>
+        <div>
+          <button class="btn btn-primary" (click)="done()">Done</button>
+        </div>
+      </div>
+    </div>
+  </ng-template>
+</div>

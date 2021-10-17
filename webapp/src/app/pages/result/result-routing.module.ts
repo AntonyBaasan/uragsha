@@ -4,7 +4,7 @@ import { ResultPageComponent } from './result-page/result-page.component';
 
 const routes: Routes = [
   {
-    path: '',
+    path: ':sessionRequestId',
     component: ResultPageComponent,
   },
 ];
@@ -13,4 +13,4 @@ const routes: Routes = [
   imports: [RouterModule.forChild(routes)],
   exports: [RouterModule],
 })
-export class ResultRoutingModule {}
+export class ResultRoutingModule { }

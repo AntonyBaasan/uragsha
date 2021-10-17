@@ -31,6 +31,10 @@ export class SessionRequestDataService {
     return this.http.get<User>(this.endpoint + '/' + sessionRequestId+'/session/otheruser');
   }
 
+  // getResult(sessionRequestId: string) {
+  //   return this.http.get<any>(this.endpoint + '/' + sessionRequestId+'/session/result');
+  // }
+
   create(sessionRequest: SessionRequest): Observable<SessionRequest> {
     return this.http.post<SessionRequest>(this.endpoint, sessionRequest)
       .pipe(
