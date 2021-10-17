@@ -1,21 +1,27 @@
-<header class="navbar navbar-dark sticky-top bg-dark flex-md-nowrap p-0 shadow">
-  <button
-    class="navbar-toggler position-absolute d-md-none collapsed"
-    type="button"
-    data-bs-toggle="collapse"
-    data-bs-target="#sidebarMenu"
-    aria-controls="sidebarMenu"
-    aria-expanded="false"
-    aria-label="Toggle navigation"
-  >
-    <span class="navbar-toggler-icon"></span>
-  </button>
-  <a class="navbar-brand col-md-3 col-lg-2 ms-5 brand brand" href="#"
+<header
+  class="
+    flex-shrink
+    navbar navbar-dark
+    sticky-top
+    bg-dark
+    flex-md-nowrap
+    p-0
+    shadow
+  "
+  style="min-width: 480px"
+>
+  <a class="navbar-brand col-md-3 col-lg-2 ms-4 brand brand" href="#"
     >Uragsha</a
   >
 
   <nav class="d-flex flex-row mt-0 mt-sm-0 ms-sm-auto">
-    <a class="me-3 py-2 text-light text-decoration-none" routerLink="/"
+    <a
+      class="me-3 py-2 text-light text-decoration-none"
+      data-bs-toggle="modal"
+      data-bs-target="#introModal"
+      >Intro</a
+    >
+    <a class="me-3 py-2 text-light text-decoration-none" routerLink="/dashboard"
       >Calendar</a
     >
     <a class="me-3 py-2 text-light text-decoration-none" routerLink="session"
@@ -61,9 +67,3 @@
     </ng-template>
   </nav>
 </header>
-
-<div class="container-fluid">
-  <div class="row">
-    <router-outlet></router-outlet>
-  </div>
-</div>

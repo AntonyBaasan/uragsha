@@ -14,9 +14,6 @@ export class HomePageComponent {
     private sessionRequestsDataService: SessionRequestsDataService,
     private sessionRequestFactoryService: SessionRequestFactoryService,
     private router: Router,
-    private activatedRoute: ActivatedRoute,
-    // private store: StoreService,
-    private cdr: ChangeDetectorRef
   ) { }
 
   startIntstantSession() {
@@ -29,8 +26,6 @@ export class HomePageComponent {
     }
   }
 
-  logout() {
-    this.authService.logout();
-  }
+
 
 }
