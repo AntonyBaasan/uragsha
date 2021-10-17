@@ -1,0 +1,18 @@
+<h2 *ngIf="sessionRequests.length === 0; else list">No sessions</h2>
+<ng-template #list>
+  <h2>Upcoming sessions</h2>
+  <div *ngFor="let session of sessionRequests">
+    <div *ngIf="session" class="d-flex flex-row">
+      <span class="me-1">{{ getTitle(session) }}</span>
+      <div>
+        <button
+          [disabled]="!canJoin(session)"
+          class="btn btn-success"
+          (click)="join(session)"
+        >
+          Join
+        </button>
+      </div>
+    </div>
+  </div>
+</ng-template>

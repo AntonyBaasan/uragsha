@@ -1,8 +1,5 @@
 import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
-import compareAsc from 'date-fns/compareAsc';
-import differenceInSeconds from 'date-fns/differenceInSeconds';
-import formatDistance from 'date-fns/formatDistance';
+import { addMinutes, subMinutes } from 'date-fns';
 import { SessionRequest, SessionRequestType } from 'src/app/models';
 import { AuthService, DashboardDataService } from 'src/app/services';
 
@@ -12,12 +9,11 @@ import { AuthService, DashboardDataService } from 'src/app/services';
   styleUrls: ['./main-content.component.scss']
 })
 export class MainContentComponent implements OnInit {
-  sessions: SessionRequest[] = [];
+  sessionRequests: SessionRequest[] = [];
 
   constructor(
     private authService: AuthService,
     private dashboardDataService: DashboardDataService,
-    private router: Router,
     private cdr: ChangeDetectorRef,
   ) { }
 
@@ -33,7 +29,27 @@ export class MainContentComponent implements OnInit {
   }
 
   private setSessionRequests(sessionRequests: SessionRequest[]) {
-    this.sessions = sessionRequests;
+    this.sessionRequests = sessionRequests;
+    // adding fake session requests
+    // this.sessionRequests.push({
+    //   id: 'aaa',
+    //   start: subMinutes(new Date(), 60),
+    //   title: 'fake sessions 1',
+    //   sessionType: SessionRequestType.Scheduled,
+    // } as SessionRequest)
+    // this.sessionRequests.push({
+    //   id: 'bbb',
+    //   start: addMinutes(new Date(), 60),
+    //   title: 'fake sessions 2',
+    //   sessionType: SessionRequestType.Scheduled,
+    // } as SessionRequest)
+    // this.sessionRequests.push({
+    //   id: 'ccc',
+    //   start: subMinutes(new Date(), 360),
+    //   title: 'fake sessions 3',
+    //   sessionType: SessionRequestType.Scheduled,
+    //   sessionId: 'some session id'
+    // } as SessionRequest)
     this.cdr.detectChanges();
   }
 
@@ -41,39 +57,4 @@ export class MainContentComponent implements OnInit {
     return this.authService.isLoggedIn();
   }
 
-
-  // TODO: move to a service
-  getDateTime(sessionRequest: SessionRequest): String {
-    const currentTime = new Date();
-    const startDate = new Date(sessionRequest.start);
-    if (sessionRequest.sessionType === SessionRequestType.Instant) {
-      return 'Active';
-    }
-    if (compareAsc(startDate, currentTime) === -1) {
-      if (sessionRequest.sessionId) {
-        return 'Active';
-      } else {
-        return 'Waiting';
-      }
-    }
-    return formatDistance(startDate, currentTime); // 'MM/dd/yyyy'
-  }
-
-  // TODO: move to a service
-  canJoin(sessionRequest: SessionRequest): boolean {
-    const currentTime = new Date();
-    const startDate = new Date(sessionRequest.start);
-    if (sessionRequest.sessionType === SessionRequestType.Instant) {
-      return true;
-    }
-    const startBeforeSec = differenceInSeconds(startDate, currentTime);
-    if (startBeforeSec < 10 * 60) {
-      return true;
-    }
-    return false;
-  }
-
-  join(sessionRequest: SessionRequest): void {
-    this.router.navigate(['/call', sessionRequest.id]);
-  }
 }
