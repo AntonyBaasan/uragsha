@@ -23,6 +23,11 @@ const routes: Routes = [
     canActivate: [AngularFireAuthGuard]
   },
   {
+    path: 'result',
+    loadChildren: () => import('./pages/result/result.module').then((m) => m.ResultModule),
+    canActivate: [AngularFireAuthGuard]
+  },
+  {
     path: 'login',
     loadChildren: () => import('./pages/login/login.module').then((m) => m.LoginModule),
     canActivate: [AngularFireAuthGuard],
