@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
         - name: {{ .Values.uragsha.apps.scheduler.name }}
-          image: {{ .Values.uragsha.apps.scheduler.image }}
+          image: "{{ .Values.uragsha.apps.scheduler.image }}:{{ .Values.appVersion}}"
           ports:
             - containerPort: 80
           envFrom:

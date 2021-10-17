@@ -16,6 +16,6 @@ spec:
     spec:
       containers:
       - name: {{ .Values.uragsha.apps.webapp.name }}
-        image: {{ .Values.uragsha.apps.webapp.image }}
+        image: "{{ .Values.uragsha.apps.webapp.image }}:{{ .Values.appVersion}}"
         ports:
         - containerPort: 80

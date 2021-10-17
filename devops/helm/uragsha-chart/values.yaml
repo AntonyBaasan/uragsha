@@ -1,26 +1,29 @@
+
+appVersion: v0.16
+
 uragsha:
   apps:
     signalling:
       name: signalling
-      image: antonybaasan/uragsha.signalling:v0.16
+      image: antonybaasan/uragsha.signalling
       replicas: 1
       domain: signalling.uragsha.com
     webapi:
       name: webapi
-      image: antonybaasan/uragsha.webapi:v0.16
+      image: antonybaasan/uragsha.webapi
       replicas: 3
       domain: webapi.uragsha.com
     scheduler:
       name: scheduler
-      image: antonybaasan/uragsha.scheduler:v0.16
+      image: antonybaasan/uragsha.scheduler
       replicas: 1
     instantmatcher:
       name: instantmatcher
-      image: antonybaasan/uragsha.instantmatcher:v0.16
+      image: antonybaasan/uragsha.instantmatcher
       replicas: 1
     webapp:
       name: webapp
-      image: antonybaasan/uragsha.webapp:v0.16
+      image: antonybaasan/uragsha.webapp
       replicas: 1
       domain: app.uragsha.com
 
