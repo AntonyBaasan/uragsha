@@ -3,22 +3,36 @@
     class="
       col-sm
       d-flex
+      justify-content-sm-end
+      align-items-sm-center
       justify-content-center
-      align-items-sm-center align-items-end
+      align-items-end
     "
     style="padding: 20px"
   >
     <div class="d-flex flex-column">
-      <div *ngIf="!isLoggedIn(); else leftContent" class="btn-group">
-        <button
-          type="button"
-          class="btn btn-primary"
-          data-bs-toggle="dropdown"
-          aria-expanded="false"
-          routerLink="/login"
-        >
-          Sign In
-        </button>
+      <div *ngIf="!isLoggedIn(); else leftContent" class="p-4">
+        <div>
+          <h1>
+            Always keep moving. Exercise wherever, whenever, with whoever.
+          </h1>
+          <p>
+            Lorem Ipsum is simply dummy text of the printing and typesetting
+            industry. Lorem Ipsum has been the industry's standard dummy text
+            ever since the 1500s
+          </p>
+        </div>
+        <div class="d-flex justify-content-lg-end justify-content-center">
+          <button
+            type="button"
+            class="btn btn-primary btn-lg"
+            data-bs-toggle="dropdown"
+            aria-expanded="false"
+            routerLink="/login"
+          >
+            Sign In
+          </button>
+        </div>
       </div>
       <ng-template #leftContent>
         <div class="mb-1">
@@ -26,10 +40,10 @@
             [sessionRequests]="sessionRequests"
           ></app-waiting-sessions>
         </div>
-        <div class="btn-group">
+        <div class="">
           <button
             type="button"
-            class="btn btn-primary dropdown-toggle"
+            class="btn btn-primary dropdown-toggle btn-lg"
             data-bs-toggle="dropdown"
             aria-expanded="false"
           >
@@ -61,20 +75,16 @@
     class="
       col-sm
       d-flex
+      justify-content-sm-start
+      align-items-sm-center
+
       justify-content-center
-      align-items-sm-center align-items-start
+      align-items-start
     "
     style="padding: 20px"
   >
     <div>
-      <div>105 people online</div>
-      <button
-        class="btn btn-success"
-        data-bs-toggle="modal"
-        data-bs-target="#introModal"
-      >
-        Intro
-      </button>
+      <app-user-stats></app-user-stats>
     </div>
   </div>
 </div>

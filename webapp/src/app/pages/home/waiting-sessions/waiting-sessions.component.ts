@@ -3,7 +3,7 @@ import { Router } from '@angular/router';
 import compareAsc from 'date-fns/compareAsc';
 import differenceInSeconds from 'date-fns/differenceInSeconds';
 import formatDistance from 'date-fns/formatDistance'
-import { SessionRequest, SessionRequestType } from 'src/app/models';
+import { SessionRequest, SessionRequestStatus, SessionRequestType } from 'src/app/models';
 
 @Component({
   selector: 'app-waiting-sessions',
@@ -55,8 +55,15 @@ export class WaitingSessionsComponent {
     if (sessionRequest.sessionType === SessionRequestType.Instant) {
       return 'Instant session is ' + this.getDateTime(sessionRequest);
     } else {
-      return sessionRequest.title + ' scheduled ' + this.getDateTime(sessionRequest);
+      return sessionRequest.title + ' scheduled ' + this.getDateTime(sessionRequest) + ' ' + this.getOtherUser(sessionRequest);
     }
+  }
+
+  getOtherUser(sessionRequest: SessionRequest) {
+    if (sessionRequest.status === SessionRequestStatus.Waiting) {
+      return '(matching...)';
+    }
+    return '';
   }
 
 }
