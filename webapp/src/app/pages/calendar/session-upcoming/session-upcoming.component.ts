@@ -3,7 +3,7 @@ import {
   Input, Output
 } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { SessionRequestScheduled } from '../../../../models';
+import { SessionRequestScheduled } from '../../../models';
 
 @Component({
   selector: 'app-session-upcoming',

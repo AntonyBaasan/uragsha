@@ -2,8 +2,6 @@ import { NgModule } from '@angular/core';
 import { RouterModule, Routes, PreloadAllModules } from '@angular/router';
 import { AngularFireAuthGuard, redirectLoggedInTo, redirectUnauthorizedTo } from '@angular/fire/compat/auth-guard';
 
-
-// const redirectUnauthorizedToHome = () => redirectUnauthorizedTo(['/login']);
 const redirectLoggedInToAccount = () => redirectLoggedInTo(['']);
 
 const routes: Routes = [
@@ -13,9 +11,14 @@ const routes: Routes = [
       import('./pages/home/home.module').then((m) => m.HomeModule),
   },
   {
-    path: 'dashboard',
+    path: 'calendar',
     loadChildren: () =>
-      import('./pages/dashboard/dashboard.module').then((m) => m.DashboardModule),
+      import('./pages/calendar/calendar.module').then((m) => m.CalendarModule),
+  },
+  {
+    path: 'sessions',
+    loadChildren: () => import('./pages/session/session.module').then((m) => m.SessionModule),
+    canActivate: [AngularFireAuthGuard]
   },
   {
     path: 'call',

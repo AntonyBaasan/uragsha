@@ -1,6 +1,6 @@
-import { ChangeDetectorRef, Component } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
-import { AuthService, SessionRequestFactoryService, SessionRequestsDataService } from 'src/app/services';
+import { Component } from '@angular/core';
+import { Router } from '@angular/router';
+import { AuthService, SessionRequestFactoryService, SessionRequestDataService } from 'src/app/services';
 
 @Component({
   selector: 'app-home-page',
@@ -11,7 +11,7 @@ export class HomePageComponent {
 
   constructor(
     public authService: AuthService,
-    private sessionRequestsDataService: SessionRequestsDataService,
+    private sessionRequestDataService: SessionRequestDataService,
     private sessionRequestFactoryService: SessionRequestFactoryService,
     private router: Router,
   ) { }
@@ -20,7 +20,7 @@ export class HomePageComponent {
     const user = this.authService.currentUser;
     if (user.value) {
       const newInstantSessionRequest = this.sessionRequestFactoryService.createInstant(user.value.uid);
-      this.sessionRequestsDataService.create(newInstantSessionRequest).subscribe(sessionRequest => {
+      this.sessionRequestDataService.create(newInstantSessionRequest).subscribe(sessionRequest => {
         this.router.navigate(['/call', sessionRequest.id]);
       });
     }

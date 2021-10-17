@@ -7,7 +7,7 @@ import { SessionRequestScheduled, SessionRequest, Session, User } from 'src/app/
 import { ModelHelperService } from '../model-helper.service';
 
 @Injectable({ providedIn: 'root' })
-export class SessionRequestsDataService {
+export class SessionRequestDataService {
 
   private endpoint: string = environment.webApiUrl + '/api/SessionRequest';
 

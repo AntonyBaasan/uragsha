@@ -4,7 +4,7 @@ import { cloneDeep } from 'lodash';
 import { from, Subscription } from 'rxjs';
 import { mergeMap, tap } from 'rxjs/operators';
 import { SessionDetail, SessionRequest, SessionRequestType, UserCallMetadata, CallStateEnum, WorkoutState, User, WorkoutStateEnum, Workout } from '../../models';
-import { AuthService, SessionRequestsDataService, TimerService } from '../../services';
+import { AuthService, SessionRequestDataService, TimerService } from '../../services';
 import { SingnallingService } from '../../services/signalling.service';
 import { WebrtcService } from '../../services/webrtc.service';
 import { CallPageService } from './call-page.service';
@@ -51,7 +51,7 @@ export class CallPageComponent implements OnInit, OnDestroy {
   private subOnReceiveIceCandidate: Subscription | undefined;
 
   constructor(
-    private sessionRequestDataService: SessionRequestsDataService,
+    private sessionRequestDataService: SessionRequestDataService,
     private signallingService: SingnallingService,
     private webRtcService: WebrtcService,
     private authService: AuthService,

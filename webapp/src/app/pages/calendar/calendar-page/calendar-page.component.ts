@@ -1,43 +1,46 @@
-import {
-  ChangeDetectionStrategy,
-  ChangeDetectorRef,
-  Component,
-  OnDestroy,
-  OnInit,
-} from '@angular/core';
+import { ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
 import { Subscription } from 'rxjs';
 import { SessionRequest, SessionRequestScheduled } from '../../../models';
-import { AuthService, SingnallingService, StoreService, SessionRequestsDataService } from '../../../services';
-import { CalendarTabService } from '../calendar-tab/calendar-tab.service';
-import { CalendarService } from '../calendar-tab/calendar/calendar.service';
-import { SessionService } from '../session/session.service';
+import { CalendarPageService } from './calendar-page.service';
+import { CalendarService } from '../calendar/calendar.service';
+import { AuthService, SingnallingService, StoreService, SessionRequestDataService } from '../../../services';
 
-const SERVICES = [SessionService, CalendarService, CalendarTabService];
+const SERVICES = [CalendarService, CalendarPageService];
 
 @Component({
-  selector: 'app-dashboard-page',
-  templateUrl: './dashboard-page.component.html',
-  styleUrls: ['./dashboard-page.component.scss'],
-  providers: [SERVICES],
-  changeDetection: ChangeDetectionStrategy.OnPush,
+  selector: 'app-calendar-page',
+  templateUrl: './calendar-page.component.html',
+  styleUrls: ['./calendar-page.component.scss'],
+  providers: [...SERVICES]
 })
-export class DashboardPageComponent implements OnInit, OnDestroy {
+export class CalendarPageComponent implements OnInit, OnDestroy {
+  sessionRequests: SessionRequestScheduled[] = [];
+  todaysWorkouts: SessionRequestScheduled[] = [];
   userName: string = '';
 
+  // subscriptions
+  private subSessionRequestsSubject: Subscription | undefined;
   private subOnGetUserSessionRequests: Subscription | undefined;
   private subOnSessionRequestUpdated: Subscription | undefined;
   private subOnSessionRequestCreated: Subscription | undefined;
   private subOnSessionRequestDeleted: Subscription | undefined;
 
   constructor(
-    public authService: AuthService,
-    private signallingService: SingnallingService,
-    private sessionRequestsDataService: SessionRequestsDataService,
+    private authService: AuthService,
     private store: StoreService,
-    private cdr: ChangeDetectorRef
-  ) { }
+    private calendarPageService: CalendarPageService,
+    private signallingService: SingnallingService,
+    private sessionRequestDataService: SessionRequestDataService,
+    private cdr: ChangeDetectorRef) { }
 
   ngOnInit(): void {
+    this.subSessionRequestsSubject =
+      this.store.SessionRequestsSubject.subscribe((sessions) => {
+        this.sessionRequests = [...sessions] as SessionRequestScheduled[];
+        this.todaysWorkouts = this.calendarPageService.getSessionsClosest([...sessions]) as SessionRequestScheduled[];
+        this.cdr.detectChanges();
+      });
+
     this.authService.currentUser.subscribe(user => {
       this.userName = user && user.uid ? user.uid : '';
       if (this.userName) {
@@ -70,37 +73,41 @@ export class DashboardPageComponent implements OnInit, OnDestroy {
       );
   }
 
-  loadSessionRequest() {
-    this.sessionRequestsDataService.getAllScheduled().subscribe(sessionRequests => {
-      this.store.setSessionRequests(sessionRequests);
-    })
-  }
-
-  clearSessionRequest() {
-    this.store.setSessionRequests([]);
-  }
-
   ngOnDestroy(): void {
+    this.subSessionRequestsSubject?.unsubscribe();
     this.subOnGetUserSessionRequests?.unsubscribe();
     this.subOnSessionRequestUpdated?.unsubscribe();
     this.subOnSessionRequestCreated?.unsubscribe();
     this.subOnSessionRequestDeleted?.unsubscribe();
   }
 
-  logout() {
-    this.authService.logout();
+  insertSession(date: any) {
+    const user = this.authService.currentUser.getValue();
+    if (user) {
+      const request = this.calendarPageService.createSessionRequestByStartDate(date, user.uid);
+
+      this.store.insertSessionRequest(request);
+      this.sessionRequestDataService.create(request).subscribe(sessionRequest => {
+        //returned value has ID with it.
+        this.store.updateSessionRequest(sessionRequest as SessionRequestScheduled);
+      });
+    }
   }
 
-  saveDemoData() {
-    // reads demo data from backend service and save into DB using signalling
-    // const user = this.store.getUser();
-    // if (user) {
-    //   this.backendService
-    //     .createDemoSessionRequests(user.uid)
-    //     .subscribe((sessions) => {
-    //       sessions.forEach((s) => this.signallingService.createSessionRequest(s));
-    //     });
-    // }
+  removeSession(id: string) {
+    this.sessionRequestDataService.delete(id).subscribe(() => {
+      this.store.deleteSessionRequest(id);
+    });
+  }
+
+  loadSessionRequest() {
+    this.sessionRequestDataService.getAllScheduled().subscribe(sessionRequests => {
+      this.store.setSessionRequests(sessionRequests);
+    })
+  }
+
+  clearSessionRequest() {
+    this.store.setSessionRequests([]);
   }
 
   private handleOnSessionRequestUpdate(sessionRequest: SessionRequest): void {

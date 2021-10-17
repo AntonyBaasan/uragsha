@@ -6,7 +6,7 @@ import {
   Output,
 } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { SessionRequestScheduled, SessionRequestStatus } from '../../../../models';
+import { SessionRequestScheduled, SessionRequestStatus } from '../../../models';
 
 @Component({
   selector: 'app-session-tile',

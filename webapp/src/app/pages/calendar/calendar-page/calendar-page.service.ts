@@ -1,16 +1,10 @@
 import { Injectable } from '@angular/core';
-import {
-  compareAsc,
-  getDate,
-  getMonth,
-  getYear,
-  subMinutes,
-} from 'date-fns';
+import { compareAsc, getDate, getMonth, getYear, subMinutes } from 'date-fns';
 import { SessionRequestFactoryService } from 'src/app/services';
 import { SessionRequest, SessionRequestScheduled, SessionRequestType } from '../../../models';
 
 @Injectable()
-export class CalendarTabService {
+export class CalendarPageService {
 
   constructor(private sessionRequestFactoryService: SessionRequestFactoryService) { }
 
