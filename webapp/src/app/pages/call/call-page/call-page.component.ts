@@ -314,7 +314,7 @@ export class CallPageComponent implements OnInit, OnDestroy {
   }
 
   leave() {
-    this.router.navigate(['/']);
+    this.router.navigate(['/result', this.sessionRequestId]);
     // setTimeout(() => this.router.navigate(['/']), 1000);
   }
 
