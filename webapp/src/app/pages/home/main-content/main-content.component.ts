@@ -1,6 +1,6 @@
 import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
-import { addMinutes, subMinutes } from 'date-fns';
-import { SessionRequest, SessionRequestType } from 'src/app/models';
+import { Router } from '@angular/router';
+import { SessionRequest } from 'src/app/models';
 import { AuthService, DashboardDataService } from 'src/app/services';
 
 @Component({
@@ -14,6 +14,7 @@ export class MainContentComponent implements OnInit {
   constructor(
     private authService: AuthService,
     private dashboardDataService: DashboardDataService,
+    private router: Router,
     private cdr: ChangeDetectorRef,
   ) { }
 
@@ -53,8 +54,12 @@ export class MainContentComponent implements OnInit {
     this.cdr.detectChanges();
   }
 
-  isLoggedIn(){
+  isLoggedIn() {
     return this.authService.isLoggedIn();
+  }
+
+  schedule() {
+    this.router.navigate(['/calendar']);
   }
 
 }
