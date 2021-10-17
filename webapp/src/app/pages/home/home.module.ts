@@ -1,9 +1,9 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { SharedModule } from '../shared/shared.module';
+import { SharedModule } from '../../shared/shared.module';
 import { HomeRoutingModule } from './home-routing.module';
 import { FormsModule } from '@angular/forms';
-import { StoreService, TimerService } from '../services';
+import { StoreService, TimerService } from '../../services';
 import { HomePageComponent } from './home-page/home-page.component';
 import { MainContentComponent } from './main-content/main-content.component';
 import { CallInstructionComponent } from './call-instruction/call-instruction.component';

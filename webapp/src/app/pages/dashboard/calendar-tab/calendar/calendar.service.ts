@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { CalendarEvent } from 'angular-calendar';
-import { SessionRequestScheduled } from '../../../models';
+import { SessionRequestScheduled } from '../../../../models';
 
 @Injectable()
 export class CalendarService {

@@ -6,11 +6,11 @@ import {
   OnInit,
 } from '@angular/core';
 import { Subscription } from 'rxjs';
-import { SessionRequest, SessionRequestScheduled } from '../../models';
-import { AuthService, SingnallingService, StoreService, SessionRequestsDataService } from '../../services';
-import { CalendarTabService } from './../calendar-tab/calendar-tab.service';
-import { CalendarService } from './../calendar-tab/calendar/calendar.service';
-import { SessionService } from './../session/session.service';
+import { SessionRequest, SessionRequestScheduled } from '../../../models';
+import { AuthService, SingnallingService, StoreService, SessionRequestsDataService } from '../../../services';
+import { CalendarTabService } from '../calendar-tab/calendar-tab.service';
+import { CalendarService } from '../calendar-tab/calendar/calendar.service';
+import { SessionService } from '../session/session.service';
 
 const SERVICES = [SessionService, CalendarService, CalendarTabService];
 

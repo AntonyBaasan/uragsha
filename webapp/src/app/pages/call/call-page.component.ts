@@ -3,10 +3,10 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { cloneDeep } from 'lodash';
 import { from, Subscription } from 'rxjs';
 import { mergeMap, tap } from 'rxjs/operators';
-import { SessionDetail, SessionRequest, SessionRequestType, UserCallMetadata, CallStateEnum, WorkoutState, User, WorkoutStateEnum, Workout } from '../models';
-import { AuthService, SessionRequestsDataService, TimerService } from '../services';
-import { SingnallingService } from '../services/signalling.service';
-import { WebrtcService } from '../services/webrtc.service';
+import { SessionDetail, SessionRequest, SessionRequestType, UserCallMetadata, CallStateEnum, WorkoutState, User, WorkoutStateEnum, Workout } from '../../models';
+import { AuthService, SessionRequestsDataService, TimerService } from '../../services';
+import { SingnallingService } from '../../services/signalling.service';
+import { WebrtcService } from '../../services/webrtc.service';
 import { CallPageService } from './call-page.service';
 import { VideoComponent } from './video/video.component';
 

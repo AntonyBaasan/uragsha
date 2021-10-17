@@ -10,21 +10,21 @@ const routes: Routes = [
   {
     path: '',
     loadChildren: () =>
-      import('./home/home.module').then((m) => m.HomeModule),
+      import('./pages/home/home.module').then((m) => m.HomeModule),
   },
   {
     path: 'dashboard',
     loadChildren: () =>
-      import('./dashboard/dashboard.module').then((m) => m.DashboardModule),
+      import('./pages/dashboard/dashboard.module').then((m) => m.DashboardModule),
   },
   {
     path: 'call',
-    loadChildren: () => import('./call/call.module').then((m) => m.CallModule),
+    loadChildren: () => import('./pages/call/call.module').then((m) => m.CallModule),
     canActivate: [AngularFireAuthGuard]
   },
   {
     path: 'login',
-    loadChildren: () => import('./login/login.module').then((m) => m.LoginModule),
+    loadChildren: () => import('./pages/login/login.module').then((m) => m.LoginModule),
     canActivate: [AngularFireAuthGuard],
     data: { authGuardPipe: redirectLoggedInToAccount }
   },

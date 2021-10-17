@@ -1,5 +1,5 @@
 import { Injectable, OnDestroy } from '@angular/core';
-import { UserCallMetadata, WorkoutStateEnum } from '../models';
+import { UserCallMetadata, WorkoutStateEnum } from '../../models';
 
 @Injectable()
 export class CallPageService implements OnDestroy {

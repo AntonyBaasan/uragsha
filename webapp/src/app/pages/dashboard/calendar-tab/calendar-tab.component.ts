@@ -1,8 +1,8 @@
 import { ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
 import { Subscription } from 'rxjs';
-import { SessionRequest, SessionRequestScheduled } from '../../models';
+import { SessionRequest, SessionRequestScheduled } from '../../../models';
 import { CalendarTabService } from './calendar-tab.service';
-import { AuthService, SingnallingService, StoreService, SessionRequestsDataService } from '../../services';
+import { AuthService, SingnallingService, StoreService, SessionRequestsDataService } from '../../../services';
 
 @Component({
   selector: 'app-calendar-tab',

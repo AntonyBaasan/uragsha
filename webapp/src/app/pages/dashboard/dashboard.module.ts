@@ -11,8 +11,8 @@ import { FormsModule } from '@angular/forms';
 import { SessionUpcomingComponent } from './calendar-tab/session-upcoming/session-upcoming.component';
 import { CalendarTabComponent } from './calendar-tab/calendar-tab.component';
 import { SessionTileComponent } from './calendar-tab/session-tile/session-tile.component';
-import { SharedModule } from '../shared/shared.module';
-import { StoreService, TimerService } from '../services';
+import { SharedModule } from '../../shared/shared.module';
+import { StoreService, TimerService } from '../../services';
 
 const COMPONENTS = [
   DashboardPageComponent,

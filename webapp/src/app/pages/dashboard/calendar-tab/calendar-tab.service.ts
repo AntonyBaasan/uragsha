@@ -7,7 +7,7 @@ import {
   subMinutes,
 } from 'date-fns';
 import { SessionRequestFactoryService } from 'src/app/services';
-import { SessionRequest, SessionRequestScheduled, SessionRequestType } from '../../models';
+import { SessionRequest, SessionRequestScheduled, SessionRequestType } from '../../../models';
 
 @Injectable()
 export class CalendarTabService {
