@@ -18,6 +18,7 @@ export interface OptionsButtons {
   fit: boolean;
   options: boolean;
   leave: boolean;
+  fullScreen: boolean,
 }
 
 export interface OptionValues {
