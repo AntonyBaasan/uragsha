@@ -12,6 +12,7 @@ import { SingnallingService } from '../../../services/signalling.service';
 import { WebrtcService } from '../../../services/webrtc.service';
 import { CallPageService } from './call-page.service';
 import { VideoComponent } from './../video/video.component';
+import { TimerComponent } from '../timer/timer.component';
 
 const SERVICES = [WebrtcService, CallPageService];
 
@@ -24,6 +25,7 @@ const SERVICES = [WebrtcService, CallPageService];
 export class CallPageComponent implements OnInit, OnDestroy {
   @ViewChild('myVideo') myVideoComponent: VideoComponent;
   @ViewChild('remoteVideo') remoteVideoComponent: VideoComponent;
+  @ViewChild('appTimer') appTimer: TimerComponent;
 
   CallStateEnum = CallStateEnum;
   localStream: MediaStream | undefined;
@@ -152,6 +154,7 @@ export class CallPageComponent implements OnInit, OnDestroy {
       this.remoteVideoComponent.setStream(stream);
       if (this.sessionDetail && this.sessionDetail.state === CallStateEnum.waiting) {
         this.sessionDetail.state = CallStateEnum.joined;
+        this.appTimer.startTimer();
         this.signallingService.UpdateSessionDetail(this.sessionDetail);
       }
     });

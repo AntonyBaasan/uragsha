@@ -7,7 +7,7 @@ import { TimerService } from 'src/app/services/timer.service';
   templateUrl: './timer.component.html',
   styleUrls: ['./timer.component.scss']
 })
-export class TimerComponent implements OnInit, OnDestroy {
+export class TimerComponent {
   @Input()
   set initSeconds(seconds: number) {
     this.initTime = seconds;
@@ -17,19 +17,8 @@ export class TimerComponent implements OnInit, OnDestroy {
 
   private initTime: number = 0;
   private timeLeft: number = 0;
-  private interval: any;
 
   constructor(private timerService: TimerService, private cdr: ChangeDetectorRef) { }
-
-  ngOnInit(): void {
-    this.startTimer();
-  }
-
-  ngOnDestroy(): void {
-    if (this.interval) {
-      clearInterval(this.interval);
-    }
-  }
 
   secondsToMin(): string {
     if (this.timeLeft) {
