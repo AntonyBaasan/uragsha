@@ -48,7 +48,7 @@ export class WebrtcService implements OnDestroy {
   }
 
   async addIceCandidate(iceCandidate: RTCIceCandidate) {
-    return await this.peerConnection.addIceCandidate(iceCandidate);
+    return await this.peerConnection?.addIceCandidate(iceCandidate);
   }
 
   async createOffer(): Promise<RTCSessionDescriptionInit> {

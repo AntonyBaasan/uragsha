@@ -78,11 +78,8 @@ export class CallPageComponent implements OnInit, OnDestroy {
 
         this.userSetting.userInfo.userId = this.userId;
         this.userSetting.userInfo.userName = user?.displayName ?? '';
+        this.updateOtherUserInfo();
 
-        this.sessionRequestDataService.getOtherUser(this.sessionRequestId).subscribe((otherUser: User) => {
-          this.remoteUserSetting.userInfo.userId = otherUser.uid;
-          this.remoteUserSetting.userInfo.userName = otherUser?.displayName ?? '';
-        });
         this.sessionRequestDataService.get(this.sessionRequestId)
           .pipe(
             tap(sessionRequest => this.sessionRequest = sessionRequest),
@@ -98,6 +95,14 @@ export class CallPageComponent implements OnInit, OnDestroy {
     });
 
     this.detectOrietation();
+  }
+
+  private updateOtherUserInfo() {
+    this.sessionRequestDataService.getOtherUser(this.sessionRequestId).subscribe((otherUser: User) => {
+      this.remoteUserSetting.userInfo.userId = otherUser.uid;
+      this.remoteUserSetting.userInfo.userName = otherUser?.displayName ?? '';
+      this.cdr.detectChanges();
+    });
   }
 
   private subscribeSignallingServiceEvents() {
@@ -196,6 +201,7 @@ export class CallPageComponent implements OnInit, OnDestroy {
   private handleUserJoinSession(joinedUserId: string): void {
     console.log('joinedUserId:', joinedUserId);
     if (this.userId !== joinedUserId) {
+      this.updateOtherUserInfo();
       // other user joined this session
       // start video call
       this.startCall();
@@ -269,6 +275,8 @@ export class CallPageComponent implements OnInit, OnDestroy {
       console.error('Weird! Why offer object is empty?');
       return;
     }
+
+    this.updateOtherUserInfo();
 
     this.startWebRtc();
 

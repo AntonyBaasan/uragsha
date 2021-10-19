@@ -1,9 +1,11 @@
-<h2 *ngIf="sessionRequests.length === 0; else list">No sessions</h2>
+<h2 *ngIf="_sesssionRequests.length === 0; else list">No sessions</h2>
 <ng-template #list>
   <h2>Upcoming sessions</h2>
-  <div *ngFor="let session of sessionRequests">
-    <div *ngIf="session" class="d-flex flex-row">
-      <span class="me-1">{{ getTitle(session) }}</span>
+  <div *ngFor="let session of _sesssionRequests">
+    <div class="d-flex flex-row border-bottom my-2 p-2">
+      <span class="me-1"
+        >{{ getTitle(session) }} {{ getOtherUser(session) }}</span
+      >
       <div>
         <button
           [disabled]="!canJoin(session)"

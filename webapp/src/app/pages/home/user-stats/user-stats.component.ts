@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, Input, OnInit } from '@angular/core';
 import { AuthService } from 'src/app/services';
 
 @Component({
@@ -9,22 +9,34 @@ import { AuthService } from 'src/app/services';
 export class UserStatsComponent implements OnInit {
 
   // @Input()
-  userStat: any;
+  userStat: any = {
+    displayName: '',
+    session: 0,
+    lastWeekSession: 0,
+    streakSession: 0,
+  };
 
-  constructor(private authService: AuthService) { }
+  constructor(
+    private authService: AuthService,
+    private cdr: ChangeDetectorRef
+  ) { }
 
   ngOnInit(): void {
-    this.userStat = {
-      displayName: 'David Hearn',
-      session: 1034,
-      lastWeekSession: 12,
-      streakSession: 27,
-    }
+    this.authService.currentUser.subscribe(user => {
+      if (user) {
+        this.userStat = {
+          displayName: user?.displayName,
+          session: 1034,
+          lastWeekSession: 12,
+          streakSession: 27,
+        }
+        this.cdr.detectChanges();
+      }
+    });
   }
 
   isLoggedIn() {
     return this.authService.isLoggedIn();
   }
-
 
 }

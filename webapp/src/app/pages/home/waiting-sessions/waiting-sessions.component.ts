@@ -1,9 +1,12 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, Input, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import compareAsc from 'date-fns/compareAsc';
 import differenceInSeconds from 'date-fns/differenceInSeconds';
 import formatDistance from 'date-fns/formatDistance'
-import { SessionRequest, SessionRequestStatus, SessionRequestType } from 'src/app/models';
+import { of } from 'rxjs';
+import { catchError, map } from 'rxjs/operators';
+import { SessionRequest, SessionRequestStatus, SessionRequestType, User } from 'src/app/models';
+import { SessionRequestDataService } from 'src/app/services';
 
 @Component({
   selector: 'app-waiting-sessions',
@@ -12,25 +15,33 @@ import { SessionRequest, SessionRequestStatus, SessionRequestType } from 'src/ap
 })
 export class WaitingSessionsComponent {
 
-  @Input() sessionRequests: SessionRequest[];
+  @Input() set sessionRequests(values: SessionRequest[]) {
+    this._sesssionRequests = values;
+    values.forEach(s => {
+      this.loadOtherUser(s);
+    });
+  }
 
-  constructor(private router: Router) { }
+  _sesssionRequests: SessionRequest[] = [];
+  // TODO: temp solution
+  otherUsers: { [sessionRequestId: string]: string } = {};
+
+  constructor(
+    private sessionRequestDataService: SessionRequestDataService,
+    private cdr: ChangeDetectorRef,
+    private router: Router) { }
 
   // TODO: move to a service
   getDateTime(sessionRequest: SessionRequest): String {
     const currentTime = new Date();
     const startDate = new Date(sessionRequest.start);
     if (sessionRequest.sessionType === SessionRequestType.Instant) {
-      return 'Active';
+      return ' in progress';
     }
     if (compareAsc(startDate, currentTime) === -1) {
-      if (sessionRequest.sessionId) {
-        return 'Active';
-      } else {
-        return 'Matching'; //
-      }
+      return ' in progress';
     }
-    return formatDistance(startDate, currentTime); // 'MM/dd/yyyy'
+    return 'scheduled ' + formatDistance(startDate, currentTime); // 'MM/dd/yyyy'
   }
 
   // TODO: move to a service
@@ -53,17 +64,31 @@ export class WaitingSessionsComponent {
 
   getTitle(sessionRequest: SessionRequest) {
     if (sessionRequest.sessionType === SessionRequestType.Instant) {
-      return 'Instant session is ' + this.getDateTime(sessionRequest);
+      return 'Instant session is in progress';
     } else {
-      return sessionRequest.title + ' scheduled ' + this.getDateTime(sessionRequest) + ' ' + this.getOtherUser(sessionRequest);
+      return 'Session ' + this.getDateTime(sessionRequest);
     }
   }
 
+  private loadOtherUser(sessionRequest: SessionRequest) {
+    this.sessionRequestDataService.getOtherUser(sessionRequest.id)
+      .subscribe(
+        (otherUser: User) => {
+          if (otherUser?.displayName) {
+            this.otherUsers[sessionRequest.id] = otherUser.displayName;
+            this.cdr.detectChanges();
+          }
+        });
+  }
+
+  // // TODO: will refactor! can't call server like this
   getOtherUser(sessionRequest: SessionRequest) {
-    if (sessionRequest.status === SessionRequestStatus.Waiting) {
-      return '(matching...)';
+    if (this.otherUsers[sessionRequest.id]) {
+      return 'with ' + this.otherUsers[sessionRequest.id];
     }
-    return '';
+
+    // not matched yet
+    return '(matching...)';
   }
 
 }
