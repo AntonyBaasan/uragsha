@@ -18,6 +18,7 @@ export class OptionsComponent {
   @Output() toggleMute = new EventEmitter();
   @Output() toggleFit = new EventEmitter();
   @Output() leave = new EventEmitter();
+  @Output() toggleFullscreen = new EventEmitter();
 
   constructor() { }
 
@@ -43,6 +44,9 @@ export class OptionsComponent {
 
   onLeave() {
     this.leave.emit();
+  }
+  onToggleFullscreen(){
+    this.toggleFullscreen.emit();
   }
 
   getPositionStyle() {

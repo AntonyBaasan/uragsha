@@ -38,6 +38,14 @@
       Options
     </button>
     <button
+      *ngIf="userCallMetadata.uiLayout.visibleButtons.options"
+      class="btn btn-primary options-button m-1"
+      (click)="onToggleFullscreen()"
+    >
+      <i class="bi bi-arrows-fullscreen"></i>
+      Screen
+    </button>
+    <button
       *ngIf="userCallMetadata.uiLayout.visibleButtons.leave"
       class="btn btn-danger options-button m-1"
       (click)="onLeave()"

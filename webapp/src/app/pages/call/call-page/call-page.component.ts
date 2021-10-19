@@ -337,6 +337,21 @@ export class CallPageComponent implements OnInit, OnDestroy {
     setting.uiLayout.optionValues.isFit = !setting.uiLayout.optionValues.isFit;
   }
 
+  toggleFullscreen() {
+    var doc = window.document as any;
+    var docEl = doc.documentElement as any;
+
+    var requestFullScreen = docEl.requestFullscreen || docEl.mozRequestFullScreen || docEl.webkitRequestFullScreen || docEl.msRequestFullscreen;
+    var cancelFullScreen = doc.exitFullscreen || doc.mozCancelFullScreen || doc.webkitExitFullscreen || doc.msExitFullscreen;
+
+    if (!doc.fullscreenElement && !doc.mozFullScreenElement && !doc.webkitFullscreenElement && !doc.msFullscreenElement) {
+      requestFullScreen.call(docEl);
+    }
+    else {
+      cancelFullScreen.call(doc);
+    }
+  }
+
   togglePause() {
     this.userSetting.workoutState.workout.current.isPaused = !this.userSetting.workoutState.workout.current.isPaused;
   }
