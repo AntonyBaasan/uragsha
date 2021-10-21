@@ -62,7 +62,7 @@ export class CallPageService implements OnDestroy {
           fit: true,
           options: false,
           leave: false,
-          fullScreen: true,
+          fullScreen: false,
         }
       },
       userInfo: {

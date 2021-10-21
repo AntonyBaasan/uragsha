@@ -3,8 +3,6 @@ import { Router } from '@angular/router';
 import compareAsc from 'date-fns/compareAsc';
 import differenceInSeconds from 'date-fns/differenceInSeconds';
 import formatDistance from 'date-fns/formatDistance'
-import { of } from 'rxjs';
-import { catchError, map } from 'rxjs/operators';
 import { SessionRequest, SessionRequestStatus, SessionRequestType, User } from 'src/app/models';
 import { SessionRequestDataService } from 'src/app/services';
 
@@ -89,6 +87,11 @@ export class WaitingSessionsComponent {
 
     // not matched yet
     return '(matching...)';
+  }
+
+  delete(sessionRequest: SessionRequest) {
+    this.sessionRequestDataService.delete(sessionRequest.id)
+      .subscribe(() => this.cdr.detectChanges());
   }
 
 }
