@@ -38,6 +38,7 @@
         <div class="mb-1">
           <app-waiting-sessions
             [sessionRequests]="sessionRequests"
+            (deleteSessionRequest)="delete($event)"
           ></app-waiting-sessions>
         </div>
         <div class="">

@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, Input, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { Router } from '@angular/router';
 import compareAsc from 'date-fns/compareAsc';
 import differenceInSeconds from 'date-fns/differenceInSeconds';
@@ -19,6 +19,8 @@ export class WaitingSessionsComponent {
       this.loadOtherUser(s);
     });
   }
+  @Output() deleteSessionRequest = new EventEmitter<SessionRequest>();
+
 
   _sesssionRequests: SessionRequest[] = [];
   // TODO: temp solution
@@ -90,6 +92,7 @@ export class WaitingSessionsComponent {
   }
 
   delete(sessionRequest: SessionRequest) {
+    this.deleteSessionRequest.emit(sessionRequest);
     this.sessionRequestDataService.delete(sessionRequest.id)
       .subscribe(() => this.cdr.detectChanges());
   }

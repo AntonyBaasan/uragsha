@@ -1,7 +1,7 @@
 import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { SessionRequest } from 'src/app/models';
-import { AuthService, DashboardDataService } from 'src/app/services';
+import { AuthService, DashboardDataService, SessionRequestDataService } from 'src/app/services';
 
 @Component({
   selector: 'app-main-content',
@@ -14,6 +14,7 @@ export class MainContentComponent implements OnInit {
   constructor(
     private authService: AuthService,
     private dashboardDataService: DashboardDataService,
+    private sessionRequestDataService: SessionRequestDataService,
     private router: Router,
     private cdr: ChangeDetectorRef,
   ) { }
@@ -60,6 +61,15 @@ export class MainContentComponent implements OnInit {
 
   schedule() {
     this.router.navigate(['/calendar']);
+  }
+
+  delete(sessionRequest: SessionRequest) {
+    this.sessionRequestDataService.delete(sessionRequest.id)
+      .subscribe(() => {
+        const index = this.sessionRequests.findIndex(s=>s.id === sessionRequest.id);
+        this.sessionRequests.splice(index, 1);
+        this.cdr.detectChanges();
+      });
   }
 
 }
