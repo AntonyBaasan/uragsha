@@ -1,11 +1,12 @@
-import { ChangeDetectorRef, Component, EventEmitter, Input, Output } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter, Input, Output } from '@angular/core';
 import { addSeconds, format } from 'date-fns'
 import { TimerService } from 'src/app/services/timer.service';
 
 @Component({
   selector: 'app-timer',
   templateUrl: './timer.component.html',
-  styleUrls: ['./timer.component.scss']
+  styleUrls: ['./timer.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class TimerComponent {
   @Input()
@@ -32,11 +33,11 @@ export class TimerComponent {
     this.timerService.setTimer('secondCounter', 1000, true, () => {
       if (this.timeLeft > 0) {
         this.timeLeft--;
-        this.cdr;
       } else {
         this.timeDone.emit();
         this.stopTimer();
       }
+      this.cdr.detectChanges();
     });
   }
 

@@ -15,7 +15,7 @@
       </div>
       <div
         class="user-state d-flex justify-content-center align-items-center fs-2"
-        *ngIf="getSessionState() === CallStateEnum.waiting"
+        *ngIf="getSessionState() === CallStateEnum.new"
       >
         Waiting {{ remoteUserSetting.userInfo.userName }}...
       </div>

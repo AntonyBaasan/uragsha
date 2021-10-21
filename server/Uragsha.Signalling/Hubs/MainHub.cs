@@ -193,7 +193,7 @@ namespace Uragsha.Signalling.Hubs
                 {
                     SessionId = session.Id,
                     Started = DateTime.UtcNow,
-                    State = CallStateEnum.waiting,
+                    State = CallStateEnum.New,
                 };
                 // set latest
                 GlobalInfo.ActiveSessions.AddOrUpdate(session.Id, sessionDetail, (id, detail) => detail);
@@ -231,7 +231,7 @@ namespace Uragsha.Signalling.Hubs
             Console.WriteLine("Reset webrtc Answer and Offer!");
             sessionDetail.Answer = null;
             sessionDetail.Offer = null;
-            sessionDetail.State = CallStateEnum.waiting;
+            sessionDetail.State = CallStateEnum.New;
             await Clients.GroupExcept(sessionDetail.SessionId, new List<string> { Context.ConnectionId }).OnSessionDetailUpdated(sessionDetail);
         }
 

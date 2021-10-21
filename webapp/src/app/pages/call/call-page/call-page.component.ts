@@ -151,9 +151,11 @@ export class CallPageComponent implements OnInit, OnDestroy {
         this.cdr.detectChanges();
       });
     this.subOnRemoteStreamAddedSubject = this.webRtcService.OnRemoteStreamAddedSubject.subscribe(stream => {
+      console.log('OnRemoteStreamAddedSubject');
       this.remoteVideoComponent.setStream(stream);
-      if (this.sessionDetail && this.sessionDetail.state === CallStateEnum.waiting) {
-        this.sessionDetail.state = CallStateEnum.joined;
+
+      if (this.sessionDetail && this.sessionDetail.state === CallStateEnum.new) {
+        this.sessionDetail.state = CallStateEnum.inProgress;
         this.appTimer.startTimer();
         this.signallingService.UpdateSessionDetail(this.sessionDetail);
       }
@@ -313,7 +315,11 @@ export class CallPageComponent implements OnInit, OnDestroy {
   }
 
   handleSessionDetailUpdated(sessionDetail: SessionDetail) {
+    if ((!this.sessionDetail || this.sessionDetail.state === CallStateEnum.new) && sessionDetail.state === CallStateEnum.inProgress) {
+      this.appTimer.startTimer();
+    }
     this.sessionDetail = sessionDetail;
+
   }
 
   handleWorkoutStateUpdated(userId: string, workoutState: WorkoutState) {

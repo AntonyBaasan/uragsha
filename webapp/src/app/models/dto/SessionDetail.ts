@@ -12,8 +12,9 @@ export interface WebRtcMessage {
 }
 
 export enum CallStateEnum {
-  waiting,
-  joined,
+  new,
+  inProgress,
   done,
+  deleted
 }
 
