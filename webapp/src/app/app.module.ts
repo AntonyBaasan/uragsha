@@ -21,7 +21,7 @@ import { httpInterceptorProviders } from './interceptors';
   ],
   providers: [
     httpInterceptorProviders,
-    { provide: PERSISTENCE, useValue: 'session' },
+    { provide: PERSISTENCE, useValue: 'local' },
   ],
   bootstrap: [AppComponent],
 })
