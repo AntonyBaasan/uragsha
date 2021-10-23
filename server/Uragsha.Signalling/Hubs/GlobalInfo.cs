@@ -4,12 +4,14 @@ using System.Collections.Generic;
 
 namespace Uragsha.Signalling.Hubs
 {
-    // will move as service
+    // TODO: will move as service
     public static class GlobalInfo
     {
-        //public readonly static Dictionary<string, List<string>> UserConnections = new();
-        public readonly static HashSet<string> ConnectedIds = new();
-        public readonly static ConcurrentDictionary<string, SessionDetail> ActiveSessions = new();
+        // TODO: this is temp. variable used for admin
+        public static readonly HashSet<string> ConnectedIds = new();
+
+        // TODO: will be moved to some sort of persistancy (ideally Remote Redis Cache)
+        public static readonly ConcurrentDictionary<string, SessionDetail> ActiveSessions = new();
     }
 
 }
