@@ -6,6 +6,8 @@ namespace Scheduler.Interfaces.Services
 {
     public interface IMatcherService
     {
+        public bool CanMatch(SessionRequest sessionRequest1, SessionRequest sessionRequest2);
+
         public void Match(MatchAlgorithm algorithm);
 
         public void CollectGarbage();

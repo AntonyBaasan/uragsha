@@ -3,7 +3,7 @@ import { Subscription } from 'rxjs';
 import { SessionRequest, SessionRequestScheduled } from '../../../models';
 import { CalendarPageService } from './calendar-page.service';
 import { CalendarService } from '../calendar/calendar.service';
-import { AuthService, SingnallingService, StoreService, SessionRequestDataService } from '../../../services';
+import { AuthService, SingnallingService, StoreService } from '../../../services';
 
 const SERVICES = [CalendarService, CalendarPageService];
 
@@ -30,27 +30,35 @@ export class CalendarPageComponent implements OnInit, OnDestroy {
     private store: StoreService,
     private calendarPageService: CalendarPageService,
     private signallingService: SingnallingService,
-    private sessionRequestDataService: SessionRequestDataService,
     private cdr: ChangeDetectorRef) { }
 
   ngOnInit(): void {
+
+    this.authService.currentUser.subscribe(user => {
+      this.userName = user && user.uid ? user.uid : '';
+      if (this.userName) {
+        this.subscribeToStore();
+        this.subscribeToSignallingEvents();
+        this.loadSessionRequest();
+      } else {
+        this.ngOnDestroy();
+        this.clearSessionRequest();
+      }
+      this.cdr.detectChanges();
+    });
+
+  }
+
+  private subscribeToStore() {
     this.subSessionRequestsSubject =
       this.store.SessionRequestsSubject.subscribe((sessions) => {
         this.sessionRequests = [...sessions] as SessionRequestScheduled[];
         this.todaysWorkouts = this.calendarPageService.getSessionsClosest([...sessions]) as SessionRequestScheduled[];
         this.cdr.detectChanges();
       });
+  }
 
-    this.authService.currentUser.subscribe(user => {
-      this.userName = user && user.uid ? user.uid : '';
-      if (this.userName) {
-        this.loadSessionRequest();
-      } else {
-        this.clearSessionRequest();
-      }
-      this.cdr.detectChanges();
-    });
-
+  private subscribeToSignallingEvents() {
     this.subOnGetUserSessionRequests =
       this.signallingService.OnGetUserSessionRequests.subscribe(
         (sessionRequests: SessionRequest[]) =>
@@ -59,7 +67,7 @@ export class CalendarPageComponent implements OnInit, OnDestroy {
     this.subOnSessionRequestUpdated =
       this.signallingService.OnSessionRequestUpdated.subscribe(
         (sessionRequest: SessionRequest) =>
-          this.handleOnSessionRequestUpdate(sessionRequest)
+          this.handleOnSessionRequestUpdated(sessionRequest)
       );
     this.subOnSessionRequestCreated =
       this.signallingService.OnSessionRequestCreated.subscribe(
@@ -85,40 +93,47 @@ export class CalendarPageComponent implements OnInit, OnDestroy {
     const user = this.authService.currentUser.getValue();
     if (user) {
       const request = this.calendarPageService.createSessionRequestByStartDate(date, user.uid);
-
-      this.store.insertSessionRequest(request);
-      this.sessionRequestDataService.create(request).subscribe(sessionRequest => {
-        //returned value has ID with it.
-        this.store.updateSessionRequest(sessionRequest as SessionRequestScheduled);
-      });
+      this.store.insertSessionRequest(request).subscribe();
     }
   }
 
   removeSession(id: string) {
-    this.sessionRequestDataService.delete(id).subscribe(() => {
-      this.store.deleteSessionRequest(id);
-    });
+    this.store.deleteSessionRequest(id).subscribe();
   }
 
   loadSessionRequest() {
-    this.sessionRequestDataService.getAllScheduled().subscribe(sessionRequests => {
-      this.store.setSessionRequests(sessionRequests);
-    })
+    this.store.loadAllScheduled();
+
   }
 
   clearSessionRequest() {
     this.store.setSessionRequests([]);
   }
 
-  private handleOnSessionRequestUpdate(sessionRequest: SessionRequest): void {
-    this.store.updateSessionRequest(sessionRequest as SessionRequestScheduled);
+  private handleOnSessionRequestUpdated(sessionRequest: SessionRequest): void {
+    const index = this.sessionRequests.findIndex(s => s.id === sessionRequest.id);
+    if (index !== -1) {
+      this.sessionRequests.splice(index, 1, sessionRequest as SessionRequestScheduled);
+      this.store.setSessionRequests(this.sessionRequests);
+    }
   }
 
   private handleOnSessionRequestCreated(sessionRequest: SessionRequest): void {
-    this.store.insertSessionRequest(sessionRequest as SessionRequestScheduled);
+    const index = this.sessionRequests.findIndex(s => s.id === sessionRequest.id);
+    if (index !== -1) {
+      this.sessionRequests.splice(index, 1, sessionRequest as SessionRequestScheduled);
+    } else {
+      this.sessionRequests.push(sessionRequest as SessionRequestScheduled);
+    }
+
+    this.store.setSessionRequests(this.sessionRequests);
   }
 
   private handleOnSessionRequestDeleted(sessionRequestId: string): void {
-    this.store.deleteSessionRequest(sessionRequestId);
+    const index = this.sessionRequests.findIndex(s => s.id === sessionRequestId);
+    if (index !== -1) {
+      this.sessionRequests.splice(index, 1);
+      this.store.setSessionRequests(this.sessionRequests);
+    }
   }
 }

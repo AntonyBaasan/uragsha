@@ -38,6 +38,15 @@ namespace Scheduler.Services
             throw new InvalidOperationException("Operation is not available!");
         }
 
+        public virtual bool CanMatch(SessionRequest sessionRequest1, SessionRequest sessionRequest2)
+        {
+            if (sessionRequest1.UserId.Equals(sessionRequest2.UserId))
+            {
+                return false;
+            }
+            return true;
+        }
+
         public virtual void CollectGarbage()
         {
             throw new InvalidOperationException("Operation is not available!");
@@ -64,15 +73,6 @@ namespace Scheduler.Services
                     }
                 }
             }
-        }
-
-        private bool CanMatch(SessionRequest previousSessionRequest, SessionRequest sessionRequest)
-        {
-            if (previousSessionRequest.UserId.Equals(sessionRequest.UserId))
-            {
-                return false;
-            }
-            return true;
         }
 
         private async Task<Session> Match(SessionRequest sessionRequest1, SessionRequest sessionRequest2)

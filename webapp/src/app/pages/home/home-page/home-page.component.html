@@ -1,7 +1,11 @@
 <div class="container-fluid h-100 p-0">
   <app-header></app-header>
   <div class="row m-0" style="height: calc(100vh - 50px)">
-    <app-main-content></app-main-content>
+    <app-main-content
+      [sessionRequests]="sessionRequests"
+      (goToSessionCall)="startSessionCall($event)"
+      (deleteSessionRequest)="delete($event)"
+    ></app-main-content>
     <app-introduction></app-introduction>
     <app-call-instruction
       (letsGo)="startIntstantSession()"

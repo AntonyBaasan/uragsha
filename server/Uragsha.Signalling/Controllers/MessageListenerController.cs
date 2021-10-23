@@ -1,15 +1,15 @@
-﻿using Messaging.Interfaces.Models;
+﻿using System.Collections.Generic;
+using System.Threading.Tasks;
+using Messaging.Interfaces.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.SignalR;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using Scheduler.Interfaces.Models;
-using System.Collections.Generic;
-using System.Threading.Tasks;
 using Uragsha.Signalling.Hubs;
 
-namespace Uragsha.WebApi.Controllers
+namespace Uragsha.Signalling.Controllers
 {
     [ApiController]
     [Authorize(Policy = "ServicePolicy")]
@@ -17,12 +17,12 @@ namespace Uragsha.WebApi.Controllers
     public class MessageListenerController : ControllerBase
     {
         private readonly ILogger<MessageListenerController> _logger;
-        private readonly IHubContext<MainHub> hubcontext;
+        private readonly IHubContext<MainHub> _hubcontext;
 
         public MessageListenerController(ILogger<MessageListenerController> logger, IHubContext<MainHub> hubcontext)
         {
             _logger = logger;
-            this.hubcontext = hubcontext;
+            _hubcontext = hubcontext;
         }
 
         [HttpPost]
@@ -47,7 +47,7 @@ namespace Uragsha.WebApi.Controllers
                     foreach (var userId in hubMessage.Content.ToUserId)
                     {
                         _logger.LogDebug($"Method {hubMessage.Content.Method} was called for user {userId}");
-                        await hubcontext.Clients.User(userId).SendAsync(hubMessage.Content.Method, sessionRequest);
+                        await _hubcontext.Clients.User(userId).SendAsync(hubMessage.Content.Method, sessionRequest);
                     }
                 }
             }

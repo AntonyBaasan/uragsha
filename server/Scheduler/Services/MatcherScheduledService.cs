@@ -22,7 +22,8 @@ namespace Scheduler.Services
 
         public override async void Match(MatchAlgorithm algorithm)
         {
-            var found = await sessionRequestService.FindWaitingScheduledSessionRequest(DateTime.Now.ToUniversalTime(), null);
+            var stillProgressTime = DateTime.Now.ToUniversalTime().AddMinutes(-15);
+            var found = await sessionRequestService.FindWaitingScheduledSessionRequest(stillProgressTime, null);
 
             logger.LogInformation($"Found {found.Count} non scheduled session requests!");
 
@@ -34,6 +35,21 @@ namespace Scheduler.Services
                 var sessionRequests = group.AsEnumerable();
                 Match(algorithm, sessionRequests);
             }
+        }
+
+        public override bool CanMatch(SessionRequest sessionRequest1, SessionRequest sessionRequest2)
+        {
+            var baseResult = base.CanMatch(sessionRequest1, sessionRequest2);
+            if (baseResult == false)
+            {
+                return false;
+            }
+            if (!sessionRequest1.Start.Equals(sessionRequest2.Start))
+            {
+                return false;
+            }
+
+            return true;
         }
     }
 }

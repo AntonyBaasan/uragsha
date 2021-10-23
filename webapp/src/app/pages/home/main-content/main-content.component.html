@@ -38,7 +38,8 @@
         <div class="mb-1">
           <app-waiting-sessions
             [sessionRequests]="sessionRequests"
-            (deleteSessionRequest)="delete($event)"
+            (goToSessionCall)="goToSessionCall.emit($event)"
+            (deleteSessionRequest)="deleteSessionRequest.emit($event)"
           ></app-waiting-sessions>
         </div>
         <div class="">
@@ -78,7 +79,6 @@
       d-flex
       justify-content-sm-start
       align-items-sm-center
-
       justify-content-center
       align-items-start
     "

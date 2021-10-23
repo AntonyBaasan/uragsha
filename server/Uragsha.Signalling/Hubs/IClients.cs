@@ -9,6 +9,7 @@ namespace Uragsha.Signalling.Hubs
         // Debug
         Task OnTextMessage(string message);
 
+        // Called from messaging.
         Task OnGetUserSessionRequests(List<SessionRequest> sessionRequests);
         Task OnSessionRequestCreated(SessionRequest sessionRequest);
         Task OnSessionRequestUpdated(SessionRequest sessionRequest);

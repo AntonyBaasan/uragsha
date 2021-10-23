@@ -47,7 +47,12 @@ namespace Uragsha.WebApi.Controllers
             var findSessionRequestArg = new FindSessionRequestArgs
             {
                 UserId = userId,
-                Status = new List<SessionRequestStatus> { SessionRequestStatus.Waiting },
+                Status = new List<SessionRequestStatus>
+                {
+                    SessionRequestStatus.Waiting, 
+                    SessionRequestStatus.Scheduled,
+                    SessionRequestStatus.Started,
+                },
                 SessionType = SessionRequestType.Scheduled
             };
             var found = await sessionRequestService.FindSessionRequest(findSessionRequestArg);

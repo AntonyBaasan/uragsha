@@ -5,7 +5,7 @@ import { of } from 'rxjs/internal/observable/of';
 import { delay } from 'rxjs/operators';
 import { SessionRequestStatus, SessionRequestType } from 'src/app/models';
 import { SessionRequestResult } from 'src/app/models/dto/SessionRequestResult';
-import { AuthService, SessionRequestDataService } from 'src/app/services';
+import { AuthService } from 'src/app/services';
 
 @Component({
   selector: 'app-result-page',
@@ -21,7 +21,6 @@ export class ResultPageComponent implements OnInit {
 
   constructor(
     public auth: AuthService,
-    private sessionRequestDataService: SessionRequestDataService,
     private route: ActivatedRoute,
     private router: Router,
   ) { }

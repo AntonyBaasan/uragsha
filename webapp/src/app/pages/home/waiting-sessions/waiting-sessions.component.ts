@@ -1,10 +1,9 @@
-import { ChangeDetectorRef, Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { Router } from '@angular/router';
+import { ChangeDetectorRef, Component, EventEmitter, Input, Output } from '@angular/core';
 import compareAsc from 'date-fns/compareAsc';
 import differenceInSeconds from 'date-fns/differenceInSeconds';
 import formatDistance from 'date-fns/formatDistance'
-import { SessionRequest, SessionRequestStatus, SessionRequestType, User } from 'src/app/models';
-import { SessionRequestDataService } from 'src/app/services';
+import { SessionRequest, SessionRequestType, User } from 'src/app/models';
+import { StoreService } from 'src/app/services';
 
 @Component({
   selector: 'app-waiting-sessions',
@@ -20,16 +19,16 @@ export class WaitingSessionsComponent {
     });
   }
   @Output() deleteSessionRequest = new EventEmitter<SessionRequest>();
-
+  @Output() goToSessionCall = new EventEmitter<SessionRequest>();
 
   _sesssionRequests: SessionRequest[] = [];
   // TODO: temp solution
   otherUsers: { [sessionRequestId: string]: string } = {};
 
   constructor(
-    private sessionRequestDataService: SessionRequestDataService,
-    private cdr: ChangeDetectorRef,
-    private router: Router) { }
+    private storeService: StoreService,
+    private cdr: ChangeDetectorRef
+  ) { }
 
   // TODO: move to a service
   getDateTime(sessionRequest: SessionRequest): String {
@@ -59,8 +58,7 @@ export class WaitingSessionsComponent {
   }
 
   join(sessionRequest: SessionRequest): void {
-    // this.router.navigate(['/call', sessionRequest.id]);
-    window.open('/#/call/' + sessionRequest.id, "_blank");
+    this.goToSessionCall.emit(sessionRequest);
   }
 
   getTitle(sessionRequest: SessionRequest) {
@@ -72,10 +70,10 @@ export class WaitingSessionsComponent {
   }
 
   private loadOtherUser(sessionRequest: SessionRequest) {
-    this.sessionRequestDataService.getOtherUser(sessionRequest.id)
+    this.storeService.getSessionRuquestOtherUser(sessionRequest.id)
       .subscribe(
-        (otherUser: User) => {
-          if (otherUser?.displayName) {
+        (otherUser: User | null) => {
+          if (otherUser && otherUser?.displayName) {
             this.otherUsers[sessionRequest.id] = otherUser.displayName;
             this.cdr.detectChanges();
           }
@@ -83,7 +81,7 @@ export class WaitingSessionsComponent {
   }
 
   // // TODO: will refactor! can't call server like this
-  getOtherUser(sessionRequest: SessionRequest) {
+  getOtherUserName(sessionRequest: SessionRequest) {
     if (this.otherUsers[sessionRequest.id]) {
       return 'with ' + this.otherUsers[sessionRequest.id];
     }
@@ -94,8 +92,6 @@ export class WaitingSessionsComponent {
 
   delete(sessionRequest: SessionRequest) {
     this.deleteSessionRequest.emit(sessionRequest);
-    this.sessionRequestDataService.delete(sessionRequest.id)
-      .subscribe(() => this.cdr.detectChanges());
   }
 
 }
