@@ -43,6 +43,8 @@ export class CallPageComponent implements OnInit, OnDestroy {
   sessionTimerInSeconds: number = 900;// 15min
   // sessionTimerInSeconds: number = 10;
 
+  private iceCandidateCache: RTCIceCandidate[] = [];
+
   private subOnWorkoutStateUpdated: Subscription | undefined;
   private subOnSessionDetailUpdated: Subscription | undefined;
   private subOnUserJoinSession: Subscription | undefined;
@@ -156,6 +158,7 @@ export class CallPageComponent implements OnInit, OnDestroy {
 
       if (this.sessionDetail && this.sessionDetail.state === CallStateEnum.new) {
         this.sessionDetail.state = CallStateEnum.inProgress;
+        this.readIceCandidateCache();
         this.appTimer.startTimer();
         this.signallingService.UpdateSessionDetail(this.sessionDetail);
       }
@@ -308,14 +311,29 @@ export class CallPageComponent implements OnInit, OnDestroy {
 
   private async handleReceiveIceCandidate(iceCandidate: RTCIceCandidate) {
     try {
+      if (this.sessionDetail.state !== CallStateEnum.inProgress) {
+        this.iceCandidateCache.push(iceCandidate);
+        return;
+      }
       await this.webRtcService.addIceCandidate(iceCandidate)
     } catch (e) {
       console.error('Error adding received ice candidate', e);
     }
   }
 
+  private async readIceCandidateCache() {
+    while (this.iceCandidateCache.length > 0) {
+      const candidate = this.iceCandidateCache.shift();
+      if (candidate) {
+        await this.webRtcService.addIceCandidate(candidate);
+      }
+    }
+    this.iceCandidateCache = [];
+  }
+
   handleSessionDetailUpdated(sessionDetail: SessionDetail) {
     if ((!this.sessionDetail || this.sessionDetail.state === CallStateEnum.new) && sessionDetail.state === CallStateEnum.inProgress) {
+      this.readIceCandidateCache();
       this.appTimer.startTimer();
     }
     this.sessionDetail = sessionDetail;
@@ -331,8 +349,10 @@ export class CallPageComponent implements OnInit, OnDestroy {
   }
 
   leave() {
-    this.router.navigate(['/result', this.sessionRequestId]);
-    // setTimeout(() => this.router.navigate(['/']), 1000);
+
+    this.ngOnDestroy();
+
+    // this.router.navigate(['/result', this.sessionRequestId]);
   }
 
   toggleMute(setting: UserCallMetadata) {
