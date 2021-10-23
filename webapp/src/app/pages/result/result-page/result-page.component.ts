@@ -50,9 +50,12 @@ export class ResultPageComponent implements OnInit {
   }
 
   done() {
-    window.close();
     // TODO: save result on the server
-    // this.router.navigate(['/']);
+    if (window.opener) {
+      window.close();
+    } else {
+      this.router.navigate(['/']);
+    }
   }
 
 }
