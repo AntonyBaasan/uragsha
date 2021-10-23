@@ -59,7 +59,8 @@ export class WaitingSessionsComponent {
   }
 
   join(sessionRequest: SessionRequest): void {
-    this.router.navigate(['/call', sessionRequest.id]);
+    // this.router.navigate(['/call', sessionRequest.id]);
+    window.open('/#/call/' + sessionRequest.id, "_blank");
   }
 
   getTitle(sessionRequest: SessionRequest) {

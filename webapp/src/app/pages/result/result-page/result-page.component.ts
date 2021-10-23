@@ -40,7 +40,7 @@ export class ResultPageComponent implements OnInit {
         displayName: 'David'
       }
     } as SessionRequestResult)
-      .pipe(delay(2000))
+      .pipe(delay(1000))
       .subscribe((result) => {
         this.isLoading = false;
         this.myName = this.auth.currentUser.value?.displayName;
@@ -50,8 +50,9 @@ export class ResultPageComponent implements OnInit {
   }
 
   done() {
+    window.close();
     // TODO: save result on the server
-    this.router.navigate(['/']);
+    // this.router.navigate(['/']);
   }
 
 }

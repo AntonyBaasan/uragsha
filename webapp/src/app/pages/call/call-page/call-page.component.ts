@@ -349,10 +349,7 @@ export class CallPageComponent implements OnInit, OnDestroy {
   }
 
   leave() {
-
-    this.ngOnDestroy();
-
-    // this.router.navigate(['/result', this.sessionRequestId]);
+    this.router.navigate(['/result', this.sessionRequestId]);
   }
 
   toggleMute(setting: UserCallMetadata) {
