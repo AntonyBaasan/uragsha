@@ -4,7 +4,6 @@ namespace Identity.Interfaces.Models
 {
     public class User
     {
-        // by EF convension this will became Primary key
         public string Id { get; set; }
         public string Name { get; set; }
         public string Email { get; init; }

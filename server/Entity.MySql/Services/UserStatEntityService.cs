@@ -36,9 +36,12 @@ namespace Entity.MySql.Services
             await _crudEntityService.UpdateAsync(stat);
         }
 
-        public Task<bool> ExistAsync(string userId)
+        public async Task<bool> ExistAsync(string userId)
         {
-            return _crudEntityService.ExistAsync(typeof(UserStatEntity), userId);
+            using var scope = _scopeFactory.CreateScope();
+            var dbContext = scope.ServiceProvider.GetRequiredService<MainDbContext>();
+            var exist = await dbContext.UserStats.AnyAsync(s => s.UserId.Equals(userId));
+            return exist;
         }
 
     }

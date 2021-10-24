@@ -9,9 +9,11 @@ namespace Identity
         public IdentityAutoMapperProfile()
         {
             CreateMap<User, UserEntity>();
+            CreateMap<UserStat, UserStatEntity>();
             CreateMap<UserRole, UserRoleEntity>();
 
             CreateMap<UserEntity, User>();
+            CreateMap<UserStatEntity, UserStat>();
             CreateMap<UserRoleEntity, UserRole>();
         }
     }
