@@ -1,13 +1,13 @@
-﻿using HttpUtilities.Services;
+﻿using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+using HttpUtilities.Services;
 using Identity.Interfaces.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Scheduler.Interfaces.Models;
 using Scheduler.Interfaces.Services;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace Uragsha.WebApi.Controllers
 {
@@ -17,11 +17,11 @@ namespace Uragsha.WebApi.Controllers
     public class SessionRequestController : ControllerBase
     {
         private readonly ILogger<SessionRequestController> _logger;
-        private readonly ISessionRequestService sessionRequestService;
-        private readonly ISessionService sessionService;
-        private readonly IUserService userService;
-        private readonly IMatcherService matcherService;
-        private readonly IContextService contextService;
+        private readonly ISessionRequestService _sessionRequestService;
+        private readonly ISessionService _sessionService;
+        private readonly IUserService _userService;
+        private readonly IMatcherService _matcherService;
+        private readonly IContextService _contextService;
 
         public SessionRequestController(
             ILogger<SessionRequestController> logger,
@@ -33,41 +33,41 @@ namespace Uragsha.WebApi.Controllers
             )
         {
             _logger = logger;
-            this.sessionRequestService = sessionRequestService;
-            this.sessionService = sessionService;
-            this.userService = userService;
-            this.matcherService = matcherService;
-            this.contextService = contextService;
+            _sessionRequestService = sessionRequestService;
+            _sessionService = sessionService;
+            _userService = userService;
+            _matcherService = matcherService;
+            _contextService = contextService;
         }
 
         [HttpGet]
         public async Task<IEnumerable<SessionRequest>> Get()
         {
-            var userId = contextService.GetUserId();
+            var userId = _contextService.GetUserId();
             var findSessionRequestArg = new FindSessionRequestArgs
             {
                 UserId = userId,
                 Status = new List<SessionRequestStatus>
                 {
-                    SessionRequestStatus.Waiting, 
+                    SessionRequestStatus.Waiting,
                     SessionRequestStatus.Scheduled,
                     SessionRequestStatus.Started,
                 },
                 SessionType = SessionRequestType.Scheduled
             };
-            var found = await sessionRequestService.FindSessionRequest(findSessionRequestArg);
+            var found = await _sessionRequestService.FindSessionRequest(findSessionRequestArg);
             return found;
         }
 
         [HttpGet("{id}")]
         public async Task<IActionResult> Get(string id)
         {
-            var found = await sessionRequestService.GetByIdAsync(id);
+            var found = await _sessionRequestService.GetByIdAsync(id);
             if (found == null)
             {
                 return NotFound();
             }
-            if (!found.UserId.Equals(contextService.GetUserId()))
+            if (!found.UserId.Equals(_contextService.GetUserId()))
             {
                 return NotFound();
             }
@@ -77,24 +77,51 @@ namespace Uragsha.WebApi.Controllers
         [HttpGet("{id}/session/otheruser")]
         public async Task<IActionResult> GetOtherUser(string id)
         {
-            var userId = contextService.GetUserId();
-            var sessionRequest = await sessionRequestService.GetByIdAsync(id);
-            if (sessionRequest == null) { return NotFound(); }
-            if (!sessionRequest.UserId.Equals(userId)) { return NotFound(); }
+            var userId = _contextService.GetUserId();
 
-            var session = await sessionService.GetBySessionRequestIdAsync(id);
+            var session = await _sessionService.GetBySessionRequestIdAsync(id);
             if (session == null) { return NotFound(); }
+            var isSessionBelongToUser = session.SessionRequests.Any(sr => sr.UserId.Equals(userId));
+            if (!isSessionBelongToUser) { return NotFound(); }
             var otherUserId = session.SessionRequests.First(sr => !sr.UserId.Equals(userId)).UserId;
-            var otherUser = await this.userService.GetUserByIdAsync(otherUserId);
+            var otherUser = await _userService.GetUserByIdAsync(otherUserId);
 
             return Ok(otherUser);
+        }
+
+        [HttpGet("{id}/comment")]
+        public IActionResult GetComment(string id)
+        {
+            return NotFound();
+        }
+
+        // Get session information based on session request id
+        [HttpPost("{id}/comment")]
+        public async Task<IActionResult> InsertComment(string id, [FromBody] SessionRequestComment comment)
+        {
+            // check if user belon
+            var userId = _contextService.GetUserId();
+
+            var session = await _sessionService.GetBySessionRequestIdAsync(comment.GivenSessionRequestId);
+            if (session == null) { return NotFound(); }
+            var isTargetSessionRequestBelongSession = session.SessionRequests.Any(sr => sr.Id.Equals(comment.ReceivedSessionRequestId));
+            if (!isTargetSessionRequestBelongSession)
+            {
+                return NotFound();
+            }
+            var givenSessionRequest = session.SessionRequests.FirstOrDefault(sr => sr.Id.Equals(comment.GivenSessionRequestId));
+            if (givenSessionRequest == null || !givenSessionRequest.UserId.Equals(userId)) { return NotFound(); }
+
+            await _sessionRequestService.SetComment(comment);
+
+            return Ok(comment);
         }
 
         [HttpPost]
         public async Task<SessionRequest> Post([FromBody] SessionRequest sessionRequest)
         {
-            sessionRequest.UserId = contextService.GetUserId();
-            var created = await sessionRequestService.CreateSessionRequestAsync(sessionRequest);
+            sessionRequest.UserId = _contextService.GetUserId();
+            var created = await _sessionRequestService.CreateSessionRequestAsync(sessionRequest);
             return created;
         }
 
@@ -103,12 +130,12 @@ namespace Uragsha.WebApi.Controllers
         {
             try
             {
-                var sessionRequest = await sessionRequestService.GetByIdAsync(id);
-                var userId = contextService.GetUserId();
+                var sessionRequest = await _sessionRequestService.GetByIdAsync(id);
+                var userId = _contextService.GetUserId();
                 if (sessionRequest != null && sessionRequest.UserId.Equals(userId))
                 {
-                    await matcherService.UnmatchBySessionRequest(id);
-                    await sessionRequestService.RemoveSessionRequest(userId, id);
+                    await _matcherService.UnmatchBySessionRequest(id);
+                    await _sessionRequestService.RemoveSessionRequest(userId, id);
                 }
                 else
                 {

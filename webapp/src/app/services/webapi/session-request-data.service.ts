@@ -3,8 +3,9 @@ import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { environment } from 'src/environments/environment';
-import { SessionRequestScheduled, SessionRequest, Session, User } from 'src/app/models';
+import { SessionRequestScheduled, SessionRequest, User } from 'src/app/models';
 import { ModelHelperService } from '../model-helper.service';
+import { SessionRequestComment } from 'src/app/models/dto/SessionRequestComment';
 
 @Injectable({ providedIn: 'root' })
 export class SessionRequestDataService {
@@ -28,12 +29,16 @@ export class SessionRequestDataService {
   }
 
   getOtherUser(sessionRequestId: string) {
-    return this.http.get<User>(this.endpoint + '/' + sessionRequestId+'/session/otheruser');
+    return this.http.get<User>(this.endpoint + '/' + sessionRequestId + '/session/otheruser');
   }
 
-  // getResult(sessionRequestId: string) {
-  //   return this.http.get<any>(this.endpoint + '/' + sessionRequestId+'/session/result');
-  // }
+  getComment(sessionRequestId: string) {
+    return this.http.get<SessionRequestComment>(this.endpoint + '/' + sessionRequestId + '/comment/');
+  }
+
+  setComment(comment: SessionRequestComment) {
+    return this.http.post<SessionRequestComment>(this.endpoint + '/' + comment.givenSessionRequestId + '/comment', comment);
+  }
 
   create(sessionRequest: SessionRequest): Observable<SessionRequest> {
     return this.http.post<SessionRequest>(this.endpoint, sessionRequest)

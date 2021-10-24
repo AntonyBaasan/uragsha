@@ -13,5 +13,7 @@ namespace Scheduler.Interfaces.Models
         public SessionRequestStatus Status { get; set; }
         public string SessionId { get; set; }
         public Session Session { get; set; }
+        public SessionRequestComment GivenSessionRequestComment{ get; set; }
+        public SessionRequestComment ReceivedSessionRequestComment{ get; set; }
     }
 }

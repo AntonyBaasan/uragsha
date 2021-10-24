@@ -7,7 +7,6 @@ using System.Threading.Tasks;
 using Entity.Services;
 using AutoMapper;
 using Entity.Models;
-using HttpUtilities.Services;
 
 namespace Scheduler.Services
 {
@@ -15,13 +14,16 @@ namespace Scheduler.Services
     {
         private readonly IMapper _mapper;
         private readonly ISessionRequestEntityService _sessionRequestEntityService;
+        private readonly ISessionRequestCommentEntityService _sessionRequestCommentEntityService;
 
         public SessionRequestService(
             ISessionRequestEntityService sessionRequestEntityService,
+            ISessionRequestCommentEntityService sessionRequestCommentEntityService,
             IMapper mapper
         )
         {
             _sessionRequestEntityService = sessionRequestEntityService;
+            _sessionRequestCommentEntityService = sessionRequestCommentEntityService;
             _mapper = mapper;
         }
 
@@ -54,6 +56,20 @@ namespace Scheduler.Services
         public async Task RemoveSessionRequest(string userId, string id)
         {
             await _sessionRequestEntityService.DeleteAsync(id, userId);
+        }
+
+        public async Task SetComment(SessionRequestComment comment)
+        {
+            var commentEntity = _mapper.Map<SessionRequestComment, SessionRequestCommentEntity>(comment);
+            var exist = await _sessionRequestCommentEntityService.ExistAsync(commentEntity.Id);
+            if (exist)
+            {
+                await _sessionRequestCommentEntityService.UpdateAsync(commentEntity);
+            }
+            else
+            {
+                await _sessionRequestCommentEntityService.AddAsync(commentEntity);
+            }
         }
 
         public Task<List<SessionRequest>> GetSessionRequestsByDate(DateTime start, SessionRequestStatus status)

@@ -10,9 +10,11 @@ namespace Scheduler
         {
             CreateMap<Session, SessionEntity>();
             CreateMap<SessionRequest, SessionRequestEntity>();
+            CreateMap<SessionRequestComment, SessionRequestCommentEntity>();
 
             CreateMap<SessionEntity, Session>();
             CreateMap<SessionRequestEntity, SessionRequest>();
+            CreateMap<SessionRequestCommentEntity, SessionRequestComment>();
         }
     }
 }

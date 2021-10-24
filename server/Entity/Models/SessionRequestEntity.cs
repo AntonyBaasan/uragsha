@@ -19,5 +19,10 @@ namespace Entity.Models
         public string? SessionId { get; set; }
 #pragma warning restore CS8632 // The annotation for nullable reference types should only be used in code within a '#nullable' annotations context.
         public virtual SessionEntity Session { get; set; }
+
+        public string GivenSessionRequestCommentId { get; set; }
+        public string ReceivedSessionRequestCommentId { get; set; }
+        public SessionRequestCommentEntity GivenSessionRequestComment { get; set; }
+        public SessionRequestCommentEntity ReceivedSessionRequestComment { get; set; }
     }
 }
