@@ -1,10 +1,8 @@
 import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { isThisISOWeek, subMinutes } from 'date-fns';
-import { delay, finalize, switchMap, tap } from 'rxjs/operators';
-import { Session, SessionRequest, SessionRequestStatus, SessionRequestType } from 'src/app/models';
+import { finalize, switchMap, tap } from 'rxjs/operators';
+import { SessionRequest } from 'src/app/models';
 import { SessionRequestComment } from 'src/app/models/dto/SessionRequestComment';
-import { SessionRequestResult } from 'src/app/models/dto/SessionRequestResult';
 import { AuthService, SessionRequestDataService } from 'src/app/services';
 
 @Component({
@@ -54,13 +52,15 @@ export class ResultPageComponent implements OnInit {
   }
 
   private handleSessionResult(sessionRequest: SessionRequest) {
-    this.isLoading = false;
     this.sessionId = sessionRequest.sessionId;
     this.sessionRequestId = sessionRequest.id;
-    this.cdr.detectChanges();
 
     this.sessionRequestDataService.getOtherUser(sessionRequest.id)
       .pipe(
+        finalize(() => {
+          this.isLoading = false;
+          this.cdr.detectChanges();
+        }),
         tap(otherUser => {
           this.otherUserId = otherUser.uid;
           this.otherUserName = otherUser.displayName ?? '';
@@ -74,8 +74,9 @@ export class ResultPageComponent implements OnInit {
   }
 
   done() {
-    this.sessionRequestDataService.setComment(this.sessionRequestId, this.isSuccessfulWorkout, this.comment)
-      .pipe(finalize(()=>this.close()))
+    this.sessionRequestDataService
+      .setComment(this.sessionRequestId, this.isSuccessfulWorkout, this.comment)
+      .pipe(finalize(() => this.close()))
       .subscribe();
   }
 
@@ -91,5 +92,4 @@ export class ResultPageComponent implements OnInit {
       this.router.navigate(['/']);
     }
   }
-
 }
