@@ -3,7 +3,7 @@ kind: ConfigMap
 metadata:
   name: backend-env-config
 data:
-  Uragsha_TestEnvValue: This value is from K8s!
+  Uragsha_TestEnvValue: K8s appVersion:{{ .Values.appVersion}}
   Uragsha_Url__Signalling: https://signalling.uragsha.com
   Uragsha_Url__WebApi: https://webapi.uragsha.com
   Uragsha_AllowedCors__0: https://uragsha.com
