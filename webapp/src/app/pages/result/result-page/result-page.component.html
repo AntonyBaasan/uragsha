@@ -6,30 +6,56 @@
   <ng-template #resultpage>
     <div class="border rounded-3 p-5">
       <div>
-        <h1>Good job!</h1>
-        <div>
-          <div>Did {{ otherUserName }} workout fully?</div>
-          <div>
-            <button class="btn btn-success">Yes</button>
-            <button class="btn btn-danger">No</button>
+        <h1 class="d-flex justify-content-center">Good job!</h1>
+        <div class="m-3 fs-3 d-flex flex-column">
+          <label for="radio1"
+            ><p class="text-center">
+              Did {{ otherUserName }} workout well?
+            </p></label
+          >
+          <div id="radio1" class="d-flex justify-content-center flex-row">
+            <div class="form-check m-2 fs-4">
+              <input
+                class="form-check-input"
+                type="radio"
+                name="isSuccessfulWorkout1"
+                id="isSuccessfulWorkout1"
+                [checked]="isSuccessfulWorkout"
+                (click)="setSuccessResult(true)"
+              />
+              <label class="form-check-label" for="isSuccessfulWorkout1">
+                Yes
+              </label>
+            </div>
+            <div class="form-check m-2">
+              <input
+                class="form-check-input"
+                type="radio"
+                name="isSuccessfulWorkout2"
+                id="isSuccessfulWorkout2"
+                [checked]="!isSuccessfulWorkout"
+                (click)="setSuccessResult(false)"
+              />
+              <label class="form-check-label" for="isSuccessfulWorkout2">
+                No
+              </label>
+            </div>
           </div>
         </div>
-        <div>
-          <div>
-            <span>Comment for {{ otherUserName }}?</span
-            ><span class="ms-1">(optional)</span>
-          </div>
-          <div>
-            <textarea
-              placeholder="e.g. I like how you did pull ups!"
-            ></textarea>
-          </div>
+        <div class="fs-3 d-flex flex-column">
+          <label for="comment-text" class="m-2">
+            <p>Comment for {{ otherUserName }}?<span class="ms-1 fs-5">(optional)</span></p>
+
+          </label>
+          <textarea
+            class="form-control fs-4"
+            id="comment-text"
+            [(ngModel)]="comment"
+            placeholder="e.g. I like how you did pull ups!"
+          ></textarea>
         </div>
-        <br />
-        <br />
-        <br />
-        <div>
-          <button class="btn btn-primary" (click)="done()">Done</button>
+        <div class="d-flex justify-content-end mt-3">
+          <button class="btn btn-primary btn-lg" (click)="done()">Done</button>
         </div>
       </div>
     </div>

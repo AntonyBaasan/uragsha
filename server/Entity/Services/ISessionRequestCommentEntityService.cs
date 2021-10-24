@@ -15,5 +15,7 @@ namespace Entity.Services
 
         public Task<bool> ExistAsync(string id);
 
+        public Task<SessionRequestCommentEntity> GetByGivenSessionRequestId(string givenSessionRequestId);
+
     }
 }

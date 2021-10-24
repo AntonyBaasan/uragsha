@@ -36,8 +36,12 @@ export class SessionRequestDataService {
     return this.http.get<SessionRequestComment>(this.endpoint + '/' + sessionRequestId + '/comment/');
   }
 
-  setComment(comment: SessionRequestComment) {
-    return this.http.post<SessionRequestComment>(this.endpoint + '/' + comment.givenSessionRequestId + '/comment', comment);
+  setComment(sessionRequestId: string, isSuccessfulWorkout: boolean, comment: string) {
+    const request = {
+      isSuccessfulWorkout: isSuccessfulWorkout,
+      comment: comment
+    };
+    return this.http.post<SessionRequestComment>(this.endpoint + '/' + sessionRequestId + '/comment', request);
   }
 
   create(sessionRequest: SessionRequest): Observable<SessionRequest> {

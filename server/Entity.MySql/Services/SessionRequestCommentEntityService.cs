@@ -2,6 +2,7 @@
 using System.Threading.Tasks;
 using Entity.Models;
 using Entity.Services;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Entity.MySql.Services
@@ -42,6 +43,14 @@ namespace Entity.MySql.Services
         public Task<bool> ExistAsync(string id)
         {
             return _crudEntityService.ExistAsync(typeof(SessionRequestCommentEntity), id);
+        }
+
+        public async Task<SessionRequestCommentEntity> GetByGivenSessionRequestId(string givenSessionRequestId)
+        {
+            using var scope = _scopeFactory.CreateScope();
+            var dbContext = scope.ServiceProvider.GetRequiredService<MainDbContext>();
+            var result = await dbContext.SessionRequestComments.FirstOrDefaultAsync(c=>c.GivenSessionRequestId.Equals(givenSessionRequestId));
+            return result;
         }
 
         private IQueryable<SessionRequestCommentEntity> GetAsQueryable(MainDbContext context)

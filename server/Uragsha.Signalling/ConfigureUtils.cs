@@ -40,6 +40,7 @@ namespace Uragsha.Signalling
 
             // Internal services
             services.AddSingleton<ISessionRequestService, SessionRequestService>();
+            services.AddSingleton<ISessionRequestCommentService, SessionRequestCommentService>();
             services.AddSingleton<ISessionService, SessionService>();
             services.AddSingleton<IUserService, UserService>();
 

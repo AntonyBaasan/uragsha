@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using HttpUtilities.Services;
@@ -8,6 +9,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Scheduler.Interfaces.Models;
 using Scheduler.Interfaces.Services;
+using Uragsha.WebApi.Dto;
 
 namespace Uragsha.WebApi.Controllers
 {
@@ -18,6 +20,7 @@ namespace Uragsha.WebApi.Controllers
     {
         private readonly ILogger<SessionRequestController> _logger;
         private readonly ISessionRequestService _sessionRequestService;
+        private readonly ISessionRequestCommentService _sessionRequestCommentService;
         private readonly ISessionService _sessionService;
         private readonly IUserService _userService;
         private readonly IMatcherService _matcherService;
@@ -26,11 +29,12 @@ namespace Uragsha.WebApi.Controllers
         public SessionRequestController(
             ILogger<SessionRequestController> logger,
             ISessionRequestService sessionRequestService,
+            ISessionRequestCommentService sessionRequestCommentService,
             ISessionService sessionService,
             IUserService userService,
             IMatcherService matcherService,
             IContextService contextService
-            )
+        )
         {
             _logger = logger;
             _sessionRequestService = sessionRequestService;
@@ -38,6 +42,7 @@ namespace Uragsha.WebApi.Controllers
             _userService = userService;
             _matcherService = matcherService;
             _contextService = contextService;
+            _sessionRequestCommentService = sessionRequestCommentService;
         }
 
         [HttpGet]
@@ -90,31 +95,40 @@ namespace Uragsha.WebApi.Controllers
         }
 
         [HttpGet("{id}/comment")]
-        public IActionResult GetComment(string id)
+        public async Task<IActionResult> GetComment(string id)
         {
-            return NotFound();
+            var sessionRequestComment = await _sessionRequestCommentService.GetCommentByGivenSessionRequestId(id);
+            if (sessionRequestComment == null) { return NotFound(); }
+            return Ok(sessionRequestComment);
         }
 
         // Get session information based on session request id
         [HttpPost("{id}/comment")]
-        public async Task<IActionResult> InsertComment(string id, [FromBody] SessionRequestComment comment)
+        public async Task<IActionResult> SetComment(string id, [FromBody] SetCommentRequestDto request)
         {
             // check if user belon
             var userId = _contextService.GetUserId();
 
-            var session = await _sessionService.GetBySessionRequestIdAsync(comment.GivenSessionRequestId);
+            var session = await _sessionService.GetBySessionRequestIdAsync(id);
             if (session == null) { return NotFound(); }
-            var isTargetSessionRequestBelongSession = session.SessionRequests.Any(sr => sr.Id.Equals(comment.ReceivedSessionRequestId));
-            if (!isTargetSessionRequestBelongSession)
-            {
-                return NotFound();
-            }
-            var givenSessionRequest = session.SessionRequests.FirstOrDefault(sr => sr.Id.Equals(comment.GivenSessionRequestId));
+            var receivedSessionRequest = session.SessionRequests.FirstOrDefault(s => !s.Id.Equals(id));
+            if (receivedSessionRequest == null) { return NotFound(); }
+            var givenSessionRequest = session.SessionRequests.FirstOrDefault(s => s.Id.Equals(id));
             if (givenSessionRequest == null || !givenSessionRequest.UserId.Equals(userId)) { return NotFound(); }
 
-            await _sessionRequestService.SetComment(comment);
+            var (isSuccessfulWorkout, comment) = request;
+            var sessionRequestComment = new SessionRequestComment()
+            {
+                Id = Guid.NewGuid().ToString(),
+                IsSuccessfulWorkout = isSuccessfulWorkout,
+                UpdatedDate = DateTime.UtcNow,
+                Comment = comment,
+                GivenSessionRequestId = id,
+                ReceivedSessionRequestId = receivedSessionRequest.Id
+            };
+            var updated = await _sessionRequestCommentService.SetComment(sessionRequestComment);
 
-            return Ok(comment);
+            return Ok(updated);
         }
 
         [HttpPost]

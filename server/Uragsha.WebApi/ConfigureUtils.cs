@@ -43,6 +43,7 @@ namespace Uragsha.WebApi
 
             // Internal services
             services.AddSingleton<ISessionRequestService, SessionRequestService>();
+            services.AddSingleton<ISessionRequestCommentService, SessionRequestCommentService>();
             services.AddSingleton<ISessionService, SessionService>();
             // NOTE: we need all matcher services for this webapi
             services.AddSingleton<IMatcherService, MatcherService>();

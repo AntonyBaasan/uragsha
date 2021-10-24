@@ -19,8 +19,5 @@ namespace Scheduler.Interfaces.Services
         Task UpdateSessionRequest(SessionRequest sessionRequest);
         Task RemoveSessionRequest(string id);
         Task RemoveSessionRequest(string userId, string id);
-
-        Task SetComment(SessionRequestComment comment);
-
     }
 }

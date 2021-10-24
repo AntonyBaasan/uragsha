@@ -1,10 +1,9 @@
-import { ThrowStmt } from '@angular/compiler';
 import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { subMinutes } from 'date-fns';
-import { of } from 'rxjs/internal/observable/of';
-import { delay, finalize } from 'rxjs/operators';
-import { Session, SessionRequestStatus, SessionRequestType } from 'src/app/models';
+import { isThisISOWeek, subMinutes } from 'date-fns';
+import { delay, finalize, switchMap, tap } from 'rxjs/operators';
+import { Session, SessionRequest, SessionRequestStatus, SessionRequestType } from 'src/app/models';
+import { SessionRequestComment } from 'src/app/models/dto/SessionRequestComment';
 import { SessionRequestResult } from 'src/app/models/dto/SessionRequestResult';
 import { AuthService, SessionRequestDataService } from 'src/app/services';
 
@@ -21,6 +20,9 @@ export class ResultPageComponent implements OnInit {
   otherUserId: string;
 
   sessionId?: string;
+  sessionRequestId: string;
+  isSuccessfulWorkout: boolean = true;
+  comment: string;
 
   constructor(
     private auth: AuthService,
@@ -40,16 +42,10 @@ export class ResultPageComponent implements OnInit {
     }
 
     this.myName = this.auth.currentUser.value?.displayName;
-    this.sessionRequestDataService.getOtherUser(sessionRequestId).subscribe(otherUser => {
-      this.otherUserId = otherUser.uid;
-      this.otherUserName = otherUser.displayName ?? '';
-    });
     this.sessionRequestDataService.get(sessionRequestId)
       .subscribe(sessionRequest => {
         if (sessionRequest.sessionId) {
-          this.isLoading = false;
-          this.sessionId = sessionRequest.sessionId;
-          this.cdr.detectChanges();
+          this.handleSessionResult(sessionRequest)
         } else {
           // close this result dialog if there was not match
           this.close();
@@ -57,9 +53,34 @@ export class ResultPageComponent implements OnInit {
       });
   }
 
-  done() {
+  private handleSessionResult(sessionRequest: SessionRequest) {
+    this.isLoading = false;
+    this.sessionId = sessionRequest.sessionId;
+    this.sessionRequestId = sessionRequest.id;
+    this.cdr.detectChanges();
 
-    this.close();
+    this.sessionRequestDataService.getOtherUser(sessionRequest.id)
+      .pipe(
+        tap(otherUser => {
+          this.otherUserId = otherUser.uid;
+          this.otherUserName = otherUser.displayName ?? '';
+        }),
+        switchMap(() => this.sessionRequestDataService.getComment(sessionRequest.id))
+      )
+      .subscribe((sessionRequestComment: SessionRequestComment) => {
+        this.isSuccessfulWorkout = sessionRequestComment.isSuccessfulWorkout;
+        this.comment = sessionRequestComment.comment;
+      });
+  }
+
+  done() {
+    this.sessionRequestDataService.setComment(this.sessionRequestId, this.isSuccessfulWorkout, this.comment)
+      .pipe(finalize(()=>this.close()))
+      .subscribe();
+  }
+
+  setSuccessResult(result: boolean) {
+    this.isSuccessfulWorkout = result;
   }
 
   private close() {

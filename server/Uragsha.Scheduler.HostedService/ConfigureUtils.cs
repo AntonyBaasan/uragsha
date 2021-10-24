@@ -40,6 +40,7 @@ namespace Uragsha.Scheduler.HostedService
 
             // Internal services
             services.AddSingleton<ISessionRequestService, SessionRequestService>();
+            services.AddSingleton<ISessionRequestCommentService, SessionRequestCommentService>();
             services.AddSingleton<ISessionService, SessionService>();
             services.AddSingleton<IMatcherService, MatcherScheduledService>();
             services.AddSingleton<IUserService, UserService>();

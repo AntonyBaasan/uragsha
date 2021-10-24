@@ -40,6 +40,7 @@ namespace Uragsha.InstantMatcher.HostedService
 
             // Internal services
             services.AddSingleton<ISessionRequestService, SessionRequestService>();
+            services.AddSingleton<ISessionRequestCommentService, SessionRequestCommentService>();
             services.AddSingleton<ISessionService, SessionService>();
             services.AddSingleton<IMatcherService, MatcherInstantService>();
             services.AddSingleton<IUserService, UserService>();
