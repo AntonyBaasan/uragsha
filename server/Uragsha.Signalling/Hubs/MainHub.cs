@@ -1,15 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.SignalR;
 using System.Dynamic;
-using Uragsha.Signalling.Dto;
-using Microsoft.AspNetCore.Authorization;
 using System.Linq;
-using Identity.Interfaces.Services;
-using Scheduler.Interfaces.Services;
+using System.Threading.Tasks;
 using Identity.Interfaces.Models;
+using Identity.Interfaces.Services;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.SignalR;
 using Scheduler.Interfaces.Models;
+using Scheduler.Interfaces.Services;
+using Uragsha.Signalling.Dto;
 
 namespace Uragsha.Signalling.Hubs
 {
@@ -62,7 +62,7 @@ namespace Uragsha.Signalling.Hubs
 
         public async void AfterLogin(UserDto userDto)
         {
-            string uid = this.GetCurrentUid();
+            string uid = GetCurrentUid();
 
             if (!await UserService.UserExistAsync(uid))
             {
@@ -74,7 +74,7 @@ namespace Uragsha.Signalling.Hubs
                     PhotoUrl = userDto.PhotoUrl,
                     Plan = UserPlan.Free,
                     Status = UserStatus.Active,
-                    Roles = new List<UserRole> { new UserRole { Name = "User" } }
+                    Roles = new List<UserRole> { new() { Name = "User" } }
                 };
                 UserService.AddUser(user);
             }
@@ -82,7 +82,7 @@ namespace Uragsha.Signalling.Hubs
 
         public async void UpdateWorkoutState(string sessionRequestId, object workoutState)
         {
-            string userId = this.GetCurrentUid();
+            string userId = GetCurrentUid();
             var session = await SessionService.GetBySessionRequestIdAsync(sessionRequestId);
             if (session == null)
             {
@@ -148,7 +148,7 @@ namespace Uragsha.Signalling.Hubs
 
             GlobalInfo.ActiveSessions.TryGetValue(session.Id, out SessionDetail sessionDetail);
 
-            if (sessionDetail.Answer != null)
+            if (sessionDetail?.Answer != null)
             {
                 Console.WriteLine("Video call is already started. Can't start!");
                 return;
@@ -253,7 +253,7 @@ namespace Uragsha.Signalling.Hubs
 
         private string GetCurrentUid()
         {
-            var uid = this.Context.User.Claims.FirstOrDefault(c => c.Type == "user_id");
+            var uid = Context.User.Claims.FirstOrDefault(c => c.Type == "user_id");
             return uid != null ? uid.Value : "";
         }
 
