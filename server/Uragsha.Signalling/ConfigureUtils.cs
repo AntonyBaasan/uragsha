@@ -34,6 +34,7 @@ namespace Uragsha.Signalling
 
             // Entity services
             services.AddSingleton<IUserEntityService, UserEntityService>();
+            services.AddSingleton<IUserStatEntityService, UserStatEntityService>();
             services.AddSingleton<ISessionRequestEntityService, SessionRequestEntityService>();
             services.AddSingleton<ISessionRequestCommentEntityService, SessionRequestCommentEntityService>();
             services.AddSingleton<ISessionEntityService, SessionEntityService>();

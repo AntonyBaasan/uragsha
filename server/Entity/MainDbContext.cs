@@ -8,6 +8,7 @@ namespace Entity
     public class MainDbContext : DbContext
     {
         public DbSet<UserEntity> Users { get; set; }
+        public DbSet<UserStatEntity> UserStats { get; set; }
         public DbSet<UserRoleEntity> UserRoles { get; set; }
         public DbSet<SessionEntity> Sessions { get; set; }
         public DbSet<SessionRequestEntity> SessionRequests { get; set; }
@@ -27,15 +28,21 @@ namespace Entity
                 .HasOne(c => c.GivenSessionRequest)
                 .WithOne(s => s.GivenSessionRequestComment)
                 //.HasForeignKey<SessionRequestEntity>(s=>s.GivenSessionRequestCommentId)
-                .HasForeignKey<SessionRequestCommentEntity>(c=>c.GivenSessionRequestId)
+                .HasForeignKey<SessionRequestCommentEntity>(c => c.GivenSessionRequestId)
                 .OnDelete(DeleteBehavior.NoAction);
 
             modelBuilder.Entity<SessionRequestCommentEntity>()
                 .HasOne(c => c.ReceivedSessionRequest)
                 .WithOne(s => s.ReceivedSessionRequestComment)
                 //.HasForeignKey<SessionRequestEntity>(s=>s.ReceivedSessionRequestCommentId)
-                .HasForeignKey<SessionRequestCommentEntity>(c=>c.ReceivedSessionRequestId)
+                .HasForeignKey<SessionRequestCommentEntity>(c => c.ReceivedSessionRequestId)
                 .OnDelete(DeleteBehavior.NoAction);
+
+            modelBuilder.Entity<UserStatEntity>()
+                .HasOne(s => s.User)
+                .WithOne(s => s.UserStatEntity)
+                .HasForeignKey<UserStatEntity>(s => s.UserId)
+                .OnDelete(DeleteBehavior.Cascade);
         }
     }
 }
