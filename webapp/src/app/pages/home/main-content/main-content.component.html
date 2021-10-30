@@ -11,7 +11,7 @@
     style="padding: 20px"
   >
     <div class="d-flex flex-column">
-      <div *ngIf="!isLoggedIn(); else leftContent" class="p-4">
+      <div class="p-4">
         <div>
           <h1>
             Exercise wherever, whenever, with whoever. Motivate each other.
@@ -34,58 +34,6 @@
           </button>
         </div>
       </div>
-      <ng-template #leftContent>
-        <div class="mb-1">
-          <app-waiting-sessions
-            [sessionRequests]="sessionRequests"
-            (goToSessionCall)="goToSessionCall.emit($event)"
-            (deleteSessionRequest)="deleteSessionRequest.emit($event)"
-          ></app-waiting-sessions>
-        </div>
-        <div class="d-flex justify-content-sm-end  justify-content-center">
-          <button
-            type="button"
-            class="btn btn-primary dropdown-toggle btn-lg"
-            data-bs-toggle="dropdown"
-            aria-expanded="false"
-          >
-            New Workout
-          </button>
-          <ul class="dropdown-menu">
-            <li>
-              <a
-                class="dropdown-item"
-                data-bs-toggle="modal"
-                data-bs-target="#instructionModal"
-              >
-                <i class="bi bi-plus-lg me-2"></i>
-                <span class="fs-6">Instant workout</span>
-              </a>
-            </li>
-            <li>
-              <a class="dropdown-item" (click)="schedule()">
-                <i class="bi bi-calendar-plus me-2"></i>
-                <span class="fs-6">Schedule for later</span>
-              </a>
-            </li>
-          </ul>
-        </div>
-      </ng-template>
-    </div>
-  </div>
-  <div
-    class="
-      col-sm
-      d-flex
-      justify-content-sm-start
-      align-items-sm-center
-      justify-content-center
-      align-items-start
-    "
-    style="padding: 20px"
-  >
-    <div>
-      <app-user-stats></app-user-stats>
     </div>
   </div>
 </div>

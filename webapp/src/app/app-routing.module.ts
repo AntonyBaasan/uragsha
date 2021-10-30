@@ -2,23 +2,29 @@ import { NgModule } from '@angular/core';
 import { RouterModule, Routes, PreloadAllModules } from '@angular/router';
 import { AngularFireAuthGuard, redirectLoggedInTo, redirectUnauthorizedTo } from '@angular/fire/compat/auth-guard';
 
-const redirectLoggedInToAccount = () => redirectLoggedInTo(['']);
+const redirectLoggedInToCalendar = () => redirectLoggedInTo(['calendar']);
+const redirectNotLoggedInToHome = () => redirectUnauthorizedTo(['']);
 
 const routes: Routes = [
   {
     path: '',
     loadChildren: () =>
       import('./pages/home/home.module').then((m) => m.HomeModule),
+    canActivate: [AngularFireAuthGuard],
+    data: { authGuardPipe: redirectLoggedInToCalendar }
   },
   {
     path: 'calendar',
     loadChildren: () =>
       import('./pages/calendar/calendar.module').then((m) => m.CalendarModule),
+    canActivate: [AngularFireAuthGuard],
+    data: { authGuardPipe: redirectNotLoggedInToHome }
   },
   {
     path: 'sessions',
     loadChildren: () => import('./pages/session/session.module').then((m) => m.SessionModule),
-    canActivate: [AngularFireAuthGuard]
+    canActivate: [AngularFireAuthGuard],
+    data: { authGuardPipe: redirectNotLoggedInToHome }
   },
   {
     path: 'call',
@@ -28,13 +34,14 @@ const routes: Routes = [
   {
     path: 'result',
     loadChildren: () => import('./pages/result/result.module').then((m) => m.ResultModule),
-    canActivate: [AngularFireAuthGuard]
+    canActivate: [AngularFireAuthGuard],
+    data: { authGuardPipe: redirectNotLoggedInToHome }
   },
   {
     path: 'login',
     loadChildren: () => import('./pages/login/login.module').then((m) => m.LoginModule),
     canActivate: [AngularFireAuthGuard],
-    data: { authGuardPipe: redirectLoggedInToAccount }
+    data: { authGuardPipe: redirectLoggedInToCalendar }
   },
 ];
 
