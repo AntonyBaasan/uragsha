@@ -15,25 +15,25 @@ namespace Uragsha.WebApi.Controllers
     public class DashboardController : ControllerBase
     {
         private readonly ILogger<SessionRequestController> _logger;
-        private readonly DashboardService dashboarService;
-        private readonly IDistributedCache cache;
+        private readonly DashboardService _dashboardService;
+        private readonly IDistributedCache _cache;
 
         public DashboardController(
             ILogger<SessionRequestController> logger,
-            DashboardService dashboarService,
+            DashboardService dashboardService,
             IDistributedCache cache
             )
         {
             _logger = logger;
-            this.dashboarService = dashboarService;
-            this.cache = cache;
+            _dashboardService = dashboardService;
+            _cache = cache;
         }
 
         [Authorize]
         [HttpGet("comingsoon")]
         public async Task<IEnumerable<SessionRequest>> ComingSoon()
         {
-            var sessionRequests = await dashboarService.GetComingSessionRequests();
+            var sessionRequests = await _dashboardService.GetComingSessionRequests();
             return sessionRequests.OrderBy(s=>s.Start);
         }
 

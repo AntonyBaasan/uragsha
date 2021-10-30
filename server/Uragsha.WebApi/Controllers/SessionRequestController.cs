@@ -106,7 +106,6 @@ namespace Uragsha.WebApi.Controllers
         [HttpPost("{id}/comment")]
         public async Task<IActionResult> SetComment(string id, [FromBody] SetCommentRequestDto request)
         {
-            // check if user belon
             var userId = _contextService.GetUserId();
 
             var session = await _sessionService.GetBySessionRequestIdAsync(id);
