@@ -51,6 +51,17 @@ kubectl apply -f .\devops\k8s\services.yml
 
 ### **Troubleshoot:**
 
-Internal pod to pod communication has to be enabled in order to ACME challenge succeed:
+**Internal pod to pod communication has to be enabled in order to ACME challenge succeed:**
 
 https://www.digitalocean.com/community/questions/issue-with-waiting-for-http-01-challenge-propagation-failed-to-perform-self-check-get-request-from-acme-challenges
+
+**Debug Mysql database in production** 
+
+Need to enable the mysql pod from kubernetes cluster 
+```PS
+# peek the mysql pod name
+kubectl get pod -l app=mysql
+# port-forward above pod to local 3307 port
+kubectl port-forward <MYSQL-POD-NAME> 3307:3306
+```
+After this you can use any IDE or Cli to access production database on your local machine. Address: localhost:3307
