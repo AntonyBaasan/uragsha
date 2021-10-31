@@ -14,9 +14,9 @@ namespace Scheduler.Services
     public class MatcherService : IMatcherService
     {
         protected readonly ISessionRequestService sessionRequestService;
-        protected readonly ISessionService sessionService;
-        protected readonly IEmailService emailService;
-        protected readonly IMessageSender messageSender;
+        private readonly ISessionService sessionService;
+        private readonly IEmailService emailService;
+        private readonly IMessageSender messageSender;
         protected readonly ILogger<MatcherService> logger;
 
         public MatcherService(
