@@ -1,6 +1,6 @@
 import { ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
 import { Subscription } from 'rxjs';
-import { AuthService, SingnallingService, StoreService } from './services';
+import { AuthService, SingnallingService } from './services';
 
 @Component({
   selector: 'app-root',

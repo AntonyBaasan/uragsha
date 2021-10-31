@@ -50,8 +50,8 @@ export class AuthService implements OnDestroy {
     this.auth.signInWithRedirect(provider);
   }
 
-  logout() {
-    this.auth.signOut();
+  logout(): Promise<void> {
+    return this.auth.signOut();
   }
 
   private async handleAuthState(user: firebase.User | null): Promise<void> {
