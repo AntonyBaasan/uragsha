@@ -1,14 +1,14 @@
 .home-bg {
-  background-color: red;
+  background-color: rgb(255, 255, 255);
   background-repeat: no-repeat;
   background-size: cover;
-  background-position: center;
+  background-position: left;
 }
 
 .home-bg-image-1 {
-  background-image: linear-gradient(0deg, rgba(255, 255, 255, 0.4), rgba(255, 255, 255, 0.4)), url("assets/img/home/home-background-1.jpg");
+  background-image: linear-gradient(0deg, rgba(255, 255, 255, 0.4), rgba(255, 255, 255, 0.5)), url("assets/img/home/home-background-1.jpg");
 }
 
 .home-bg-image-2 {
-  background-image: linear-gradient(0deg, rgba(255, 255, 255, 0.4), rgba(255, 255, 255, 0.4)), url("assets/img/home/home-background-2.jpg");
+  background-image: linear-gradient(0deg, rgba(255, 255, 255, 0.4), rgba(255, 255, 255, 0.6)), url("assets/img/home/home-background-2.jpg");
 }
