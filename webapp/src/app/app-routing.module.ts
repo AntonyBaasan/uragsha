@@ -6,13 +6,6 @@ const redirectLoggedInToCalendar = () => redirectLoggedInTo(['calendar']);
 const redirectNotLoggedIn = () => redirectUnauthorizedTo(['login']);
 
 const routes: Routes = [
-  // {
-  //   path: '',
-  //   loadChildren: () =>
-  //     import('./pages/home/home.module').then((m) => m.HomeModule),
-  //   canActivate: [AngularFireAuthGuard],
-  //   data: { authGuardPipe: redirectLoggedInToCalendar }
-  // },
   { path: '', redirectTo: 'calendar', pathMatch: 'full' },
   {
     path: 'calendar',
