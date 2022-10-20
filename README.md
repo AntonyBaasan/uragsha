@@ -1,4 +1,4 @@
-# uragsha
+# Uragsha
 
 ![landing page](https://github.com/antonybaasan/uragsha/actions/workflows/landing-page-firebase-hosting-deploy.yml/badge.svg)
 
